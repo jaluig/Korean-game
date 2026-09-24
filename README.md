@@ -12,6 +12,12 @@ practice rounds keep it growing.
 - **Streaks, points, levels, a daily goal and badges**, saved on your computer
 - Korean interface with small English subtitles, which you can turn off once you're ready
 
+<p align="center"><img src="docs/screenshots/home.png" alt="Home screen: the mascot, today's practice, the daily goal and the minigames" width="760"></p>
+
+| Meeting a new word | Typing with the built-in keyboard | Feedback that explains the mistake |
+| --- | --- | --- |
+| ![A new-word card for 맛있어요 with its pronunciation and an example](docs/screenshots/word-intro.png) | ![Typing 학교 on the on-screen Korean keyboard](docs/screenshots/typing.png) | ![Sentence Builder explaining 에서 vs 에](docs/screenshots/sentence-feedback.png) |
+
 ## Quick start
 
 1. Download or clone this folder.
