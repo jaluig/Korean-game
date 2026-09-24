@@ -133,15 +133,23 @@
       .filter((t) => !answer.includes(t.tile))
       .slice(0, decoys);
 
-    // Other known words as fillers — but never the bare form of an answer tile
-    // (아침 next to 아침을, 얼마예요? next to 얼마예요): those could build a correct
-    // sentence and be marked wrong.
+    // Other known words as fillers — but never one that could build a correct
+    // sentence and be marked wrong:
+    //  - the bare form of an answer tile (아침 next to 아침을, 얼마예요? next to 얼마예요),
+    //  - another form of a word the sentence uses (가요 next to 가세요, 먹어요 next to 먹었어요),
+    //  - 같이 when the sentence already says "with someone" (가족하고 같이 먹어요 is fine too).
     const answerForms = answer.map(U.normalize);
+    const neededIds = new Set(sentence.needs || []);
+    const neededDicts = new Set((sentence.needs || []).map((id) => M.content.word(id)).filter((w) => w && w.dict).map((w) => w.dict));
+    const withSomeone = answerForms.some((t) => /(하고|이랑|랑)$/.test(t));
     const fillers = U.sample(
       U.uniqueBy(knownWords, (w) => w.ko).filter((w) => {
         const bare = U.normalize(w.ko);
         return (
           !bare.includes(' ') &&
+          !neededIds.has(w.id) &&
+          !(w.dict && neededDicts.has(w.dict)) &&
+          !(withSomeone && bare === '같이') &&
           !answerForms.some((t) => t.startsWith(bare)) &&
           !traps.some((t) => U.normalize(t.tile) === bare)
         );

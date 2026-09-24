@@ -210,7 +210,9 @@ Mallang.content.registerTopic({
       traps: [{ tile: '오른쪽으로', why: '오른쪽으로 means “to the right”. “Straight ahead” is 똑바로.' }] },
 
     // ---- Level 3 ----
-    { id: 's-turn', level: 3, en: 'Turn right at the crossroads.', ko: '사거리에서 오른쪽으로 도세요.',
+    // No particle questions here: 돌다 also takes 을/를 for the place you turn at (모퉁이를 돌다),
+    // so 사거리를 isn't clearly wrong.
+    { id: 's-turn', level: 3, en: 'Turn right at the crossroads.', ko: '사거리에서 오른쪽으로 도세요.', drill: false,
       tiles: ['사거리에서', '오른쪽으로', '도세요'], gloss: ['at the crossroads', 'to the right', 'please turn'],
       words: ['crossroads', 'right', 'turn'],
       traps: [

@@ -31,7 +31,7 @@ Mallang.content.registerTopic({
     },
     {
       title: { ko: '엄마 / 어머니', en: 'Mom or mother?' },
-      text: '**엄마** and **아빠** are the everyday words, and adults use them too. **어머니** and **아버지** are more polite, for formal situations. When you talk to older people like your grandparents, the verb often takes the extra-polite **-세요** ending: 어디 가세요?',
+      text: '**엄마** and **아빠** are the everyday words, and adults use them too. **어머니** and **아버지** are more polite, for formal situations. When 어머니, 아버지 or other elders, like your grandparents, are the ones doing something, the verb usually takes the extra-polite **-세요** ending: 어디 가세요? (With 엄마 and 아빠, plain 있어요 or 가요 is common too.) Never use -세요 for what you do yourself.',
       examples: [
         { ko: '엄마하고 아빠는 집에 있어요.', en: 'Mom and Dad are at home.' },
         { ko: '아버지, 어머니, 감사합니다!', en: 'Thank you, Father and Mother!' },
@@ -193,7 +193,8 @@ Mallang.content.registerTopic({
       traps: [{ tile: '학생예요', why: '학생 ends in a consonant (받침), so it takes 이에요. 예요 goes after vowels.' }] },
     { id: 's-parents', level: 2, en: 'Thank you, Father and Mother!', ko: '아버지, 어머니, 감사합니다!',
       tiles: ['아버지', '어머니', '감사합니다'], gloss: ['Father', 'Mother', 'thank you'],
-      words: ['father', 'mother', 'cafe:thanks'], alts: [['어머니', '아버지', '감사합니다']] },
+      words: ['father', 'mother', 'cafe:thanks'],
+      alts: [['어머니', '아버지', '감사합니다'], ['감사합니다', '아버지', '어머니'], ['감사합니다', '어머니', '아버지']] },
 
     // ---- Level 3 ----
     { id: 's-hyung', level: 3, en: 'My older brother has a girlfriend. (said by a man)', ko: '형은 여자 친구가 있어요.',
@@ -227,6 +228,8 @@ Mallang.content.registerTopic({
       ] },
     { id: 's-grandparents', level: 3, en: 'Grandma, Grandpa, where are you going?', ko: '할머니, 할아버지, 어디 가세요?',
       tiles: ['할머니', '할아버지', '어디', '가세요'], gloss: ['Grandma', 'Grandpa', 'where', 'are (you) going? (polite)'],
-      words: ['grandma', 'grandpa', 'directions:where', 'day:go'], alts: [['할아버지', '할머니', '어디', '가세요']] },
+      words: ['grandma', 'grandpa', 'directions:where', 'day:go'],
+      alts: [['할아버지', '할머니', '어디', '가세요'], ['어디', '가세요', '할머니', '할아버지'], ['어디', '가세요', '할아버지', '할머니']],
+      traps: [{ tile: '가요', why: 'Your grandparents are the ones going, and they’re older than you, so the verb takes the respectful -세요 ending: 가세요. Plain 가요 isn’t polite enough for them.' }] },
   ],
 });

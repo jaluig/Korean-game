@@ -70,6 +70,20 @@ test('filler tiles are never the bare form of an answer tile', () => {
   }
 });
 
+test('filler tiles are never another form of a word the sentence uses', () => {
+  const known = M.content.words();
+  for (let round = 0; round < 25; round++) {
+    for (const s of M.content.sentences()) {
+      const dicts = new Set(s.needs.map((id) => M.content.word(id).dict).filter(Boolean));
+      const { tiles } = D.sentenceTiles(s, { decoys: 3, knownWords: known });
+      for (const t of tiles.filter((x) => x.word)) {
+        assert.ok(!s.needs.includes(t.word.id), `${s.id}: filler ${t.text} is one of its own words`);
+        assert.ok(!(t.word.dict && dicts.has(t.word.dict)), `${s.id}: filler ${t.text} is another form of its verb`);
+      }
+    }
+  }
+});
+
 test('near-synonyms never appear as each other’s wrong options', () => {
   const pool = M.content.words();
   const pairs = [

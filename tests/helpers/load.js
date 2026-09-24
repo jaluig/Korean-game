@@ -21,7 +21,17 @@ const CORE = [
   'js/core/particles.js',
   'js/core/answers.js',
 ];
-const CONTENT = ['content/cafe.js', 'content/my-day.js', 'content/sounds.js'];
+const CONTENT = [
+  'content/cafe.js',
+  'content/my-day.js',
+  'content/people.js',
+  'content/directions.js',
+  'content/past.js',
+  'content/hobbies.js',
+  'content/feelings.js',
+  'content/weather.js',
+  'content/sounds.js',
+];
 // Minigames only touch the DOM when a round starts, so their round-building logic can be tested.
 const GAMES = ['js/games/balloon-pop.js', 'js/games/particle-lab.js', 'js/games/verb-magic.js', 'js/games/number-shop.js', 'js/games/sound-twins.js'];
 
