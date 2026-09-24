@@ -169,12 +169,16 @@ Mallang.content.registerTopic({
       words: ['tired', 'mood', 'good'],
       traps: [
         { tile: '기분을', why: '좋아요 describes something (“is good”), so 기분 is its subject and takes 이: 기분이 좋아요.' },
+        { tile: '기분에', why: '기분에 안 좋아요 would mean “it’s bad for your mood” (like 건강에 안 좋아요, bad for your health). Here your mood itself isn’t good, so 기분 is the subject: 기분이 안 좋아요.' },
         { tile: '좋아해요', why: '좋아해요 means “to like (something)”. For your mood, use 좋아요: 기분이 좋아요.' },
       ] },
     { id: 's-coffee', en: "I like coffee. I don't like milk.", ko: '커피가 좋아요. 우유는 싫어요.',
       tiles: ['커피가', '좋아요', '우유는', '싫어요'], gloss: ['coffee (subject)', 'is good (I like it)', 'milk (topic)', "I don't like it"],
       words: ['cafe:coffee', 'good', 'cafe:milk', 'dislike'],
-      traps: [{ tile: '커피를', why: '좋아요 means “is good”, so the thing you like is its subject and takes 가: 커피가 좋아요. (커피를 goes with 좋아해요.)' }] },
+      traps: [
+        { tile: '커피를', why: '좋아요 means “is good”, so the thing you like is its subject and takes 가: 커피가 좋아요. (커피를 goes with 좋아해요.)' },
+        { tile: '커피에', why: '커피에 좋아요 would mean “it’s good for coffee” (like 건강에 좋아요, good for your health). To say you like coffee, coffee is the subject: 커피가 좋아요.' },
+      ] },
     { id: 's-love', en: "I love you. I'm really happy.", ko: '사랑해요. 정말 행복해요.',
       tiles: ['사랑해요', '정말', '행복해요'], gloss: ['I love you', 'really', "I'm happy"], words: ['love', 'happy'],
       traps: [

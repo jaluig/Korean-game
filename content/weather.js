@@ -130,7 +130,7 @@ Mallang.content.registerTopic({
       note: 'ㅂ and ㅎ blend into ㅍ: [스패요]. The opposite is 건조해요 (it’s dry).',
       example: { ko: '여름에는 너무 습해요.', en: 'It’s so humid in summer.' } },
     { id: 'windy', ko: '바람이 불어요', en: "it's windy", level: 3, pos: 'phrase', emoji: '💨', rom: 'barami bureoyo',
-      pron: '바라미 부러요', accept: ['바람 불어요'], enAlt: ['wind is blowing', 'wind blows'],
+      pron: '바라미 부러요', avoid: ['wind'], accept: ['바람 불어요'], enAlt: ['wind is blowing', 'wind blows'],
       note: 'Literally “the wind blows” (불다 → 불어요). A very windy day: 바람이 많이 불어요.',
       example: { ko: '오늘은 바람이 많이 불어요.', en: 'It’s very windy today.' } },
     { id: 'cloud', ko: '구름', en: 'cloud', level: 3, pos: 'noun', emoji: '☁️', rom: 'gureum',
@@ -141,7 +141,7 @@ Mallang.content.registerTopic({
       example: { ko: '하늘이 정말 파래요.', en: 'The sky is really blue.' } },
     { id: 'forecast', ko: '일기 예보', en: 'weather forecast', level: 3, pos: 'noun', emoji: '📺', rom: 'ilgi yebo',
       enAlt: ['forecast', 'weather report'],
-      note: '일기 here is an old word for “weather”, not the 일기 that means “diary”.',
+      note: '일기 here is a formal word for “weather”, not the 일기 that means “diary”.',
       example: { ko: '일기 예보 봤어요?', en: 'Did you see the weather forecast?' } },
     { id: 'temperature', ko: '기온', en: 'temperature (air)', level: 3, pos: 'noun', emoji: '🌡️', rom: 'gion',
       note: 'The air temperature in weather reports: 기온이 높아요 / 낮아요 (high / low). Body temperature is 체온.',
@@ -160,6 +160,7 @@ Mallang.content.registerTopic({
     // ---- Level 1 ----
     { id: 's-cold', en: "It's really cold today!", ko: '오늘 정말 추워요!',
       tiles: ['오늘', '정말', '추워요'], gloss: ['today', 'really', "it's cold"], words: ['day:today', 'cold'],
+      alts: [['정말', '오늘', '추워요']],
       traps: [
         { tile: '차가워요', why: '차가워요 is for things that feel cold to the touch, like water or ice. For cold weather, say 추워요.' },
         { tile: '춥어요', why: '춥다 is ㅂ-irregular: before a vowel, ㅂ turns into 우 → 추워요.' },
@@ -178,11 +179,16 @@ Mallang.content.registerTopic({
     { id: 's-snow', en: "I like snow. I don't like rain.", ko: '눈이 좋아요. 비는 싫어요.',
       tiles: ['눈이', '좋아요', '비는', '싫어요'], gloss: ['snow (subject)', 'is good (I like it)', 'rain (topic)', "I don't like it"],
       words: ['snow', 'feelings:good', 'rain', 'feelings:dislike'],
-      traps: [{ tile: '눈을', why: '좋아요 means “is good”, so the thing you like is its subject and takes 이: 눈이 좋아요.' }] },
+      traps: [
+        { tile: '눈을', why: '좋아요 means “is good”, so the thing you like is its subject and takes 이: 눈이 좋아요.' },
+        { tile: '눈에', why: '눈에 좋아요 means “it’s good for your eyes” (눈 also means “eye”!). To say you like snow, snow is the subject: 눈이 좋아요.' },
+      ] },
 
     // ---- Level 2 ----
     { id: 's-sun', level: 2, en: 'The sun is really hot.', ko: '해가 정말 뜨거워요.',
-      tiles: ['해가', '정말', '뜨거워요'], gloss: ['sun (subject)', 'really', 'is hot (burning)'], words: ['sun', 'cafe:hot'] },
+      tiles: ['해가', '정말', '뜨거워요'], gloss: ['sun (subject)', 'really', 'is hot (burning)'], words: ['sun', 'cafe:hot'],
+      alts: [['정말', '해가', '뜨거워요']],
+      traps: [{ tile: '더워요', why: '더워요 is for hot weather or feeling hot (여름에는 더워요). The sun’s heat on your skin is 뜨거워요: 해가 뜨거워요.' }] },
     { id: 's-raining', level: 2, en: "It's raining. I don't have an umbrella!", ko: '비가 와요. 우산이 없어요!',
       tiles: ['비가', '와요', '우산이', '없어요'], gloss: ['rain (subject)', 'comes', 'umbrella (subject)', "there isn't"],
       words: ['raining', 'umbrella', 'day:nothave'],
@@ -197,7 +203,7 @@ Mallang.content.registerTopic({
       traps: [
         { tile: '더워요', why: '더워요 means “it’s hot”. For “warm”, say 따뜻해요.' },
         { tile: '추워요', why: '추워요 means “it’s cold”. For a pleasant cool, say 시원해요.' },
-        { tile: '여름에는', why: '여름 means “summer”. “Spring” is 봄: 봄에는.' },
+        { tile: '여름에는', why: '여름 means “summer”. Spring is 봄 (봄에는) and autumn is 가을 (가을에는).' },
       ] },
     { id: 's-clear', level: 2, en: "It was cloudy yesterday. Today it's clear.", ko: '어제는 흐렸어요. 오늘은 맑아요.',
       tiles: ['어제는', '흐렸어요', '오늘은', '맑아요'], gloss: ['yesterday (topic)', 'was cloudy', 'today (topic)', "it's clear"],
@@ -207,7 +213,9 @@ Mallang.content.registerTopic({
       tiles: ['겨울은', '추운', '계절이에요'], gloss: ['winter (topic)', 'cold', 'is a season'], words: ['winter', 'cold', 'season'],
       traps: [{ tile: '차가운', why: '차가운 is for cold things you touch, like water or ice. A cold season or cold weather is 추운.' }] },
     { id: 's-wind', level: 2, en: 'The breeze is really cool.', ko: '바람이 정말 시원해요.',
-      tiles: ['바람이', '정말', '시원해요'], gloss: ['wind (subject)', 'really', 'is cool'], words: ['wind', 'cool'] },
+      tiles: ['바람이', '정말', '시원해요'], gloss: ['wind (subject)', 'really', 'is cool'], words: ['wind', 'cool'],
+      alts: [['정말', '바람이', '시원해요']],
+      traps: [{ tile: '바람에', why: '바람에 would mean “because of the wind”. Here the breeze itself is what’s cool, so it’s the subject and takes 이: 바람이 시원해요.' }] },
 
     // ---- Level 3 ----
     { id: 's-windy', level: 3, en: "It's windy. It's a bit chilly.", ko: '바람이 불어요. 좀 쌀쌀해요.',
