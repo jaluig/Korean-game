@@ -82,7 +82,7 @@
 
     status() {
       const best = M.store.state.totals.numbersCorrect;
-      return { ready: true, ko: best ? `숫자 ${best}개 맞혔어요` : '가게를 열어요!', en: best ? `${best} numbers right so far` : 'Open the shop!' };
+      return { ready: true, ko: best ? `숫자 ${best}개 맞혔어요` : '가게를 열어요!', en: best ? `${U.plural(best, 'number')} right so far` : 'Open the shop!' };
     },
 
     start(host) {
