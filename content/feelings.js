@@ -120,7 +120,7 @@ Mallang.content.registerTopic({
       example: { ko: '이 책은 좀 재미없어요.', en: 'This book is a bit boring.' } },
     { id: 'nervous', ko: '떨려요', en: "I'm nervous", level: 2, pos: 'verb', emoji: '😬', rom: 'tteollyeoyo', dict: '떨리다',
       avoid: ['worried'], enAlt: ['shaking', 'trembling'],
-      note: '떨리다 means “to tremble”: your heart shakes before an exam, an interview or a first date.',
+      note: '떨리다 means “to tremble”: your heart pounds before an exam, an interview or a first date.',
       example: { ko: '내일 면접이 있어요. 너무 떨려요.', en: 'I have an interview tomorrow. I’m so nervous.' } },
     { id: 'lonely', ko: '외로워요', en: "I'm lonely", level: 2, pos: 'adjective', emoji: '🥺', rom: 'oerowoyo', dict: '외롭다',
       note: 'ㅂ-irregular: 외롭 + 어요 → 외로워요.',
