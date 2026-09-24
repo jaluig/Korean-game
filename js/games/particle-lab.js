@@ -25,9 +25,15 @@
       .filter((x) => x.drills.length);
   }
 
+  /** The topic's sentences, or every topic's if the topic has too few questions yet. */
+  function poolFor(topicId) {
+    const own = questionPool(topicId);
+    return own.length >= cfg().minQuestions ? own : questionPool('all');
+  }
+
   /** Tricky and due sentences first; within a sentence, weaker particles more often. */
   function buildRound(topicId) {
-    const pool = questionPool(topicId);
+    const pool = poolFor(topicId);
     const urgent = pool.filter(({ sentence }) => M.srs.isTricky(sentence.id) || M.srs.isDue(sentence.id));
     const ordered = [...U.shuffle(urgent), ...U.shuffle(pool.filter((x) => !urgent.includes(x)))];
     const questions = [];
@@ -52,7 +58,7 @@
     blurb: { ko: '을/를? 에/에서? 알맞은 조사를 골라요', en: 'Pick the right particle' },
 
     status(topicId) {
-      const n = questionPool(topicId).length;
+      const n = poolFor(topicId).length;
       if (n < cfg().minQuestions) {
         return { ready: false, ko: '단어를 더 배우면 문장이 열려요', en: 'Learn a few more words to open sentences' };
       }
@@ -90,7 +96,7 @@
 
       function ask({ sentence, drill }) {
         const options = U.shuffle(drill.options);
-        const slot = h('span.lab-slot', { 'aria-label': 'missing particle' }, h('span.lab-slot-q', '?'));
+        const slot = h('span.lab-slot', h('span.lab-slot-q', { 'aria-hidden': 'true' }, '?'), h('span.sr-only', '(missing particle)'));
         const line = h(
           'div.lab-sentence',
           { lang: 'ko' },
@@ -201,5 +207,5 @@
     },
   });
 
-  M.particleLab = { questionPool, buildRound };
+  M.particleLab = { questionPool, poolFor, buildRound };
 })(window.Mallang);

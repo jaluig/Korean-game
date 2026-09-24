@@ -19,7 +19,6 @@
   const points = () => M.config.points;
 
   const TONES = ['pink', 'mint', 'butter', 'sky', 'lilac'];
-  const LANES = [0, 1, 2, 3]; // spread evenly over the sky's height (see place())
   // Typing Korean takes longer, so reverse mode is a little slower.
   const REVERSE_SLOWER = 1.35;
 
@@ -81,7 +80,7 @@
 
       /* ---------- Layout ---------- */
 
-      const hearts = h('span.balloon-hearts', { 'aria-label': `${lives} lives left` });
+      const hearts = h('span.balloon-hearts', { role: 'img', 'aria-label': `${lives} lives left` });
       const waveText = h('span.hud-chip', { title: 'Wave' });
       const popsText = h('b', '0');
       const hud = h('div.balloon-hud', hearts, waveText, h('span.hud-chip', { title: 'Balloons popped' }, '🎈 ', popsText));
@@ -93,6 +92,7 @@
 
       let input = null; // English mode: a text field
       let keyboard = null; // reverse mode: the Korean keyboard
+      let typedKeys = []; // reverse mode: the keystrokes typed so far
       let typedEl = null;
 
       function drawHud() {
@@ -111,8 +111,7 @@
           {
             type: 'button',
             class: `balloon-mode ${reverse === isReverse ? 'selected' : ''}`.trim(),
-            role: 'radio',
-            'aria-checked': String(reverse === isReverse),
+            'aria-pressed': String(reverse === isReverse),
             on: {
               click: () => {
                 reverse = isReverse;
@@ -143,7 +142,7 @@
                 ? 'English words float across the sky. Type them in Korean on the keyboard below (your own keyboard works too: R = ㄱ, K = ㅏ) before they reach the left side.'
                 : 'Korean words float across the sky. Type what they mean in English before they reach the left side. Exact answers pop by themselves; Enter also accepts a small typo.'
             ),
-            h('div.balloon-modes', { role: 'radiogroup', 'aria-label': 'Mode' }, modeButton(false, '가 → A', '한국어 풍선', 'Korean balloons, type English'), modeButton(true, 'A → 가', '영어 풍선', 'English balloons, type Korean')),
+            h('div.balloon-modes', { role: 'group', 'aria-label': 'Mode' }, modeButton(false, '가 → A', '한국어 풍선', 'Korean balloons, type English'), modeButton(true, 'A → 가', '영어 풍선', 'English balloons, type Korean')),
             h('p.balloon-rules', `❤️ × ${c.lives} · every ${c.popsPerWave} pops the wind gets stronger · ${c.waves} waves to clear the sky`),
             startBtn
           )
@@ -178,7 +177,8 @@
           const display = h('div.type-display.balloon-typed', { role: 'textbox', 'aria-readonly': 'true', 'aria-label': 'Your answer' }, typedEl, h('span.caret', { 'aria-hidden': 'true' }));
           keyboard = ui.createKeyboard({
             hints: settings.keyHints,
-            onChange: (text) => {
+            onChange: (text, keys) => {
+              typedKeys = keys.filter((k) => k !== ' ');
               typedEl.textContent = text;
               display.classList.toggle('empty', !text);
               tryPop(text, { exactOnly: true });
@@ -242,30 +242,47 @@
         return i >= 0 ? queue.splice(i, 1)[0] : null;
       }
 
-      /** A lane whose last balloon has moved well away from the right edge. */
-      function pickLane() {
-        const free = LANES.filter((top) => balloons.every((b) => b.top !== top || b.progress > 0.3));
-        return free.length ? U.pick(free) : null;
+      /** How many lanes fit in the sky: balloons two lanes apart must never touch. */
+      function laneCount() {
+        const body = reverse ? 70 : 80; // balloon height (see css/minigames.css)
+        const room = Math.max(0, sky.clientHeight - 124);
+        return U.clamp(Math.floor((1.75 * room) / body + 0.75), 1, 4);
+      }
+
+      /**
+       * Where a new balloon can appear (it enters at the right edge) without
+       * touching one that is still near the edge: { lane, topPx } or null.
+       */
+      function spawnSpot() {
+        const lanes = laneCount();
+        const height = reverse ? 70 : 80;
+        const width = sky.clientWidth;
+        for (const lane of U.shuffle(Array.from({ length: lanes }, (_, i) => i))) {
+          // Lanes are spread over the sky, leaving room for the balloon and its string.
+          const topPx = (sky.clientHeight - 124) * ((lane + U.random() * 0.25) / (lanes - 1 + 0.25)) + 4;
+          const blocked = balloons.some((b) => Math.abs(b.topPx - topPx) < height + 8 && (1 - b.progress) * width + b.el.offsetWidth + 24 > width);
+          if (!blocked) return { lane, topPx };
+        }
+        return null;
       }
 
       function spawn() {
-        const top = pickLane();
-        const word = top == null ? null : nextWord();
+        const spot = spawnSpot();
+        const word = spot ? nextWord() : null;
         if (!word) return false;
         const tone = TONES[round.spawned % TONES.length];
         round.spawned++;
-        // Lanes are spread over the sky, leaving room for the balloon and its string.
-        const lanePos = (top + U.random() * 0.25) / (LANES.length - 1 + 0.25);
         const el = h(
           'div',
-          { class: `balloon tone-${tone}`, 'aria-hidden': 'true', style: { top: `calc((100% - 124px) * ${lanePos.toFixed(3)} + 4px)`, '--bob': `${2 + U.random() * 1.2}s` } },
+          { class: `balloon tone-${tone}`, 'aria-hidden': 'true', style: { top: `${spot.topPx.toFixed(1)}px`, '--bob': `${2 + U.random() * 1.2}s` } },
           h('div.balloon-body', h('span.balloon-text', { lang: reverse ? 'en' : 'ko' }, reverse ? word.en : word.ko)),
           h('div.balloon-knot'),
           h('div.balloon-string')
         );
         sky.append(el);
+        U.announce(reverse ? word.en : word.ko); // the balloons themselves are hidden from screen readers
         const factor = reverse ? REVERSE_SLOWER : 1;
-        balloons.push({ word, el, top, progress: 0, travel: travel * factor });
+        balloons.push({ word, el, topPx: spot.topPx, progress: 0, travel: travel * factor });
         place(balloons[balloons.length - 1]);
         return true;
       }
@@ -280,9 +297,20 @@
         if (i >= 0) balloons.splice(i, 1);
       }
 
-      /** Is `typed` the start of a longer answer on screen? Then wait for more (or Enter). */
+      /** Is what's typed the start of a longer answer on screen? Then wait for more (or Enter). */
       function couldGoOn(key, except) {
-        return balloons.some((b) => b !== except && answersOf(b.word, reverse).some((a) => a.length > key.length && a.startsWith(key)));
+        if (reverse) {
+          // Hangul passes through other syllables as you type (역 on the way to 여기), so compare keystrokes.
+          return balloons.some(
+            (b) =>
+              b !== except &&
+              answersOf(b.word, true).some((a) => {
+                const keys = M.hangul.toKeys(a);
+                return keys.length > typedKeys.length && typedKeys.every((k, i) => k === keys[i]);
+              })
+          );
+        }
+        return balloons.some((b) => b !== except && answersOf(b.word, false).some((a) => a.length > key.length && a.startsWith(key)));
       }
 
       /** Pop the balloon the text matches (the one nearest the edge first). */
@@ -335,6 +363,7 @@
 
       function pop(b, { almost = false } = {}) {
         remove(b);
+        U.announce(`🎈 ${b.word.ko} = ${b.word.en}`);
         M.srs.practice(b.word.id, true);
         M.progress.recordAnswer(true);
         round.pops++;
@@ -363,6 +392,7 @@
       function escape(b) {
         remove(b);
         lives--;
+        U.announce(`Missed: ${b.word.ko} = ${b.word.en}. ${Math.max(0, lives)} ${lives === 1 ? 'life' : 'lives'} left.`);
         M.srs.practice(b.word.id, false);
         M.progress.recordAnswer(false);
         if (!round.escaped.includes(b.word.id)) round.escaped.push(b.word.id);
@@ -429,7 +459,8 @@
 
       function tick(time) {
         if (!running) return;
-        const dt = last ? Math.min(time - last, 100) : 0; // a hidden tab doesn't count
+        // A hidden tab doesn't count, and nothing moves while a dialog ("Stop this round?") is open.
+        const dt = last && !ui.dialogOpen() ? Math.min(time - last, 100) : 0;
         last = time;
         sinceSpawn += dt * (reverse ? 1 / REVERSE_SLOWER : 1);
         if (!cleared && sinceSpawn >= spawnEvery && balloons.length < onScreen) {

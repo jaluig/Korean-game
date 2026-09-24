@@ -255,6 +255,7 @@
       if (closed) return;
       closed = true;
       openModals.delete(close);
+      if (M.mic) M.mic.stop();
       offKeys();
       backdrop.classList.remove('open');
       setTimeout(() => backdrop.remove(), 180);
@@ -268,6 +269,8 @@
   const openModals = new Set();
   /** Close every open dialog (used when the screen changes). */
   ui.closeAllModals = () => [...openModals].forEach((close) => close());
+  /** Is a dialog open? Timed games pause while one is (e.g. "Stop this round?"). */
+  ui.dialogOpen = () => openModals.size > 0;
 
   /** Yes/no question as a Promise<boolean>. The safe answer ("cancel") starts focused. */
   ui.confirm = ({ title, text, ok = { ko: '네', en: 'Yes' }, cancel = { ko: '아니요', en: 'No' }, danger = false } = {}) =>

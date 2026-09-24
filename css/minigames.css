@@ -956,6 +956,7 @@ body.no-en .shop-say-en {
   padding: 2px 8px;
   border-radius: 999px;
   background: var(--butter);
+  color: #4f3b3b;
   font-weight: 800;
   text-align: center;
 }

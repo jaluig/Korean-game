@@ -25,6 +25,8 @@ const CONTENT = [
   'content/cafe.js',
   'content/my-day.js',
   'content/people.js',
+  'content/numbers.js',
+  'content/shopping.js',
   'content/directions.js',
   'content/past.js',
   'content/hobbies.js',

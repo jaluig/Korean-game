@@ -104,6 +104,7 @@
     cleanup = null;
     ui.closeAllModals();
     M.keys.reset();
+    M.mic.stop();
     document.querySelectorAll('.confetti').forEach((el) => el.remove());
     U.clear(view);
     document.body.dataset.screen = name;

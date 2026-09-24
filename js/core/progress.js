@@ -116,6 +116,17 @@
     state().totals[counter] = (state().totals[counter] || 0) + by;
   }
 
+  /** Points for saying something well with 🎤: once per word or sentence per day. */
+  function rewardSpeech(text, now = U.now()) {
+    const day = dayRecord(now);
+    day.spoken = day.spoken || [];
+    if (day.spoken.includes(text)) return false;
+    day.spoken.push(text);
+    bump('spokenGood');
+    addPoints(M.config.points.spoken, now);
+    return true;
+  }
+
   /** Accuracy per skill (a verb form, a particle, a kind of number task…). */
   function skill(id, correct) {
     const skills = state().skills || (state().skills = {});
@@ -268,6 +279,7 @@
     best,
     skill,
     skillWeight,
+    rewardSpeech,
     finishRound,
     checkBadges,
   };

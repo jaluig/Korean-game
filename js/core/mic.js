@@ -15,12 +15,14 @@
 
   function stop() {
     if (!active) return;
+    const rec = active;
+    active = null;
+    rec.cancelled = true; // stopped on purpose: not a "didn't hear anything"
     try {
-      active.abort();
+      rec.abort();
     } catch {
       // already stopped
     }
-    active = null;
   }
 
   /**
@@ -50,7 +52,7 @@
     };
     rec.onend = () => {
       if (active === rec) active = null;
-      if (!settled && onError) onError('no-speech');
+      if (!settled && !rec.cancelled && onError) onError('no-speech');
       if (onEnd) onEnd();
     };
     try {
@@ -58,6 +60,7 @@
       active = rec;
     } catch {
       if (onError) onError('busy');
+      if (onEnd) onEnd();
     }
     return () => {
       if (active === rec) stop();

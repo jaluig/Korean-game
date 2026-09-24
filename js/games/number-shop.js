@@ -149,26 +149,47 @@
           const reading = N.count(n, goods.counter);
           const say = { ko: `${goods.ko} ${reading} 주세요.` };
           let given = 0;
-          const basket = h('div.shop-basket', { 'aria-live': 'polite' });
+          const basket = h('div.shop-basket', { role: 'group', 'aria-label': 'Basket' });
           const shelf = h('div.shop-shelf', { role: 'group', 'aria-label': 'Shelf' });
           const giveBtn = ui.button({ icon: '🛍️', ko: '드리기', en: 'Hand it over', variant: 'primary', size: 'big', onClick: give });
-          const draw = () => {
-            U.clear(basket).append(given ? Array.from({ length: given }, (_, i) => h('button.shop-item.in', { type: 'button', 'aria-label': `Put one ${goods.ko} back`, on: { click: () => change(-1) } }, goods.emoji)) : h('span.shop-basket-empty', ui.bi('바구니가 비었어요', 'Tap the shelf to add')));
-            basket.append(h('span.shop-count', `${given}`));
-          };
+          const draw = () =>
+            ui.keepFocus(() => {
+              const items = Array.from({ length: given }, (_, i) =>
+                h(
+                  'button.shop-item.in',
+                  { type: 'button', 'aria-label': `Put one ${goods.ko} back`, dataset: { focus: `basket-${i}` }, on: { ...M.keys.noMouseFocus, click: () => change(-1) } },
+                  goods.emoji
+                )
+              );
+              U.clear(basket).append(
+                ...(given ? items : [h('span.shop-basket-empty', ui.bi('바구니가 비었어요', 'Tap the shelf to add'))]),
+                h('span.shop-count', { 'aria-live': 'polite', 'aria-label': `${given} in the basket` }, `${given}`)
+              );
+            });
           const change = (d) => {
             given = U.clamp(given + d, 0, 12);
             M.sfx.play('tap');
             draw();
           };
-          for (let i = 0; i < 12; i++) shelf.append(h('button.shop-item', { type: 'button', 'aria-label': `Add one ${goods.ko}`, on: { click: () => change(1) } }, goods.emoji));
+          for (let i = 0; i < 12; i++) {
+            shelf.append(h('button.shop-item', { type: 'button', 'aria-label': `Add one ${goods.ko}`, on: { ...M.keys.noMouseFocus, click: () => change(1) } }, goods.emoji));
+          }
           draw();
-          host.stage.append(h('div.ex.ex-shop', ui.exTag('주문대로 담아요', 'Give the customer what they ask for', '🛒'), scene(customer, say, h('div.shop-counter', shelf, h('div.shop-basket-wrap', h('span.shop-basket-label', '🧺'), basket))), h('div.ex-actions', giveBtn)));
+          host.stage.append(
+            h(
+              'div.ex.ex-shop',
+              ui.exTag('주문대로 담아요', 'Give the customer what they ask for', '🛒'),
+              scene(customer, say, h('div.shop-counter', shelf, h('div.shop-basket-wrap', h('span.shop-basket-label', { 'aria-hidden': 'true' }, '🧺'), basket))),
+              h('div.ex-actions', h('span.key-hint', ui.bi('↑ ↓ 키', '↑ / ↓ to count, Enter')), giveBtn)
+            )
+          );
           giveBtn.focus({ preventScroll: true });
+          // ↑/↓ (or +/−) count, Enter hands it over — unless a focused button handles the key itself.
           const stopKeys = M.keys.push((event) => {
             if (event.repeat) return;
             if (event.key === '+' || event.key === 'ArrowUp') change(1);
             else if (event.key === '-' || event.key === 'ArrowDown' || event.key === 'Backspace') change(-1);
+            else if (event.key === 'Enter' && !M.keys.isControl(event)) give();
             else return;
             event.preventDefault();
           });
@@ -180,7 +201,8 @@
             giveBtn.disabled = true;
             const correct = given === n;
             answered('count', correct, {
-              words: [goods.word, COUNTER_WORD[goods.counter], NATIVE_WORD[n]].filter(Boolean),
+              // (A miscount isn't a problem with the word 사과 itself, so the noun only counts when right.)
+              words: [correct ? goods.word : null, COUNTER_WORD[goods.counter], NATIVE_WORD[n]].filter(Boolean),
               speak: `${goods.ko} ${reading}`,
               answer: `${goods.ko} ${reading}`,
               answerEn: `${n} × ${goods.emoji}`,

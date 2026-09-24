@@ -46,28 +46,35 @@
       btn.classList.add('listening');
       result.className = 'say-result';
       result.textContent = '듣고 있어요… listening';
+      let answered = false;
       stopListening = M.mic.listen({
-        onResult: (alternatives) => show(M.mic.best(text, alternatives)),
+        onResult: (alternatives) => {
+          answered = true;
+          show(M.mic.best(text, alternatives));
+        },
         onError: (code) => {
+          if (!btn.isConnected) return;
+          answered = true;
           result.className = 'say-result miss';
           result.textContent = ERRORS[code] || 'I couldn’t listen just now. Try again.';
         },
         onEnd: () => {
           btn.classList.remove('listening');
           stopListening = null;
+          if (!answered) result.textContent = ''; // cancelled
         },
       });
     }
 
     function show({ heard, score }) {
+      if (!btn.isConnected) return; // the screen changed while listening
       const tone = score >= 0.9 ? 'great' : score >= 0.7 ? 'close' : 'miss';
       const label = { great: '👏 완벽해요!', close: '👍 거의 맞아요!', miss: '🔁 다시 해 봐요' }[tone];
       result.className = `say-result ${tone}`;
       result.textContent = `${label} I heard “${heard}”`;
       if (tone !== 'miss' && !rewarded) {
         rewarded = true;
-        M.progress.bump('spokenGood');
-        M.progress.addPoints(M.config.points.spoken);
+        M.progress.rewardSpeech(text);
         M.store.save();
       }
       M.sfx.play(tone === 'miss' ? 'almost' : 'correct');

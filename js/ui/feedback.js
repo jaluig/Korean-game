@@ -69,6 +69,7 @@
       if (finished) return;
       finished = true;
       stopKeys();
+      if (M.mic) M.mic.stop();
       panel.remove();
       if (onContinue) onContinue();
     }

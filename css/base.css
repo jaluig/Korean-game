@@ -128,6 +128,23 @@
   color-scheme: dark;
 }
 
+/* The dark theme's accents are brighter, so text on them is dark instead of white. */
+:root[data-theme='dark'] .btn-primary,
+:root[data-theme='dark'] .btn-mint,
+:root[data-theme='dark'] .btn-danger {
+  --btn-fg: #2b1f24;
+}
+
+:root[data-theme='dark'] .feedback-icon,
+:root[data-theme='dark'] .topic-check,
+:root[data-theme='dark'] .day.done .day-dot {
+  color: #2b1f24;
+}
+
+:root[data-theme='dark'] .play-combo {
+  color: var(--pink-deep);
+}
+
 /* ---------- Reset ---------- */
 
 *,

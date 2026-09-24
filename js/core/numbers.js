@@ -213,6 +213,9 @@
     }
     const otherHour = (h12 % 12) + 1;
     add(time(otherHour, minute), `${time(otherHour, minute)} is ${otherHour}:${String(minute).padStart(2, '0')}.`);
+    const earlier = h12 === 1 ? 12 : h12 - 1;
+    add(time(earlier, minute), `${time(earlier, minute)} is ${earlier}:${String(minute).padStart(2, '0')}.`);
+    if (minute === 0) add(`${count(h12, '시')} 반`, `반 means “half past”: ${count(h12, '시')} 반 is ${h12}:30.`);
     if (minute >= 10 && minute % 10 !== 0 && minute % 11 !== 0) {
       const flipped = Number(String(minute).split('').reverse().join(''));
       if (flipped < 60) add(time(h12, flipped), `${count(flipped, '분')} is ${flipped} minutes.`);

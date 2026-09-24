@@ -248,5 +248,9 @@ Mallang.content.registerTopic({
       tiles: ['거기에', '어떻게', '가요'], gloss: ['(to) there', 'how', 'do I go?'], words: ['there', 'howgo'],
       alts: [['어떻게', '거기에', '가요']],
       traps: [{ tile: '거기에서', why: '에서 would mean “from there”. For the place you’re going to, use 에: 거기에 어떻게 가요?' }] },
+    { id: 's-takes', level: 3, en: 'It takes ten minutes from home to the station.', ko: '집에서 역까지 십 분 걸려요.',
+      tiles: ['집에서', '역까지', '십', '분', '걸려요'], gloss: ['from home', 'to the station', 'ten', 'minutes', 'it takes'],
+      words: ['day:home', 'station', 'numbers:sip', 'numbers:minute', 'takes'],
+      traps: [{ tile: '열', why: 'Minutes use Sino-Korean numbers: 십 분, not 열 분.' }] },
   ],
 });

@@ -186,6 +186,7 @@
         document.body.classList.remove('playing');
         cleanups.forEach((fn) => fn());
         M.speech.stop();
+        M.mic.stop();
       };
     },
   });

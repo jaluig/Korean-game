@@ -145,7 +145,8 @@
 
       function tick(time) {
         if (!running) return;
-        if (lastFrame) remaining -= Math.min(time - lastFrame, 100); // a hidden tab doesn't eat your time
+        // A hidden tab doesn't eat your time, and the clock stops while a dialog ("Stop this round?") is open.
+        if (lastFrame && !ui.dialogOpen()) remaining -= Math.min(time - lastFrame, 100);
         lastFrame = time;
         timerFill.style.width = `${Math.max(0, remaining / total) * 100}%`;
         timeText.textContent = String(Math.max(0, Math.ceil(remaining / 1000)));

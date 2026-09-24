@@ -55,6 +55,20 @@ test('Verb Magic uses learned verbs and unlocks harder spells with practice', ()
   }
 });
 
+test('every verb form Verb Magic can ask has three distinct wrong options', () => {
+  learnEverything();
+  M.store.state.totals.verbsCorrect = 100;
+  for (const word of M.verbMagic.verbPool('all')) {
+    for (const f of M.conjugate.FORMS) {
+      if (!M.verbMagic.playable(word, f.id)) continue;
+      const right = M.conjugate.conjugate(word.dict, f.id, { pos: word.pos }).text;
+      const wrong = M.verbMagic.wrongOptions(word, f.id).map((w) => w.text);
+      assert.equal(new Set(wrong).size, 3, `${word.dict} ${f.id}`);
+      assert.ok(!wrong.includes(right), `${word.dict} ${f.id}`);
+    }
+  }
+});
+
 test('Number Shop mixes every kind of customer and gets harder', () => {
   const plan = M.numberShop.planRound(8);
   assert.equal(plan.length, 8);

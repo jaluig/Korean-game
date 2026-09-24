@@ -48,12 +48,12 @@
 
     start(host) {
       const questions = buildRound();
-      const listening = M.speech.isReady();
       const round = { answers: 0, correct: 0, combo: 0, bestCombo: 0, mistakes: [] };
       let index = 0;
       let cleanup = null;
       host.onCleanup(() => cleanup && cleanup());
-      if (!listening) host.mascot.say('소리가 없어서 읽기 모드예요', 'No Korean voice, so this is reading mode', { duration: 4000 });
+      const noVoice = () => ['unavailable', 'unsupported'].includes(M.speech.status());
+      if (noVoice()) host.mascot.say('소리가 없어서 읽기 모드예요', 'No Korean voice, so this is reading mode', { duration: 4000 });
 
       function next() {
         if (cleanup) cleanup();
@@ -66,6 +66,8 @@
       }
 
       function ask({ set, target }) {
+        // Checked for every question: voices can finish loading after the round starts.
+        const listening = M.speech.isReady();
         const words = U.shuffle(set.words);
         let locked = false;
         const prompt = listening

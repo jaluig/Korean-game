@@ -50,6 +50,22 @@ test('times, months, dates, prices and ages', () => {
   assert.deepEqual(N.breakdown(150000).map((p) => p.ko), ['십오만']);
 });
 
+test('every time and price question has at least three different wrong answers', () => {
+  for (let hour = 1; hour <= 12; hour++) {
+    for (let minute = 0; minute < 60; minute += 5) {
+      const right = N.time(hour, minute);
+      const wrong = N.timeMistakes(hour, minute);
+      assert.ok(new Set(wrong.map((m) => m.text)).size >= 3, `${hour}:${minute}`);
+      assert.ok(!wrong.some((m) => m.text === right || m.text === N.time(hour, minute, { half: true })), `${hour}:${minute}`);
+    }
+  }
+  for (let won = 1000; won <= 99000; won += 500) {
+    const wrong = N.priceMistakes(won);
+    assert.ok(new Set(wrong.map((m) => m.text)).size >= 3, String(won));
+    assert.ok(!wrong.some((m) => m.text === N.price(won)), String(won));
+  }
+});
+
 test('typical number mistakes are wrong, and explained', () => {
   const price = N.priceMistakes(3000);
   assert.ok(price.some((m) => m.text === '세천 원' && /Sino-Korean/.test(m.why)));
