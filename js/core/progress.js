@@ -182,7 +182,7 @@
       earned: (s) => s.streak.best >= 3 },
     { id: 'streak-7', emoji: '🗓️', ko: '일주일 연속', en: 'Week warrior', desc: 'Practise 7 days in a row.',
       earned: (s) => s.streak.best >= 7 },
-    { id: 'perfect', emoji: '💯', ko: '완벽해요', en: 'Flawless', desc: 'Finish a Word Cards round without a mistake.',
+    { id: 'perfect', emoji: '💯', ko: '만점', en: 'Flawless', desc: 'Finish a Word Cards round without a mistake.',
       earned: (s) => s.totals.perfectRounds >= 1 },
     { id: 'typist', emoji: '⌨️', ko: '타자 요정', en: 'Typing fairy', desc: 'Type 10 correct answers on the Korean keyboard.',
       earned: (s) => s.totals.typedCorrect >= 10 },

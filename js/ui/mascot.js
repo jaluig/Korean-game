@@ -132,7 +132,7 @@
       ['실수해도 괜찮아요.', "It's okay to make mistakes."],
     ],
     combo: [
-      ['물 올랐어요!', "You're on a roll!"],
+      ['물이 올랐어요!', "You're on a roll!"],
       ['멈출 수 없어요!', 'Unstoppable!'],
       ['천재예요!', "You're a genius!"],
     ],

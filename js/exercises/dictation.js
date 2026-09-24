@@ -38,7 +38,7 @@
           display,
           h('div.type-tools', hintBtn, skipBtn),
           keyboard.el,
-          h('p.type-tip', ui.bi('띄어쓰기는 괜찮아요', 'Spaces and punctuation don’t matter. Play it again with 🔊 (🐢 = slowly).')),
+          h('p.type-tip', ui.bi('띄어쓰기는 틀려도 괜찮아요', 'Spaces and punctuation don’t matter. Play it again with 🔊 (🐢 = slowly).')),
           h('div.ex-actions', checkBtn)
         )
       );

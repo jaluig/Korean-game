@@ -32,7 +32,7 @@
     emoji: '🎈',
     color: 'sky',
     title: { ko: '풍선 터뜨리기', en: 'Balloon Pop' },
-    blurb: { ko: '뜻을 쳐서 풍선을 터뜨려요', en: 'Type the meaning to pop it' },
+    blurb: { ko: '뜻을 입력해서 풍선을 터뜨려요', en: 'Type the meaning to pop it' },
 
     status(topicId) {
       const min = cfg().minWords;
@@ -457,7 +457,7 @@
         if (won) M.progress.bump('skyCleared');
         M.store.save();
         balloons.slice().forEach((b) => b.el.classList.add('escaped'));
-        sky.append(h('div.match-over', h('span', won ? ui.bi('하늘이 깨끗해요!', 'Sky cleared! 🎉') : ui.bi('게임 끝!', 'Game over'))));
+        sky.append(h('div.match-over', h('span', won ? ui.bi('하늘이 맑아졌어요!', 'Sky cleared! 🎉') : ui.bi('게임 끝!', 'Game over'))));
         M.sfx.play(won ? 'levelup' : 'complete');
         if (won) ui.confetti({ emojis: ['🎈', '✨', '🌸', '⭐'] });
         later(

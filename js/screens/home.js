@@ -100,7 +100,7 @@
           'div.streak-box',
           h('div.streak-flame', { class: streak ? 'lit' : '' }, '🔥'),
           h('div.streak-num', String(streak)),
-          h('div.streak-label', ui.bi('일 연속', streak === 1 ? 'day streak' : 'days streak'))
+          h('div.streak-label', ui.bi('일 연속', 'day streak'))
         )
       ),
       h(

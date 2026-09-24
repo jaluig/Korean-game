@@ -43,7 +43,7 @@ Mallang.content.registerTopic({
     },
     {
       title: { ko: '뭐 했어요?', en: 'Asking about the past' },
-      text: '**뭐 했어요?** = What did you do? Ask how something was with **어땠어요?** (How was it?), and answer with a past adjective: **재미있었어요**, **맛있었어요**, **추웠어요**. Raise your voice at the end to make any of them a question: **재미있었어요?** The same form also means “have done”: **밥 먹었어요?** = Have you eaten?',
+      text: '**뭐 했어요?** = What did you do? Ask how something was with **어땠어요?** (How was it?), and answer with a past adjective: **재미있었어요**, **맛있었어요**, **추웠어요**. Say any of them with a rising tone to make it a question: **재미있었어요?** The same form also means “have done”: **밥 먹었어요?** = Have you eaten?',
       examples: [
         { ko: '주말에 뭐 했어요?', en: 'What did you do on the weekend?' },
         { ko: '영화 어땠어요? — 재미있었어요!', en: 'How was the movie? — It was fun!' },
@@ -199,7 +199,7 @@ Mallang.content.registerTopic({
       alts: [['영화를', '어젯밤', '봤어요', '재미있었어요']],
       traps: [
         { tile: '봐요', why: '어젯밤 (last night) needs the past tense: 봤어요.' },
-        { tile: '재미있어요', why: 'The movie is over, so use the past: 재미있었어요 (it was fun).' },
+        { tile: '재미있어요', why: 'The English says “It was fun!”, so use the past: 재미있었어요.' },
       ] },
     { id: 's-bought', level: 2, en: 'I bought bread and milk earlier.', ko: '아까 빵하고 우유를 샀어요.',
       tiles: ['아까', '빵하고', '우유를', '샀어요'], gloss: ['earlier', 'bread and', 'milk (object)', 'bought'],
@@ -245,6 +245,8 @@ Mallang.content.registerTopic({
       traps: [
         { tile: '친구를', why: 'Your friend is the one who came (the subject), so it takes 가: 친구가.' },
         { tile: '놀아요', why: 'This already happened, so use the past: 놀았어요.' },
+        { tile: '집에서', why: '에 marks the place someone comes or goes to: 집에 왔어요. 집에서 왔어요 would mean “came from home”.' },
+        { tile: '집이', why: '집 is where your friend came to, so it takes 에: 집에 왔어요. With 이, the house would be the one coming.' },
       ] },
     { id: 's-made', level: 3, en: 'I made a cake. It was delicious!', ko: '케이크를 만들었어요. 맛있었어요!',
       tiles: ['케이크를', '만들었어요', '맛있었어요'], gloss: ['cake (object)', 'made', 'it was delicious'],

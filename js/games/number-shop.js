@@ -3,7 +3,7 @@
  * for things and you use Korean numbers to serve them:
  *   - "사과 세 개 주세요." → hand over the right number of items (native numbers + counters)
  *   - "이거 얼마예요?"     → read the price tag aloud (Sino-Korean numbers)
- *   - "만 이천오백 원이요." → ring the amount up on the till
+ *   - "여기 만 이천오백 원이요." → type the amount the customer hands you on the till
  *   - "지금 몇 시예요?"    → tell the time (native hours, Sino-Korean minutes)
  * Wrong answers are the classic mix-ups (삼 시, 셋 개, 팔백오십 원), each explained.
  */
@@ -22,8 +22,8 @@
     { ko: '사과', emoji: '🍎', counter: '개', wrong: '잔', word: 'cafe:apple' },
     { ko: '빵', emoji: '🍞', counter: '개', wrong: '권', word: 'cafe:bread' },
     { ko: '쿠키', emoji: '🍪', counter: '개', wrong: '병', word: 'cafe:cookie' },
-    { ko: '커피', emoji: '☕', counter: '잔', wrong: '개', word: 'cafe:coffee' },
-    { ko: '주스', emoji: '🧃', counter: '잔', wrong: '장', word: 'cafe:juice' },
+    { ko: '커피', emoji: '☕', counter: '잔', wrong: '권', word: 'cafe:coffee' }, // (not 개: 커피 두 개 is common too)
+    { ko: '주스', emoji: '🥤', counter: '잔', wrong: '장', word: 'cafe:juice' },
     { ko: '물', emoji: '💧', counter: '병', wrong: '권', word: 'cafe:water' },
     { ko: '책', emoji: '📕', counter: '권', wrong: '개', word: 'day:book' },
     { ko: '사진', emoji: '🖼️', counter: '장', wrong: '병', word: 'hobbies:photo' },
@@ -218,7 +218,7 @@
           return choice.stop;
         },
 
-        /* "만 이천오백 원이요." → ring it up on the till. */
+        /* "여기 만 이천오백 원이요." → type the amount on the till. */
         register(task, customer) {
           const won = pickPrice(task.tier);
           const reading = N.price(won);
@@ -240,11 +240,11 @@
           const keys = ['7', '8', '9', '4', '5', '6', '1', '2', '3', 'C', '0', '00', '000', '⌫'];
           const pad = h('div.till-keys', keys.map((k) => h('button.till-key', { type: 'button', class: /\d/.test(k) ? '' : 'fn', on: { ...M.keys.noMouseFocus, click: () => press(k) } }, k)));
           const payBtn = ui.button({ icon: '💳', ko: '계산', en: 'Ring it up', variant: 'primary', size: 'big', onClick: submit });
-          const say = listen ? { ko: '🔊 잘 들어 보세요', speak: `${reading}이요.`, listen: true } : { ko: `${reading}이요.` };
+          const say = listen ? { ko: '🔊 잘 들어 보세요', speak: `여기 ${reading}이요.`, listen: true } : { ko: `여기 ${reading}이요.`, en: 'Here you are.' };
           host.stage.append(
             h(
               'div.ex.ex-shop',
-              ui.exTag('금액을 찍어요', listen ? 'Listen and ring up the amount' : 'Ring up the amount the customer says', '🧮'),
+              ui.exTag('받은 돈을 찍어요', listen ? 'Listen: how much is the customer giving you? Type it on the till' : 'The customer pays: type the amount on the till', '🧮'),
               scene(customer, say, h('div.shop-counter.center', h('div.till', shown, pad))),
               h('div.ex-actions', h('span.key-hint', ui.bi('숫자 키', '0–9, Enter')), payBtn)
             )

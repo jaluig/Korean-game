@@ -231,7 +231,7 @@
     'ㄷ|ㅌ': puff('ㄷ', 'ㅌ'), 'ㄷ|ㄸ': tense('ㄷ', 'ㄸ'), 'ㄸ|ㅌ': strongVsTight('ㅌ', 'ㄸ'),
     'ㅂ|ㅍ': puff('ㅂ', 'ㅍ'), 'ㅂ|ㅃ': tense('ㅂ', 'ㅃ'), 'ㅃ|ㅍ': strongVsTight('ㅍ', 'ㅃ'),
     'ㅈ|ㅊ': puff('ㅈ', 'ㅊ'), 'ㅈ|ㅉ': tense('ㅈ', 'ㅉ'), 'ㅉ|ㅊ': strongVsTight('ㅊ', 'ㅉ'),
-    'ㅅ|ㅆ': 'ㅆ is tense: a sharper, hissing “ss”. ㅅ is a soft “s”.',
+    'ㅅ|ㅆ': 'ㅆ is tense: a sharper, hissing “ss”. ㅅ is a soft “s”. (Before ㅣ both sound like “sh”: 시 is a soft “shi”, 씨 a tighter “sshi”.)',
     'ㅁ|ㅂ': 'ㅁ is “m” (lips closed, humming). ㅂ is “b/p”.',
     'ㄴ|ㄹ': 'ㄴ is “n”. ㄹ is a light flap between “r” and “l”.',
     'ㄴ|ㄷ': 'ㄴ is “n” (air through the nose). ㄷ is “d/t”.',
@@ -266,9 +266,9 @@
     'ㄲ|ㅋ': 'As a final (받침), ㄲ and ㅋ sound the same unless a vowel follows — remember the spelling.',
     'ㅂ|ㅍ': 'As a final (받침), ㅂ and ㅍ sound the same unless a vowel follows — remember the spelling.',
     'ㄲ|ㅂ': 'Final ㄲ is a clipped “k” (tongue at the back); final ㅂ is a clipped “p” (your lips close).',
-    'ㄴ|ㄹ': 'Final ㄹ is an “l” (the tongue stays up on the roof of your mouth); final ㄴ is “n”.',
+    'ㄴ|ㄹ': 'Final ㄹ is an “l” (air flows around the sides of your tongue); final ㄴ is “n” (air goes out through your nose).',
     'ㄹ|ㅅ': 'Final ㄹ is an “l”; final ㅅ sounds like a clipped “t”.',
-    'ㅁ|ㅂ': 'Both close your lips: final ㅁ hums (“m”), final ㅂ is a silent, clipped “p”.',
+    'ㅁ|ㅂ': 'Both close your lips: final ㅁ hums (“m”); final ㅂ is a clipped “p”: your lips close and stop the sound, with no puff.',
   };
 
   /** One-sentence tip about two letters in the same position of a syllable. */

@@ -54,7 +54,7 @@
     status(topicId) {
       const n = questionPool(topicId).length;
       if (n < cfg().minQuestions) {
-        return { ready: false, ko: '문장을 더 열어요', en: 'Learn a few more words to open sentences' };
+        return { ready: false, ko: '단어를 더 배우면 문장이 열려요', en: 'Learn a few more words to open sentences' };
       }
       return { ready: true, ko: `문장 ${n}개`, en: `${n} sentences to practise` };
     },

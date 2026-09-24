@@ -37,7 +37,7 @@ Mallang.content.registerTopic({
     },
     {
       title: { ko: '하고', en: 'And' },
-      text: 'Join two things with **하고** (“and”): 쿠키하고 커피 = a cookie and a coffee. It sticks to the first word, with no space.',
+      text: 'Join two things with **하고** (“and”): 쿠키하고 커피 = a cookie and a coffee. It sticks to the first word, with no space. It also means “with”: **친구하고** 먹어요 = I eat with a friend.',
       examples: [
         { ko: '쿠키하고 커피 주세요.', en: 'A cookie and a coffee, please.' },
         { ko: '빵하고 우유 주세요.', en: 'Bread and milk, please.' },
@@ -98,7 +98,7 @@ Mallang.content.registerTopic({
     { id: 'cookie', ko: '쿠키', en: 'cookie', level: 1, pos: 'noun', emoji: '🍪', rom: 'kuki',
       example: { ko: '쿠키하고 우유 주세요.', en: 'A cookie and milk, please.' } },
     { id: 'latte', ko: '라테', en: 'latte', level: 1, pos: 'noun', emoji: '☕', rom: 'rate', accept: ['라떼'],
-      note: 'The official spelling is 라테, but most café menus write 라떼. Both are fine.',
+      note: 'The standard spelling is 라테, but most café menus write 라떼. The game accepts both.',
       example: { ko: '라테 한 잔 주세요.', en: 'One latte, please.' } },
 
     // ---- Level 2 ----
@@ -231,9 +231,9 @@ Mallang.content.registerTopic({
       tiles: ['케이크', '얼마예요'], gloss: ['cake', 'how much is it?'], words: ['cake', 'howmuch'] },
     { id: 's-menu', level: 2, en: 'Excuse me! The menu, please.', ko: '여기요! 메뉴 주세요.',
       tiles: ['여기요', '메뉴', '주세요'], gloss: ['excuse me!', 'menu', 'please give'], words: ['excuseme', 'menu', 'please'] },
-    { id: 's-latte', level: 2, en: 'One latte, please.', ko: '라테 한 잔 주세요.',
+    { id: 's-latte', level: 2, en: 'One cup of latte, please.', ko: '라테 한 잔 주세요.',
       tiles: ['라테', '한', '잔', '주세요'], gloss: ['latte', 'one', 'cup', 'please give'], words: ['latte', 'one', 'cup', 'please'],
-      traps: [{ tile: '하나', why: '“One cup” needs the counter 잔, and before a counter 하나 shortens to 한: 한 잔.' }] },
+      traps: [{ tile: '하나', why: '“One cup” needs the counter 잔, and before a counter 하나 shortens to 한: 한 잔. (라테 하나 on its own is fine too — it just doesn’t say “cup”.)' }] },
     { id: 's-moresugar', level: 2, en: 'A little more sugar, please.', ko: '설탕 좀 더 주세요.',
       tiles: ['설탕', '좀', '더', '주세요'], gloss: ['sugar', 'a little', 'more', 'please give'], words: ['sugar', 'more', 'please'] },
     { id: 's-seat', level: 2, en: 'Is this seat taken?', ko: '자리 있어요?',

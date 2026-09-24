@@ -167,7 +167,10 @@ Mallang.content.registerTopic({
     { id: 's-mood', en: "I'm tired. I'm not in a good mood.", ko: '피곤해요. 기분이 안 좋아요.',
       tiles: ['피곤해요', '기분이', '안', '좋아요'], gloss: ["I'm tired", 'mood (subject)', 'not', 'is good'],
       words: ['tired', 'mood', 'good'],
-      traps: [{ tile: '기분을', why: '좋아요 describes something (“is good”), so 기분 is its subject and takes 이: 기분이 좋아요.' }] },
+      traps: [
+        { tile: '기분을', why: '좋아요 describes something (“is good”), so 기분 is its subject and takes 이: 기분이 좋아요.' },
+        { tile: '좋아해요', why: '좋아해요 means “to like (something)”. For your mood, use 좋아요: 기분이 좋아요.' },
+      ] },
     { id: 's-coffee', en: "I like coffee. I don't like milk.", ko: '커피가 좋아요. 우유는 싫어요.',
       tiles: ['커피가', '좋아요', '우유는', '싫어요'], gloss: ['coffee (subject)', 'is good (I like it)', 'milk (topic)', "I don't like it"],
       words: ['cafe:coffee', 'good', 'cafe:milk', 'dislike'],
@@ -181,7 +184,10 @@ Mallang.content.registerTopic({
       ] },
     { id: 's-fun', en: 'Korean is fun.', ko: '한국어가 재미있어요.',
       tiles: ['한국어가', '재미있어요'], gloss: ['Korean (subject)', 'is fun'], words: ['day:korean', 'fun'],
-      traps: [{ tile: '한국어를', why: '재미있어요 describes something, so the thing that is fun is its subject and takes 가: 한국어가 재미있어요.' }] },
+      traps: [
+        { tile: '한국어를', why: '재미있어요 describes something, so the thing that is fun is its subject and takes 가: 한국어가 재미있어요.' },
+        { tile: '재미없어요', why: '재미없어요 means “it’s boring”. “Fun” is 재미있어요.' },
+      ] },
 
     // ---- Level 2 ----
     { id: 's-likemovies', level: 2, en: 'My friend likes movies.', ko: '친구가 영화를 좋아해요.',
@@ -191,7 +197,10 @@ Mallang.content.registerTopic({
     { id: 's-worried', level: 2, en: "My friend is sick. I'm worried.", ko: '친구가 아파요. 걱정돼요.',
       tiles: ['친구가', '아파요', '걱정돼요'], gloss: ['friend (subject)', 'is sick', "I'm worried"],
       words: ['day:friend', 'hurts', 'worried'],
-      traps: [{ tile: '걱정되요', why: '되 + 어요 merge into 돼요, so it’s 걱정돼요. 되요 is a common misspelling.' }] },
+      traps: [
+        { tile: '걱정되요', why: '되 + 어요 merge into 돼요, so it’s 걱정돼요. 되요 is a common misspelling.' },
+        { tile: '친구를', why: '아파요 describes your friend, so 친구 is the subject and takes 가: 친구가 아파요.' },
+      ] },
     { id: 's-bored', level: 2, en: "This movie is boring. I'm bored.", ko: '이 영화는 재미없어요. 심심해요.',
       tiles: ['이', '영화는', '재미없어요', '심심해요'], gloss: ['this', 'movie (topic)', "it's boring", "I'm bored"],
       words: ['day:movie', 'boring', 'bored'] },
@@ -203,7 +212,11 @@ Mallang.content.registerTopic({
     { id: 's-busy', level: 3, en: "I'm so busy at work. It's hard.", ko: '회사에서 너무 바빠요. 힘들어요.',
       tiles: ['회사에서', '너무', '바빠요', '힘들어요'], gloss: ['at the company', 'so', "I'm busy", "it's hard"],
       words: ['day:company', 'busy', 'hard'],
-      traps: [{ tile: '바뻐요', why: '바쁘다 drops its ㅡ, and the vowel before it is ㅏ, so it takes 아요: 바빠요.' }] },
+      traps: [
+        { tile: '바뻐요', why: '바쁘다 drops its ㅡ, and the vowel before it is ㅏ, so it takes 아요: 바빠요.' },
+        { tile: '바빴어요', why: '바빴어요 is the past (“I was busy”). For now, say 바빠요.' },
+        { tile: '회사에', why: '회사에서 means “at work”, where things happen. 회사에 is for going there (회사에 가요) or being there (회사에 있어요).' },
+      ] },
     { id: 's-upset', level: 3, en: "My friend is angry. I'm upset.", ko: '친구가 화났어요. 속상해요.',
       tiles: ['친구가', '화났어요', '속상해요'], gloss: ['friend (subject)', 'is angry (got angry)', "I'm upset"],
       words: ['day:friend', 'angry', 'upset'],

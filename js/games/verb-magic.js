@@ -48,6 +48,9 @@
     return forms;
   }
 
+  /** A (verb, form) pair is played only when there are three wrong options to offer. */
+  const playable = (word, form) => C.applies(word.dict, form, { pos: word.pos }) && C.mistakes(word.dict, form, { pos: word.pos }).length >= 3;
+
   function buildRound(pool) {
     const urgent = pool.filter((w) => M.srs.isTricky(w.id) || M.srs.isDue(w.id));
     const ordered = [...U.shuffle(urgent), ...U.shuffle(pool.filter((w) => !urgent.includes(w)))];
@@ -56,7 +59,7 @@
     const out = [];
     for (let i = 0; out.length < cfg().size && i < ordered.length * 4; i++) {
       const word = ordered[i % ordered.length];
-      const possible = forms.filter((f) => C.applies(word.dict, f, { pos: word.pos }));
+      const possible = forms.filter((f) => playable(word, f));
       const fresh = possible.filter((f) => !used.has(`${word.id}|${f}`));
       if (!fresh.length) continue;
       const form = U.weightedPick(fresh, (f) => M.progress.skillWeight(`verb:${f}`));
@@ -264,5 +267,5 @@
     },
   });
 
-  M.verbMagic = { verbPool, poolFor, formsUnlocked, buildRound, wrongOptions };
+  M.verbMagic = { verbPool, poolFor, formsUnlocked, buildRound, wrongOptions, playable };
 })(window.Mallang);

@@ -19,16 +19,16 @@
     { id: 'present', ko: '현재', en: 'present', hint: '-아요/어요', sample: '해요' },
     { id: 'past', ko: '과거', en: 'past', hint: '-았어요/었어요', sample: '했어요' },
     { id: 'future', ko: '미래', en: 'future (will)', hint: '-(으)ㄹ 거예요', sample: '할 거예요' },
-    { id: 'negative', ko: '부정', en: "negative (don't)", hint: '안 + verb', sample: '안 해요' },
+    { id: 'negative', ko: '부정', en: "negative (not / don't)", hint: '안 + verb', sample: '안 해요' },
     { id: 'want', ko: '희망', en: 'want to', hint: '-고 싶어요', sample: '하고 싶어요', verbOnly: true },
-    { id: 'suggest', ko: '제안', en: "shall we? / let's", hint: '-(으)ㄹ까요?', sample: '할까요?', verbOnly: true },
+    { id: 'suggest', ko: '제안', en: 'shall I / shall we …?', hint: '-(으)ㄹ까요?', sample: '할까요?', verbOnly: true },
     { id: 'please', ko: '부탁', en: 'please do (for me)', hint: '-아/어 주세요', sample: '해 주세요', verbOnly: true },
   ];
 
   // Irregular stems. A stem is irregular when it ends with one of these.
   const IRREGULAR = {
     ㅂ: ['춥', '덥', '맵', '쉽', '어렵', '가깝', '무겁', '가볍', '귀엽', '즐겁', '반갑', '고맙', '아름답', '더럽', '차갑', '뜨겁',
-      '부럽', '무섭', '싱겁', '눕', '굽', '돕', '외롭', '시끄럽', '부끄럽', '새롭', '두껍', '밉', '괴롭', '어지럽', '부드럽', '놀랍', '아깝',
+      '부럽', '무섭', '싱겁', '눕', '굽', '돕', '곱', '외롭', '시끄럽', '부끄럽', '새롭', '두껍', '밉', '괴롭', '어지럽', '부드럽', '놀랍', '아깝',
       '미끄럽', '간지럽', '스럽'],
     ㄷ: ['듣', '걷', '묻', '싣', '깨닫'],
     ㅅ: ['낫', '짓', '붓', '잇', '긋', '젓'],
@@ -41,6 +41,8 @@
     '공부', '운동', '요리', '일', '청소', '쇼핑', '전화', '산책', '수영', '여행', '노래', '숙제', '준비', '샤워', '이야기',
     '게임', '등산', '빨래', '설거지', '세수', '출발', '도착', '시작', '연습', '걱정', '생각', '주문', '계산', '포장', '운전',
     '구경', '외식', '이사', '출근', '퇴근', '말', '대답', '질문', '약속', '인사', '낚시', '캠핑', '요가', '독서', '데이트',
+    '결혼', '설명', '확인', '연락', '안내', '추천', '대화', '사용', '노력', '결정', '초대', '예약', '취소', '소개', '졸업',
+    '입학', '방문', '외출', '등록', '검색', '수업', '회의', '출장', '면접', '산책', '빨래', '목욕',
   ]);
   // Verbs with their own opposite instead of 안 + verb.
   const OWN_NEGATIVE = { 있다: '없다', 맛있다: '맛없다', 재미있다: '재미없다' };
@@ -49,14 +51,28 @@
   // 러-irregular verbs (이르러요, 푸르러요) are rare and not handled.
   const UNSUPPORTED = new Set(['이르다', '푸르다']);
   // Things that happen to you rather than things you do: no "want to", "shall we?" or "please".
-  const NOT_VOLITIONAL = new Set(['모르다', '알다', '화나다', '좋아하다', '싫어하다', '있다', '없다', '걸리다', '나다', '사랑하다', '되다', '낫다']);
+  const NOT_VOLITIONAL = new Set([
+    '모르다', '알다', '화나다', '좋아하다', '싫어하다', '있다', '없다', '걸리다', '나다', '사랑하다', '되다', '낫다',
+    '걱정되다', '떨리다', '신나다', '놀라다',
+  ]);
+  // "Shall we…?" sounds odd with these (✗ 울까요?), though "want to" is fine (울고 싶어요).
+  const NO_SUGGEST = new Set(['웃다', '울다', '씻다']);
+  // …and "want to" is odd with these (✗ 돌고 싶어요).
+  const NO_WANT = new Set(['출근하다', '돌다']);
+  // Verbs whose "for me" form is a single dictionary word (도와주다, 빌려주다): 도와주세요, no space.
+  const ONE_WORD_PLEASE = new Set(['돕다', '빌리다']);
+  // Standard short forms, accepted when typed: 재미있어요 → 재밌어요.
+  const CONTRACTIONS = [['재미있', '재밌']];
+  // Noun + verb compounds where 안 goes inside, like X하다: 걱정 안 돼요, 춤 안 춰요.
+  const SPLIT_NEGATIVE = { 걱정되다: '걱정', 춤추다: '춤' };
   // "Please do it (for me)" only where it's something you'd really ask for.
   const PLEASE_OK = new Set([
-    '가다', '오다', '먹다', '마시다', '보다', '기다리다', '돕다', '말하다', '읽다', '쓰다', '가르치다', '열다', '닫다', '켜다',
+    // (Not 먹다/마시다: asking someone to eat or drink is 드세요. Not 건너다: "cross the road" is 건너세요.)
+    '가다', '오다', '보다', '기다리다', '돕다', '말하다', '읽다', '쓰다', '가르치다', '열다', '닫다', '켜다',
     '끄다', '만들다', '사다', '보내다', '앉다', '듣다', '부르다', '고르다', '찍다', '빌리다', '바꾸다', '알리다', '계산하다',
     '포장하다', '전화하다', '주문하다', '설명하다', '확인하다', '청소하다', '요리하다', '준비하다', '연락하다', '들어오다',
-    '내리다', '건너다', '멈추다', '세우다', '깎다', '보이다', '넣다', '빼다', '놓다', '가져오다', '노래하다', '싸다', '건네다',
-    '하다', '굽다', '도와주다', '안내하다', '추천하다',
+    '내리다', '멈추다', '세우다', '깎다', '보이다', '넣다', '빼다', '가져오다', '노래하다', '싸다',
+    '하다', '굽다', '안내하다', '추천하다',
   ]);
 
   const BRIGHT = new Set(['ㅏ', 'ㅗ', 'ㅑ', 'ㅘ', 'ㅛ']);
@@ -231,6 +247,8 @@
     if (!FORMS.some((f) => f.id === form)) return false;
     if (pos !== 'verb' && isVerbOnly(form)) return false;
     if (isVerbOnly(form) && NOT_VOLITIONAL.has(dict)) return false;
+    if (form === 'suggest' && NO_SUGGEST.has(dict)) return false;
+    if (form === 'want' && NO_WANT.has(dict)) return false;
     if (form === 'please' && !PLEASE_OK.has(dict)) return false;
     if (form === 'negative' && NO_NEGATIVE.has(dict)) return false;
     if (dict === '이다' || dict === '아니다' || UNSUPPORTED.has(dict)) return false;
@@ -242,6 +260,16 @@
    * when the form doesn't apply. pos: 'verb' | 'adjective'.
    */
   function conjugate(dict, form, { pos = 'verb' } = {}) {
+    const result = build(dict, form, { pos });
+    if (!result) return null;
+    // Standard short forms are accepted too (재밌어요 for 재미있어요).
+    for (const [long, short] of CONTRACTIONS) {
+      if (result.text.includes(long)) result.variants = [...result.variants, result.text.replace(long, short)];
+    }
+    return result;
+  }
+
+  function build(dict, form, { pos = 'verb' } = {}) {
     if (!applies(dict, form, { pos })) return null;
     const stem = stemOf(dict);
     const inf = infinitive(stem);
@@ -253,7 +281,7 @@
       const text = `${pastBase(inf.text)}어요`;
       return {
         text,
-        steps: [inf.why, `Past: put ㅆ under the last syllable and add 어요 → ${pastBase(inf.text)}어요.`],
+        steps: [inf.why, `Past: take ${inf.text} (drop 요), put ㅆ under its last syllable → ${pastBase(inf.text)}, then add 어요 → ${pastBase(inf.text)}어요.`],
         variants: inf.variants.map((v) => `${pastBase(v)}어요`),
       };
     }
@@ -268,6 +296,13 @@
     if (form === 'want') {
       return { text: `${stem}고 싶어요`, steps: [`Add 고 싶어요 straight to the stem: ${stem} + 고 싶어요. The verb itself doesn't change.`], variants: [] };
     }
+    if (form === 'please' && ONE_WORD_PLEASE.has(dict)) {
+      return {
+        text: `${inf.text}주세요`,
+        steps: [inf.why, `${inf.text}주다 is one word (“to do something for someone”), so: ${inf.text}주세요.`],
+        variants: [`${inf.text} 주세요`],
+      };
+    }
     if (form === 'please') {
       return {
         text: `${inf.text} 주세요`,
@@ -277,10 +312,28 @@
     }
     // Negative
     if (OWN_NEGATIVE[dict]) {
-      const opposite = conjugate(OWN_NEGATIVE[dict], 'present', { pos });
-      return { text: opposite.text, steps: [`${dict} has its own opposite: ${OWN_NEGATIVE[dict]} → ${opposite.text}. (안 ${inf.text}요 sounds wrong.)`], variants: [] };
+      const opposite = conjugate(OWN_NEGATIVE[dict], 'present', { pos }).text;
+      if (dict === '있다') {
+        return { text: opposite, steps: [`For “there is / I have”, the opposite of 있다 is its own word, 없다 → ${opposite}. (Not 안 있어요.)`], variants: [] };
+      }
+      // 안 맛있어요 is also heard (a milder “not very tasty”), so it's accepted when typed.
+      return {
+        text: opposite,
+        steps: [`${dict} has its own opposite: ${OWN_NEGATIVE[dict]} → ${opposite}. (안 ${inf.text}요 is also heard, but ${opposite} is the usual word.)`],
+        variants: [`안 ${inf.text}요`],
+      };
     }
     const present = `${inf.text}요`;
+    if (SPLIT_NEGATIVE[dict]) {
+      const head = SPLIT_NEGATIVE[dict];
+      const rest = `${stem.slice(head.length)}다`;
+      const restPresent = conjugate(rest, 'present', { pos }).text;
+      return {
+        text: `${head} 안 ${restPresent}`,
+        steps: [`${dict} is ${head} (a noun) + ${rest}, so 안 goes right before ${restPresent} → ${head} 안 ${restPresent}.`],
+        variants: [],
+      };
+    }
     const noun = stem.endsWith('하') ? stem.slice(0, -1) : null;
     if (pos === 'verb' && noun && NOUN_HADA.has(noun)) {
       return {
@@ -289,7 +342,7 @@
         variants: [],
       };
     }
-    return { text: `안 ${present}`, steps: [`Put 안 in front of the verb: 안 + ${present} → 안 ${present}.`], variants: [] };
+    return { text: `안 ${present}`, steps: [`Put 안 in front of the ${pos === 'verb' ? 'verb' : 'adjective'}: 안 + ${present} → 안 ${present}.`], variants: [] };
   }
 
   /* ---------- Wrong forms that learners really produce ---------- */
@@ -298,9 +351,9 @@
     present: 'the present tense',
     past: 'the past tense',
     future: 'the future (“will”)',
-    negative: 'the negative (“don’t”)',
+    negative: 'the negative (“not / don’t”)',
     want: '“want to”',
-    suggest: '“shall we?”',
+    suggest: '“shall I / shall we…?”',
     please: '“please do it (for me)”',
   };
 
@@ -352,6 +405,7 @@
         else if (form === 'past') add(`${head}${withFinal(last, 'ㅆ')}어요`, rightWhy, 'merge'); // 마싰어요, 됬어요
       }
       if (form === 'past') add(`${pastBase(infinitive(stem).text)}요`, 'The past tense ends in ㅆ + 어요, not just ㅆ요.', 'ending'); // 마셨요
+      if (form === 'present' && type === '하') add(`${stem}요`, rightWhy, 'ending'); // 공부하요
     }
     if (form === 'future' || form === 'suggest') {
       // 가을 거예요, 살을 거예요, 춥을 거예요: 을 only follows a consonant that stays.
@@ -366,6 +420,8 @@
         const vowel = head && harmony(lastChar(head)) === '아' ? 'ㅏ' : 'ㅓ';
         add(`${head}${withVowel(last, vowel, 'ㄹ')}${tail}`, change, 'irregular');
       }
+      // A very common misspelling, even among Koreans: 거에요 for 거예요.
+      if (form === 'future') add(`${futureStem(stem).text} 거에요`, 'It’s spelled 거예요 (거 + 이에요 → 거예요). 거에요 is a common misspelling.', 'spelling');
     }
     if (form === 'want') {
       add(`${infinitive(stem).text}요 싶어요`, '고 싶어요 goes straight onto the stem. Don’t conjugate the verb first.', 'ending');
@@ -373,14 +429,22 @@
     }
     if (form === 'negative') {
       const present = conjugate(dict, 'present', { pos }).text;
-      if (OWN_NEGATIVE[dict] || right.text.includes(' 안 ')) add(`안 ${present}`, rightWhy, 'negative');
-      else add(`${present} 안`, '안 comes before the verb, not after it.', 'negative');
-      if (pos === 'verb' && !OWN_NEGATIVE[dict]) add(right.text.replace('안 ', '못 '), '못 means “can’t”. For “don’t”, use 안.', 'negative');
+      if (dict === '있다') add(`안 ${present}`, rightWhy, 'negative');
+      else if (OWN_NEGATIVE[dict]) {
+        // 안 맛있어요 is also heard, so it's never offered as wrong.
+      } else if (right.text.includes(' 안 ') && !SPLIT_NEGATIVE[dict]) add(`안 ${present}`, rightWhy, 'negative'); // 안 공부해요
+      else add(`${present} 안`, `안 comes before the ${pos === 'verb' ? 'verb' : 'adjective'}, not after it.`, 'negative');
+      // 못 (can't) only makes sense with things you do on purpose.
+      if (pos === 'verb' && !OWN_NEGATIVE[dict] && !SPLIT_NEGATIVE[dict] && !NOT_VOLITIONAL.has(dict)) {
+        add(right.text.replace('안 ', '못 '), '못 means “can’t”. For “don’t”, use 안.', 'negative');
+      }
     }
 
     // The same verb in other forms: real Korean, but not the form asked for.
+    // (Not the present for "shall we?": in 해요체, 가요 can also mean "let's go".)
     for (const f of FORMS) {
       if (f.id === form || !applies(dict, f.id, { pos })) continue;
+      if (form === 'suggest' && f.id === 'present') continue;
       const other = conjugate(dict, f.id, { pos });
       add(other.text, `${other.text} is ${FORM_NAMES[f.id]}.`, 'other-form');
     }
