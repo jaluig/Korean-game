@@ -20,14 +20,15 @@
         location.hash = '#/home';
         return null;
       }
-      const topicId = M.store.state.settings.focusTopic;
+      const focus = M.store.state.settings.focusTopic;
+      const topicId = M.content.topic(focus) ? focus : 'all'; // e.g. a backup from a version with other topics
       const cleanups = [];
       const happened = { goal: false, levelUp: 0 };
       cleanups.push(M.events.on('goal', () => (happened.goal = true)));
       cleanups.push(M.events.on('levelup', (level) => (happened.levelUp = level)));
 
       let roundPoints = 0;
-      let finished = false;
+      let finished = false; // also set when leaving the screen, so late timers can't finish a round
       const progress = ui.bar(0, { color: game.color, label: 'Round progress' });
       const pointsNum = h('span.play-points-num', '0');
       const pointsEl = h('div.play-points', { title: 'Points this round' }, h('span', { 'aria-hidden': 'true' }, '⭐'), pointsNum);
@@ -165,6 +166,7 @@
       }
 
       return () => {
+        finished = true;
         document.body.classList.remove('playing');
         cleanups.forEach((fn) => fn());
         M.speech.stop();

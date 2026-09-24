@@ -31,6 +31,8 @@
       const bank = h('div.bank.bank-words', { role: 'group', 'aria-label': 'Word tiles' });
       const hintBtn = ui.button({ icon: '💡', ko: '힌트', en: 'Hint', variant: 'ghost', size: 'small', onClick: hint });
       const clearBtn = ui.button({ icon: '↺', ko: '지우기', en: 'Clear', variant: 'ghost', size: 'small', onClick: clearAll });
+      // Mouse clicks on these shouldn't take focus, so Enter keeps meaning "check".
+      [hintBtn, clearBtn].forEach((b) => b.addEventListener('mousedown', M.keys.noMouseFocus.mousedown));
       const checkBtn = ui.button({ ko: '확인', en: 'Check', variant: 'primary', size: 'big', onClick: check, disabled: true });
 
       const prompt = listening
@@ -55,11 +57,23 @@
       const timer = listening ? setTimeout(() => M.speech.speak(sentence.ko, { quiet: true }), 300) : null;
 
       function draw() {
+        const focused = el.contains(document.activeElement) ? document.activeElement.dataset.focus : null;
         U.clear(strip);
         if (!placed.length) strip.append(h('span.strip-placeholder', ui.bi('여기에 단어를 놓으세요', 'Tap the words below in order')));
         placed.forEach((id, index) =>
           strip.append(
-            h('button.word-tile.placed', { type: 'button', lang: 'ko', disabled: locked, on: { click: () => unplace(index) } }, tiles[id].text)
+            h(
+              'button.word-tile.placed',
+              {
+                type: 'button',
+                lang: 'ko',
+                'aria-label': `Remove ${tiles[id].text}`,
+                dataset: { focus: `placed-${index}` },
+                disabled: locked,
+                on: { ...M.keys.noMouseFocus, click: () => unplace(index) },
+              },
+              tiles[id].text
+            )
           )
         );
         U.clear(bank);
@@ -67,7 +81,14 @@
           bank.append(
             h(
               'button',
-              { type: 'button', class: `word-tile ${tile.used ? 'used' : ''}`.trim(), lang: 'ko', disabled: tile.used || locked, on: { click: () => place(tile) } },
+              {
+                type: 'button',
+                class: `word-tile ${tile.used ? 'used' : ''}`.trim(),
+                lang: 'ko',
+                dataset: { focus: `word-${tile.id}` },
+                disabled: tile.used || locked,
+                on: { ...M.keys.noMouseFocus, click: () => place(tile) },
+              },
               tile.text
             )
           );
@@ -75,6 +96,14 @@
         checkBtn.disabled = locked || !placed.length;
         hintBtn.disabled = locked;
         clearBtn.disabled = locked || !placed.length;
+        if (focused && !locked) restoreFocus(focused);
+      }
+
+      /** Keyboard users: stay on the same control, else move to the next free tile, else Check. */
+      function restoreFocus(key) {
+        const same = el.querySelector(`[data-focus="${key}"]`);
+        const next = same && !same.disabled ? same : bank.querySelector('button:not(:disabled)') || (!checkBtn.disabled ? checkBtn : null);
+        if (next) next.focus({ preventScroll: true });
       }
 
       function place(tile) {
@@ -151,15 +180,16 @@
         });
       }
 
+      // Enter checks — unless a tile or button has focus, which then works as usual.
       const stopKeys = M.keys.push((event) => {
         if (event.repeat || locked) return;
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && !M.keys.isControl(event)) {
           event.preventDefault();
           check();
         } else if (event.key === 'Backspace' && placed.length) {
           event.preventDefault();
           unplace(placed.length - 1);
-        } else if ((event.key === 'r' || event.key === 'R') && listening) {
+        } else if (listening && M.keys.isReplay(event)) {
           M.speech.speak(sentence.ko);
         }
       });

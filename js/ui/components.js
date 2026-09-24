@@ -15,6 +15,13 @@
   // the feedback sheet automatically "captures" the keyboard while it is open.
   const keyStack = [];
   document.addEventListener('keydown', (event) => {
+    // A held-down Enter must not click through cards, sheets and dialogs one after another.
+    if (event.key === 'Enter' && event.repeat) {
+      event.preventDefault();
+      return;
+    }
+    // Leave browser and system shortcuts (Ctrl/Cmd/Alt + key) alone.
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
     const handler = keyStack[keyStack.length - 1];
     if (handler) handler(event);
   });
@@ -37,6 +44,35 @@
       const t = event.target;
       return !!t && (t.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName));
     },
+    /**
+     * True when a button, link or form control has keyboard focus. Shortcuts
+     * for Enter and Space step aside then, so the focused control works normally.
+     */
+    isControl(event) {
+      const t = event.target;
+      return !!t && t !== document.body && !!t.closest && !!t.closest('button, a[href], input, select, textarea, [role="button"]');
+    },
+    /** The R key (replay audio), by position — works with a Korean keyboard layout too. */
+    isReplay(event) {
+      return event.code === 'KeyR' && !event.shiftKey;
+    },
+  };
+
+  /** Clicking with the mouse shouldn't move focus (so Enter keeps meaning "check"). */
+  const noMouseFocus = { mousedown: (event) => event.preventDefault() };
+  M.keys.noMouseFocus = noMouseFocus;
+
+  /**
+   * Re-render something and put keyboard focus back on the equivalent control
+   * (matched by its data-focus attribute), so redraws don't strand keyboard users.
+   */
+  ui.keepFocus = (render) => {
+    const active = document.activeElement;
+    const key = active && active.dataset ? active.dataset.focus : null;
+    render();
+    if (!key) return;
+    const next = document.querySelector(`[data-focus="${CSS.escape(key)}"]`);
+    if (next && !next.disabled) next.focus({ preventScroll: true });
   };
 
   /* ---------- Text ---------- */
@@ -84,6 +120,7 @@
         title: name,
         'aria-label': name,
         on: {
+          ...noMouseFocus,
           click: (event) => {
             event.stopPropagation();
             if (M.speech.speak(text, slow ? { rate: 0.6 } : {})) {
@@ -232,15 +269,17 @@
   /** Close every open dialog (used when the screen changes). */
   ui.closeAllModals = () => [...openModals].forEach((close) => close());
 
-  /** Yes/no question as a Promise<boolean>. */
+  /** Yes/no question as a Promise<boolean>. The safe answer ("cancel") starts focused. */
   ui.confirm = ({ title, text, ok = { ko: '네', en: 'Yes' }, cancel = { ko: '아니요', en: 'No' }, danger = false } = {}) =>
     new Promise((resolve) => {
       let answer = false;
+      const cancelBtn = ui.button({ ...cancel, variant: 'soft', onClick: () => dialog.close() });
+      cancelBtn.setAttribute('autofocus', '');
       const dialog = ui.modal({
         title,
         body: text ? h('p', text) : null,
         actions: [
-          ui.button({ ...cancel, variant: 'soft', onClick: () => dialog.close() }),
+          cancelBtn,
           ui.button({
             ...ok,
             variant: danger ? 'danger' : 'primary',

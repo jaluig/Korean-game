@@ -31,6 +31,8 @@
       const hintBtn = ui.button({ icon: '💡', ko: '힌트', en: 'Hint', variant: 'ghost', size: 'small', onClick: hint });
       const skipBtn = ui.button({ ko: '모르겠어요', en: "I don't know", variant: 'ghost', size: 'small', onClick: giveUp });
       const checkBtn = ui.button({ ko: '확인', en: 'Check', variant: 'primary', size: 'big', onClick: check });
+      // Mouse clicks on these shouldn't take focus, so Enter and Space keep typing/checking.
+      [hintBtn, skipBtn, checkBtn].forEach((b) => b.addEventListener('mousedown', M.keys.noMouseFocus.mousedown));
 
       const prompt = audioMode
         ? h('div.prompt.prompt-listen', ui.audioButton(word.ko, { size: 'huge', label: 'Play the word' }), ui.audioButton(word.ko, { size: 'big', slow: true }))

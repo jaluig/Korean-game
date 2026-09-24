@@ -70,7 +70,7 @@
         if (n >= 1 && n <= options.length) {
           event.preventDefault();
           choose(n - 1);
-        } else if ((event.key === 'r' || event.key === 'R') && mode !== 'en-ko') {
+        } else if (M.keys.isReplay(event) && mode !== 'en-ko') {
           M.speech.speak(word.ko);
         }
       });

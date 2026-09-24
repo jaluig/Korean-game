@@ -38,12 +38,12 @@
       button.focus({ preventScroll: true });
 
       const timer = settings.autoPlayAudio ? setTimeout(() => M.speech.speak(word.ko, { quiet: true }), 350) : null;
+      // Enter continues (a focused button, like "Got it" or 🔊, handles Enter itself).
       const stopKeys = M.keys.push((event) => {
-        if (event.repeat) return;
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && !M.keys.isControl(event)) {
           event.preventDefault();
           done();
-        } else if (event.key === 'r' || event.key === 'R') M.speech.speak(word.ko);
+        } else if (M.keys.isReplay(event)) M.speech.speak(word.ko);
       });
 
       let finished = false;

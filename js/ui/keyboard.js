@@ -59,7 +59,7 @@
     }
 
     // Keep focus where it is when clicking keys (no text field needed).
-    const keepFocus = { mousedown: (event) => event.preventDefault() };
+    const keepFocus = M.keys.noMouseFocus;
 
     function letterKey(code) {
       const [plain, shifted] = H.LAYOUT[code];
@@ -114,6 +114,8 @@
     // Physical keyboard, by key position (works with any OS layout or input method).
     function onKey(event) {
       if (disabled || event.ctrlKey || event.metaKey || event.altKey || M.keys.isTypingTarget(event)) return;
+      // A focused button (Hint, 🔊…) keeps its own Enter/Space.
+      if ((event.key === 'Enter' || event.key === ' ' || event.code === 'Space') && M.keys.isControl(event)) return;
       if (event.key === 'Enter') {
         if (event.repeat) return;
         event.preventDefault();

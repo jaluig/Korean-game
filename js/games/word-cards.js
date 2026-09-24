@@ -75,6 +75,7 @@
       function next() {
         if (cleanup) cleanup();
         cleanup = null;
+        M.speech.stop();
         U.clear(host.stage);
         host.setProgress(index, steps.length);
         if (index >= steps.length) return finish();
@@ -137,7 +138,7 @@
         host.react(result, round.combo);
         M.store.save();
         if (M.store.state.settings.autoPlayAudio && (!heardIt(format) || !result.correct)) {
-          setTimeout(() => M.speech.speak(word.ko, { quiet: true }), 250);
+          M.speech.speakLater(word.ko, 250, { quiet: true });
         }
 
         host.showFeedback({

@@ -32,7 +32,8 @@
       // maxNewWhenEmpty: a brand-new garden with nothing to review gets a bigger first handful.
       wordCards: { size: 12, maxNew: 3, maxNewWhenEmpty: 5, retryGap: 3, maxRetries: 2 },
       sentences: { size: 6, maxNew: 2 },
-      speedMatch: { seconds: 60, pairsOnBoard: 5, minWords: 5 },
+      // minWords is one more than pairsOnBoard, so a fresh word can always replace a matched one.
+      speedMatch: { seconds: 60, pairsOnBoard: 5, minWords: 6 },
       newWordsPerDay: 15, // a gentle cap so reviews never pile up
     },
 

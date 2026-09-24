@@ -56,13 +56,18 @@
       let remaining = total;
       let lastFrame = 0;
       let frame = 0;
+      let endTimer = 0;
 
-      const nextWord = () => {
-        if (!queue.length) {
-          const onBoard = new Set(left.filter(Boolean));
-          queue = U.shuffle(pool.filter((w) => !onBoard.has(w.id)));
+      /** The next word to bring onto the board — never one already there, and not the one just matched. */
+      const nextWord = (justMatched) => {
+        const onBoard = new Set(left.filter(Boolean));
+        const fits = (w) => !onBoard.has(w.id) && w.id !== justMatched;
+        let i = queue.findIndex(fits);
+        if (i < 0) {
+          queue = U.shuffle(pool.filter(fits));
+          i = queue.length ? 0 : -1;
         }
-        return queue.shift();
+        return i >= 0 ? queue.splice(i, 1)[0] : M.content.word(justMatched);
       };
 
       /* ---------- Layout ---------- */
@@ -106,11 +111,13 @@
       host.onCleanup(() => {
         running = false;
         cancelAnimationFrame(frame);
+        clearTimeout(endTimer);
         stopKeys();
+        M.store.save();
       });
 
       function fillBoard() {
-        const words = Array.from({ length: size }, nextWord);
+        const words = Array.from({ length: size }, () => nextWord());
         U.shuffle(words).forEach((w, i) => (left[i] = w.id));
         U.shuffle(words).forEach((w, i) => (right[i] = w.id));
         left.forEach((_, i) => drawTile('left', i));
@@ -198,19 +205,30 @@
         }
         matchesText.textContent = String(round.matches);
         comboText.textContent = String(round.combo);
+        M.store.save();
       }
 
       function replace(l, r) {
         busy.delete(`left${l}`);
         busy.delete(`right${r}`);
         if (!running) return;
+        const matched = left[l];
         left[l] = null;
         right[r] = null;
-        const word = nextWord();
+        const word = nextWord(matched);
         left[l] = word.id;
-        right[r] = word.id;
+        // The new meaning goes into a random right-hand slot (that slot's tile moves into
+        // the free one), so a new pair never simply sits in the two slots just cleared.
+        const isSelected = (j) => selected && selected.side === 'right' && selected.index === j;
+        const slots = right.map((_, j) => j).filter((j) => j === r || (!busy.has(`right${j}`) && !isSelected(j)));
+        const j = U.pick(slots);
+        if (j !== r) {
+          right[r] = right[j];
+          drawTile('right', r);
+        }
+        right[j] = word.id;
         drawTile('left', l);
-        drawTile('right', r);
+        drawTile('right', j);
       }
 
       function end() {
@@ -221,7 +239,7 @@
         board.classList.add('over');
         host.stage.querySelector('.match-area').append(h('div.match-over', h('span', ui.bi('시간 끝!', "Time's up!"))));
         M.sfx.play('complete');
-        setTimeout(
+        endTimer = setTimeout(
           () =>
             host.finish({
               gameId: 'speed-match',

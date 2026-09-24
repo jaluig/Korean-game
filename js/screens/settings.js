@@ -22,6 +22,7 @@
       h('input', {
         type: 'checkbox',
         checked: !!settings()[key],
+        dataset: { focus: `toggle-${key}` },
         on: {
           change: (event) => {
             settings()[key] = event.target.checked;
@@ -48,6 +49,7 @@
             name,
             value: String(o.value),
             checked: o.value === current,
+            dataset: { focus: `${name}-${o.value}` },
             on: { change: () => onPick(o.value) },
           }),
           ui.bi(o.ko, o.en),
@@ -197,7 +199,7 @@
     id: 'settings',
 
     render(view) {
-      redraw = () => {
+      redraw = () => ui.keepFocus(() => {
         const s = settings();
         const fileInput = h('input', { type: 'file', accept: 'application/json,.json', hidden: true, on: { change: (e) => importProgress(e.target.files[0]) } });
 
@@ -260,7 +262,7 @@
             h('p.about', `말랑 한국어 · Mallang Korean v${M.version} — made with 💖 for learning Korean.`)
           )
         );
-      };
+      });
       redraw();
       const off = M.events.on('speech:status', () => redraw());
       return () => {

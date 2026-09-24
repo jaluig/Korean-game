@@ -39,6 +39,7 @@
       );
 
       function draw() {
+        const focused = el.contains(document.activeElement) ? document.activeElement.dataset.focus : null;
         U.clear(slotsEl);
         let i = 0;
         for (const size of groups) {
@@ -51,7 +52,14 @@
                 ? h('span.slot', { 'aria-hidden': 'true' })
                 : h(
                     'button.slot.filled',
-                    { type: 'button', lang: 'ko', 'aria-label': `Remove ${tiles[tileId].text}`, on: { click: () => unplace(index) } },
+                    {
+                      type: 'button',
+                      lang: 'ko',
+                      'aria-label': `Remove ${tiles[tileId].text}`,
+                      dataset: { focus: `slot-${index}` },
+                      disabled: locked,
+                      on: { ...M.keys.noMouseFocus, click: () => unplace(index) },
+                    },
                     tiles[tileId].text
                   )
             );
@@ -63,12 +71,27 @@
           bankEl.append(
             h(
               'button',
-              { type: 'button', class: `tile ${tile.used ? 'used' : ''}`.trim(), lang: 'ko', disabled: tile.used || locked, on: { click: () => place(tile) } },
+              {
+                type: 'button',
+                class: `tile ${tile.used ? 'used' : ''}`.trim(),
+                lang: 'ko',
+                dataset: { focus: `tile-${tile.id}` },
+                disabled: tile.used || locked,
+                on: { ...M.keys.noMouseFocus, click: () => place(tile) },
+              },
               tile.text
             )
           );
         }
         checkBtn.disabled = locked || placed.length !== slotCount;
+        if (focused && !locked) restoreFocus(focused);
+      }
+
+      /** Keyboard users: stay on the same control, else move to Check (when full) or the next tile. */
+      function restoreFocus(key) {
+        const same = el.querySelector(`[data-focus="${key}"]`);
+        const next = same && !same.disabled ? same : !checkBtn.disabled ? checkBtn : bankEl.querySelector('button:not(:disabled)');
+        if (next) next.focus({ preventScroll: true });
       }
 
       function place(tile) {
@@ -108,9 +131,10 @@
         answer({ correct, grade: correct ? 'good' : 'again', given, diff, tip: diff ? diff.tip : null });
       }
 
+      // Enter checks — unless a tile or button has focus, which then works as usual.
       const stopKeys = M.keys.push((event) => {
         if (event.repeat || locked) return;
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && !M.keys.isControl(event)) {
           event.preventDefault();
           check();
         } else if (event.key === 'Backspace' && placed.length) {

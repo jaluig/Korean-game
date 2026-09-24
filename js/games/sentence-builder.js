@@ -32,13 +32,16 @@
       const plan = M.srs.buildSentenceSession({ topicId: host.topicId });
       if (!plan.steps.length) {
         const next = M.srs.nextLockedSentence(host.topicId);
-        const missing = next ? M.srs.missingWords(next).map((id) => M.content.word(id).ko) : [];
+        const words = next ? M.srs.missingWords(next).map((id) => M.content.word(id)) : [];
+        const elsewhere = words.filter((w) => host.topicId !== 'all' && w.topicId !== host.topicId);
+        const names = words.map((w) => (elsewhere.includes(w) ? `${w.ko} (${M.content.topic(w.topicId).title.en})` : w.ko));
         host.empty({
           emoji: '🔒',
           ko: '아직 문장이 없어요',
           en: 'No sentences yet',
-          text: missing.length
-            ? `Sentences unlock once you know their words. Learn ${missing.join(', ')} in Word Cards to open the next one.`
+          text: names.length
+            ? `Sentences unlock once you know their words. Learn ${names.join(', ')} in Word Cards to open the next one.` +
+              (elsewhere.length ? ' Some of these are in another topic, so choose “All topics” on the home screen.' : '')
             : 'Learn a few words in Word Cards first — sentences unlock once you know their words.',
           actions: [{ ko: '단어 카드 하기', en: 'Play Word Cards', href: '#/play/word-cards' }],
         });
@@ -56,6 +59,7 @@
       function next() {
         if (cleanup) cleanup();
         cleanup = null;
+        M.speech.stop();
         U.clear(host.stage);
         host.setProgress(index, steps.length);
         if (index >= steps.length) return finish();
@@ -93,7 +97,7 @@
         host.award(earned);
         host.react(result, round.combo);
         M.store.save();
-        if (M.store.state.settings.autoPlayAudio) setTimeout(() => M.speech.speak(sentence.ko, { quiet: true }), 250);
+        if (M.store.state.settings.autoPlayAudio) M.speech.speakLater(sentence.ko, 250, { quiet: true });
 
         host.showFeedback({
           tone: result.correct ? 'good' : 'bad',

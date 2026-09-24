@@ -311,10 +311,14 @@
     };
   }
 
-  /** The locked sentence closest to opening (fewest words still to learn). */
+  /**
+   * The locked sentence closest to opening: fewest missing words from other
+   * topics (Word Cards on this topic can't teach those), then fewest missing words.
+   */
   function nextLockedSentence(topicId = 'all') {
     const locked = M.content.sentences(topicId).filter((s) => !isUnlocked(s));
-    locked.sort((a, b) => missingWords(a).length - missingWords(b).length || byCurriculum(a, b));
+    const elsewhere = (s) => missingWords(s).filter((id) => topicId !== 'all' && M.content.word(id).topicId !== topicId).length;
+    locked.sort((a, b) => elsewhere(a) - elsewhere(b) || missingWords(a).length - missingWords(b).length || byCurriculum(a, b));
     return locked[0] || null;
   }
 

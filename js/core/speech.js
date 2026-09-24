@@ -12,6 +12,12 @@
   let voices = [];
   let status = synth ? 'loading' : 'unsupported'; // loading | ready | unavailable | unsupported
   let current = null; // keep a reference: Chrome can garbage-collect a speaking utterance
+  let pending = null; // a delayed speak() that stop() must be able to cancel
+
+  const clearPending = () => {
+    clearTimeout(pending);
+    pending = null;
+  };
 
   const isKorean = (voice) => /^ko([-_]|$)/i.test(voice.lang || '') || /korean|한국/i.test(voice.name || '');
 
@@ -78,6 +84,7 @@
       if (status !== 'ready' && !quiet) M.events.emit('speech:unavailable', status);
       return false;
     }
+    clearPending();
     try {
       const v = voice();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -99,7 +106,10 @@
       if (synth.speaking || synth.pending) {
         synth.cancel();
         // Chrome sometimes drops an utterance queued in the same tick as cancel().
-        setTimeout(() => synth.speak(utterance), 60);
+        pending = setTimeout(() => {
+          pending = null;
+          synth.speak(utterance);
+        }, 60);
       } else {
         synth.speak(utterance);
       }
@@ -110,13 +120,24 @@
     }
   }
 
+  /** Speak after a short pause (e.g. after a sound effect). stop() or a newer speak() cancels it. */
+  function speakLater(text, delay, options) {
+    clearPending();
+    pending = setTimeout(() => {
+      pending = null;
+      speak(text, options);
+    }, delay);
+  }
+
   function stop() {
+    clearPending();
     if (synth && (synth.speaking || synth.pending)) synth.cancel();
   }
 
   M.speech = {
     init,
     speak,
+    speakLater,
     stop,
     voice,
     voices: () => voices.slice(),

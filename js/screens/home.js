@@ -142,7 +142,7 @@
       { class: `card topic-card tone-${topic ? topic.color : 'lilac'} ${selected ? 'selected' : ''}`.trim() },
       h(
         'button.topic-pick',
-        { type: 'button', 'aria-pressed': String(selected), on: { click: () => onPick(id) } },
+        { type: 'button', 'aria-pressed': String(selected), dataset: { focus: `topic-${id}` }, on: { click: () => onPick(id) } },
         h('span.topic-emoji', { 'aria-hidden': 'true' }, topic ? topic.emoji : '🌈'),
         h(
           'span.topic-text',
@@ -189,7 +189,7 @@
         state.settings.focusTopic = id;
         M.store.save();
         M.sfx.play('tap');
-        draw();
+        ui.keepFocus(draw);
       };
       draw();
       return null;

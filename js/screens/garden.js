@@ -135,10 +135,11 @@
                 type: 'button',
                 class: `chip ${f.id === filter ? 'active' : ''}`.trim(),
                 'aria-pressed': String(f.id === filter),
+                dataset: { focus: `filter-${f.id}` },
                 on: {
                   click: () => {
                     filter = f.id;
-                    draw();
+                    ui.keepFocus(draw);
                   },
                 },
               },

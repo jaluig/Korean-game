@@ -54,12 +54,12 @@
     requestAnimationFrame(() => panel.classList.add('open'));
     button.focus({ preventScroll: true });
 
+    // Enter continues (a focused button, like "Continue" or 🔊, handles Enter itself).
     const stopKeys = M.keys.push((event) => {
-      if (event.repeat) return;
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !M.keys.isControl(event)) {
         event.preventDefault();
         done();
-      } else if (speak && (event.key === 'r' || event.key === 'R')) {
+      } else if (speak && M.keys.isReplay(event)) {
         M.speech.speak(speak);
       }
     });
