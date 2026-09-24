@@ -1,0 +1,520 @@
+/*
+ * Base styles: colour tokens, typography, page layout and the top bar.
+ * Design direction: "strawberry milk & matcha" — cream paper with polka dots,
+ * pastel stickers with chunky 3D shadows, and a squishy rice-cake bunny.
+ */
+
+:root {
+  --bg: #fff8f1;
+  --bg-dot: #f7e3d6;
+  --card: #ffffff;
+  --ink: #4f3b3b;
+  --ink-soft: #8b7272;
+  --ink-faint: #bba8a2;
+  --line: #f1e0d4;
+  --shadow: #ead5c6;
+
+  --pink: #ff9db6;
+  --pink-deep: #f0668c;
+  --pink-soft: #ffe6ee;
+  --pink-shadow: #cf4e74;
+  --mint: #93dcbb;
+  --mint-deep: #34ad83;
+  --mint-soft: #dff6eb;
+  --mint-shadow: #248a67;
+  --butter: #ffdb85;
+  --butter-deep: #f1b43a;
+  --butter-soft: #fff5d6;
+  --butter-shadow: #cf961e;
+  --sky: #a6d3ff;
+  --sky-deep: #4f9de6;
+  --sky-soft: #e5f2ff;
+  --sky-shadow: #3a82c7;
+  --lilac: #cfbcf2;
+  --lilac-deep: #9776d6;
+  --lilac-soft: #f2ecfd;
+  --lilac-shadow: #7b5bbd;
+
+  --good: #34ad83;
+  --good-soft: #e2f7ed;
+  --bad: #ee5f79;
+  --bad-soft: #ffe8ed;
+  --almost: #efae2c;
+  --almost-soft: #fff5d6;
+
+  --radius-s: 12px;
+  --radius: 18px;
+  --radius-l: 26px;
+
+  /* Cute rounded font for the interface; clear standard Korean fonts for the words you learn. */
+  --font-display: 'Jua', 'Nunito', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Noto Sans CJK KR', 'NanumGothic', sans-serif;
+  --font-body: 'Nunito', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Noto Sans CJK KR', 'Nanum Gothic', 'NanumGothic', system-ui, sans-serif;
+  --font-ko: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Noto Sans CJK KR', 'Nanum Gothic', 'NanumGothic', sans-serif;
+  --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', 'EmojiOne Color', sans-serif;
+
+  color-scheme: light;
+}
+
+/* ---------- Reset ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink);
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--bg-dot) 1.6px, transparent 1.7px);
+  background-size: 24px 24px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 0.4em;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+}
+
+p {
+  margin: 0 0 0.8em;
+}
+
+a {
+  color: var(--pink-deep);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid var(--sky-deep);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+#view:focus {
+  outline: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.noscript {
+  max-width: 480px;
+  margin: 60px auto;
+  padding: 20px;
+  text-align: center;
+  background: #fff;
+  border-radius: 20px;
+}
+
+/* ---------- Bilingual labels: Korean + small English subtitle ---------- */
+
+.bi {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.bi .ko {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-synthesis: none;
+}
+
+.bi .en {
+  font-family: var(--font-body);
+  font-size: 0.68em;
+  font-weight: 700;
+  opacity: 0.72;
+  margin-top: 2px;
+  letter-spacing: 0.01em;
+}
+
+.bi.inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.45em;
+}
+
+.bi.inline .en {
+  font-size: 0.8em;
+  margin-top: 0;
+}
+
+body.no-en .bi .en {
+  display: none;
+}
+
+/* Icons are emoji: prefer colour emoji fonts over look-alike glyphs in the display font. */
+.game-emoji,
+.big-emoji,
+.prompt-emoji,
+.intro-emoji,
+.plant,
+.legend-plant,
+.badge-emoji,
+.topic-emoji,
+.streak-flame,
+.word-chip-plant,
+.word-detail-top,
+.nav-icon,
+.btn-icon,
+.ex-tag-icon,
+.toast-icon,
+.level-emoji,
+.plant-badge {
+  font-family: var(--font-emoji);
+}
+
+/* The words being learned use a clear, standard Korean font. */
+body [lang='ko'],
+.ko-word {
+  font-family: var(--font-ko);
+}
+
+/* ---------- Layout ---------- */
+
+#app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px 48px;
+}
+
+.page-head {
+  margin: 28px 0 18px;
+}
+
+.page-sub {
+  color: var(--ink-soft);
+  max-width: 640px;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 34px 0 14px;
+}
+
+.section-hint {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+}
+
+.card {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: 0 6px 0 var(--shadow);
+  padding: 22px;
+}
+
+.card-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.card-count {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.big-emoji {
+  font-size: 64px;
+  line-height: 1;
+}
+
+/* Colour "tones" used by games and topics. */
+.tone-pink {
+  --tone: var(--pink);
+  --tone-deep: var(--pink-deep);
+  --tone-soft: var(--pink-soft);
+  --tone-shadow: var(--pink-shadow);
+}
+
+.tone-mint {
+  --tone: var(--mint);
+  --tone-deep: var(--mint-deep);
+  --tone-soft: var(--mint-soft);
+  --tone-shadow: var(--mint-shadow);
+}
+
+.tone-butter {
+  --tone: var(--butter);
+  --tone-deep: var(--butter-deep);
+  --tone-soft: var(--butter-soft);
+  --tone-shadow: var(--butter-shadow);
+}
+
+.tone-sky {
+  --tone: var(--sky);
+  --tone-deep: var(--sky-deep);
+  --tone-soft: var(--sky-soft);
+  --tone-shadow: var(--sky-shadow);
+}
+
+.tone-lilac {
+  --tone: var(--lilac);
+  --tone-deep: var(--lilac-deep);
+  --tone-soft: var(--lilac-soft);
+  --tone-shadow: var(--lilac-shadow);
+}
+
+/* ---------- Top bar ---------- */
+
+#topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 0 -20px;
+  padding: 0 20px;
+  background: rgba(255, 248, 241, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 2px dashed var(--line);
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 70px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.brand-mascot {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
+
+.brand-mascot svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-mascot [data-show] {
+  display: none;
+}
+
+.brand-mascot [data-show~='idle'] {
+  display: inline;
+}
+
+.nav {
+  display: flex;
+  gap: 6px;
+  margin: 0 auto;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 1rem;
+  border: 2px solid transparent;
+  transition: background 0.15s;
+}
+
+.nav-link:hover {
+  background: #fff;
+  border-color: var(--line);
+}
+
+.nav-link.active {
+  background: #fff;
+  border-color: var(--pink);
+  box-shadow: 0 3px 0 var(--pink);
+}
+
+.nav-icon {
+  font-size: 1.15rem;
+}
+
+.stat-chips {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid var(--line);
+  font-weight: 800;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.stat-chip.streak {
+  filter: grayscale(0.9);
+  opacity: 0.8;
+}
+
+.stat-chip.streak.lit {
+  filter: none;
+  opacity: 1;
+  border-color: var(--butter-deep);
+  background: var(--butter-soft);
+}
+
+.stat-chip.level {
+  background: var(--lilac-soft);
+  border-color: var(--lilac);
+}
+
+.storage-warning {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: 10px 16px;
+  text-align: center;
+  background: var(--butter-soft);
+  border-bottom: 2px solid var(--butter-deep);
+  font-size: 0.95rem;
+}
+
+/* While playing, the game gets the whole screen. */
+body.playing #topbar,
+body[data-screen='onboarding'] #topbar,
+body[data-screen='summary'] #topbar {
+  display: none;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 860px) {
+  .topbar-inner {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 8px 0;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    margin: 0;
+  }
+
+  .nav-link {
+    flex: 1;
+    justify-content: center;
+    padding: 6px 8px;
+  }
+
+  .stat-chips {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  body {
+    font-size: 16px;
+  }
+
+  #app {
+    padding: 0 14px 40px;
+  }
+
+  #topbar {
+    margin: 0 -14px;
+    padding: 0 14px;
+  }
+
+  .brand .bi .en,
+  .nav-link .bi .en {
+    display: none;
+  }
+
+  .nav-link {
+    flex-direction: column;
+    gap: 0;
+    font-size: 0.85rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

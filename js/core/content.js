@@ -1,0 +1,110 @@
+/**
+ * The content registry: topics, their words, sentences and lesson notes.
+ *
+ * Each file in /content calls `Mallang.content.registerTopic({...})`.
+ * Ids are namespaced automatically: word "water" in topic "cafe" becomes
+ * "cafe:water", so different topics can't clash. See README → "Adding content".
+ */
+(function (M) {
+  'use strict';
+
+  const U = M.utils;
+  const topics = [];
+  const words = new Map();
+  const sentences = new Map();
+  const problems = [];
+
+  const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
+
+  function registerTopic(def) {
+    if (!def || !def.id) throw new Error('registerTopic: a topic needs an "id"');
+    if (topics.some((t) => t.id === def.id)) throw new Error(`registerTopic: topic "${def.id}" exists already`);
+
+    const topic = {
+      id: def.id,
+      order: def.order ?? topics.length + 1,
+      emoji: def.emoji || '📘',
+      color: def.color || 'pink',
+      title: def.title || { ko: def.id, en: def.id },
+      description: def.description || { ko: '', en: '' },
+      notes: def.notes || [],
+      wordIds: [],
+      sentenceIds: [],
+    };
+
+    (def.words || []).forEach((w, index) => {
+      const id = qualify(def.id, w.id || '');
+      if (!w.id || !w.ko || !w.en) problems.push(`${def.id}: word #${index + 1} needs id, ko and en`);
+      if (words.has(id)) problems.push(`${id}: duplicate word id`);
+      words.set(id, Object.freeze({ ...w, id, localId: w.id, topicId: def.id, index, level: w.level || 1, type: 'word' }));
+      topic.wordIds.push(id);
+    });
+
+    (def.sentences || []).forEach((s, index) => {
+      const id = qualify(def.id, s.id || '');
+      if (sentences.has(id)) problems.push(`${id}: duplicate sentence id`);
+      sentences.set(
+        id,
+        Object.freeze({
+          ...s,
+          id,
+          topicId: def.id,
+          index,
+          level: s.level || 1,
+          type: 'sentence',
+          ko: s.ko || `${(s.tiles || []).join(' ')}.`,
+          needs: (s.words || []).map((ref) => qualify(def.id, ref)),
+          traps: s.traps || [],
+          alts: s.alts || [],
+        })
+      );
+      topic.sentenceIds.push(id);
+    });
+
+    topics.push(topic);
+    topics.sort((a, b) => a.order - b.order);
+    return topic;
+  }
+
+  /** Check every topic for authoring mistakes. Returns a list of messages. */
+  function check() {
+    const found = [...problems];
+    for (const s of sentences.values()) {
+      const label = `sentence ${s.id}`;
+      if (!s.en || !Array.isArray(s.tiles) || !s.tiles.length) {
+        found.push(`${label}: needs "en" and a non-empty "tiles" list`);
+        continue;
+      }
+      if (U.normalize(s.ko) !== U.normalize(s.tiles.join(' '))) {
+        found.push(`${label}: tiles "${s.tiles.join(' ')}" don't match "${s.ko}"`);
+      }
+      if (s.gloss && s.gloss.length !== s.tiles.length) found.push(`${label}: gloss needs one entry per tile`);
+      for (const ref of s.needs) if (!words.has(ref)) found.push(`${label}: unknown word "${ref}"`);
+      if (!s.needs.length) found.push(`${label}: list the words it uses in "words" (it unlocks once they're learned)`);
+      for (const trap of s.traps) {
+        if (!trap.tile || !trap.why) found.push(`${label}: each trap needs "tile" and "why"`);
+        if (s.tiles.includes(trap.tile)) found.push(`${label}: trap "${trap.tile}" is also part of the answer`);
+      }
+      const sorted = [...s.tiles].sort().join('|');
+      for (const alt of s.alts) {
+        if ([...alt].sort().join('|') !== sorted) found.push(`${label}: alternative order must use the same tiles`);
+      }
+    }
+    return found;
+  }
+
+  const inTopic = (topicId) => (item) => !topicId || topicId === 'all' || item.topicId === topicId;
+
+  M.content = {
+    registerTopic,
+    check,
+    topics: () => topics.slice(),
+    topic: (id) => topics.find((t) => t.id === id) || null,
+    word: (id) => words.get(id) || null,
+    sentence: (id) => sentences.get(id) || null,
+    item: (id) => words.get(id) || sentences.get(id) || null,
+    /** All words, or only those of one topic ('all' = every topic). */
+    words: (topicId = 'all') => [...words.values()].filter(inTopic(topicId)),
+    sentences: (topicId = 'all') => [...sentences.values()].filter(inTopic(topicId)),
+  };
+})(window.Mallang);

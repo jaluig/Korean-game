@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>말랑 한국어 · Mallang Korean</title>
+  <meta name="description" content="A cute Korean learning game with spaced repetition, minigames and an on-screen Hangul keyboard.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>🐰</text></svg>">
+
+  <!-- Optional web fonts. Offline, the game falls back to your system fonts and works the same. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Nunito:wght@600;700;800&display=swap">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/screens.css">
+  <link rel="stylesheet" href="css/games.css">
+</head>
+<body>
+  <div id="app">
+    <header id="topbar"></header>
+    <main id="view" tabindex="-1"></main>
+  </div>
+  <div id="overlay-root"></div>
+  <div id="announcer" class="sr-only" aria-live="polite"></div>
+
+  <noscript>
+    <p class="noscript">말랑 한국어 needs JavaScript to run. Please enable it and reload the page.</p>
+  </noscript>
+
+  <!--
+    Plain <script> tags (not ES modules) on purpose: this lets the game run by
+    simply double-clicking index.html. Order matters — each file adds its part
+    to the global `Mallang` object and may use what was loaded before it.
+  -->
+
+  <!-- Core: data, rules and services (no UI) -->
+  <script src="js/core/namespace.js"></script>
+  <script src="js/core/config.js"></script>
+  <script src="js/core/utils.js"></script>
+  <script src="js/core/hangul.js"></script>
+  <script src="js/core/storage.js"></script>
+  <script src="js/core/content.js"></script>
+  <script src="js/core/srs.js"></script>
+  <script src="js/core/progress.js"></script>
+  <script src="js/core/distractors.js"></script>
+  <script src="js/core/speech.js"></script>
+  <script src="js/core/sfx.js"></script>
+
+  <!-- Content: one file per topic. Add new topics here. -->
+  <script src="content/cafe.js"></script>
+  <script src="content/my-day.js"></script>
+
+  <!-- UI building blocks -->
+  <script src="js/ui/components.js"></script>
+  <script src="js/ui/mascot.js"></script>
+  <script src="js/ui/keyboard.js"></script>
+  <script src="js/ui/feedback.js"></script>
+
+  <!-- Exercise types (reusable by any game) -->
+  <script src="js/exercises/intro.js"></script>
+  <script src="js/exercises/choice.js"></script>
+  <script src="js/exercises/tiles.js"></script>
+  <script src="js/exercises/typing.js"></script>
+  <script src="js/exercises/sentence.js"></script>
+
+  <!-- Minigames. Add new games here. -->
+  <script src="js/games/word-cards.js"></script>
+  <script src="js/games/sentence-builder.js"></script>
+  <script src="js/games/speed-match.js"></script>
+
+  <!-- Screens -->
+  <script src="js/screens/onboarding.js"></script>
+  <script src="js/screens/home.js"></script>
+  <script src="js/screens/garden.js"></script>
+  <script src="js/screens/stats.js"></script>
+  <script src="js/screens/settings.js"></script>
+  <script src="js/screens/play.js"></script>
+  <script src="js/screens/summary.js"></script>
+
+  <!-- Start the app -->
+  <script src="js/app.js"></script>
+</body>
+</html>
