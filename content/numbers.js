@@ -198,7 +198,7 @@ Mallang.content.registerTopic({
       words: ['three', 'oclock', 'sam', 'sip', 'minute'],
       traps: [
         { tile: '서른', why: 'Minutes use Sino-Korean numbers: 삼십 분, not 서른 분.' },
-        { tile: '삼', why: 'Hours use native Korean numbers: 세 시, not 삼 시.' },
+        { tile: '삼', why: 'Hours use native Korean numbers: 세 시, not 삼 시. (And 30 minutes is 삼십 분: 삼 on its own is 3.)' },
       ] },
     { id: 's-oneoone', level: 2, en: "It's 1:01.", ko: '한 시 일 분이에요.',
       tiles: ['한', '시', '일', '분이에요'], gloss: ['one (native, before a counter)', "o'clock", 'one (Sino-Korean)', 'minute (it is)'],
@@ -237,7 +237,9 @@ Mallang.content.registerTopic({
       tiles: ['화요일하고', '목요일에', '한국어를', '공부해요'], gloss: ['Tuesday and', 'on Thursday', 'Korean (object)', 'study'],
       words: ['tuesday', 'thursday', 'day:korean', 'day:study'], alts: [['한국어를', '화요일하고', '목요일에', '공부해요']],
       traps: [{ tile: '목요일에서', why: 'To say on which day something happens, use 에: 목요일에.' }] },
-    { id: 's-wedsun', level: 3, en: "I'm free on Wednesday and Sunday.", ko: '수요일하고 일요일에 시간이 있어요.',
+    // No particle questions here: spoken Korean also says 일요일이 시간이 있어요 (“Sunday is when I’m free”),
+    // so 이 isn't clearly wrong after 일요일.
+    { id: 's-wedsun', level: 3, en: "I'm free on Wednesday and Sunday.", ko: '수요일하고 일요일에 시간이 있어요.', drill: false,
       tiles: ['수요일하고', '일요일에', '시간이', '있어요'], gloss: ['Wednesday and', 'on Sunday', 'time (subject)', 'there is'],
       words: ['wednesday', 'sunday', 'hour', 'day:have'], alts: [['시간이', '수요일하고', '일요일에', '있어요']],
       traps: [{ tile: '시간을', why: '있어요 says that something is there. The thing that is there is the subject, so it takes 이: 시간이 있어요.' }] },

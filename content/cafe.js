@@ -282,10 +282,11 @@ Mallang.content.registerTopic({
       tiles: ['빨대', '있어요'], gloss: ['straw', 'is there? / do you have?'], words: ['straw', 'day:have'] },
     { id: 's-hungry', level: 3, en: "I'm hungry. I'll eat here.", ko: '배고파요. 여기서 먹을게요.',
       tiles: ['배고파요', '여기서', '먹을게요'], gloss: ["I'm hungry", 'here', "I'll eat"], words: ['hungry', 'eathere'],
+      alts: [['여기서', '먹을게요', '배고파요']],
       traps: [{ tile: '목말라요', why: '목말라요 means “I’m thirsty”. “Hungry” is 배고파요.' }] },
     { id: 's-thirsty', level: 3, en: "I'm thirsty. Cold water, please.", ko: '목말라요. 차가운 물 주세요.',
       tiles: ['목말라요', '차가운', '물', '주세요'], gloss: ["I'm thirsty", 'cold', 'water', 'please give'],
-      words: ['thirsty', 'cold', 'water', 'please'],
+      words: ['thirsty', 'cold', 'water', 'please'], alts: [['차가운', '물', '주세요', '목말라요']],
       traps: [{ tile: '배고파요', why: '배고파요 means “I’m hungry”. “Thirsty” is 목말라요.' }] },
   ],
 });

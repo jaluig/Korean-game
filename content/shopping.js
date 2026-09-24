@@ -14,7 +14,7 @@ Mallang.content.registerTopic({
   notes: [
     {
       title: { ko: '있어요? / 없어요', en: 'Do you have…?' },
-      text: 'Name what you want and ask **있어요?** (“Do you have…?”). The answer is **있어요** (we have it) or **없어요** (we don’t). Colour words end in **색** (colour): **빨간색** (red), **파란색** (blue), **검은색** (black).',
+      text: 'Name what you want and ask **있어요?** (“Do you have…?”). The answer is **있어요** (we have it) or **없어요** (we don’t). Most colour words end in **색** (colour): **빨간색** (red), **파란색** (blue), **검은색** (black).',
       examples: [
         { ko: '빨간색 신발 있어요?', en: 'Do you have red shoes?' },
         { ko: '이거 검은색으로 있어요?', en: 'Do you have this in black?' },
@@ -41,7 +41,7 @@ Mallang.content.registerTopic({
     },
     {
       title: { ko: '(으)로 할게요', en: 'Choosing and paying' },
-      text: 'Say what you choose with **(으)로 할게요** (“I’ll go with…”): **이걸로 할게요** = I’ll take this one. It also says how you pay. Use **으로** after a consonant (현금으로) and **로** after a vowel or ㄹ (카드로, 이걸로).',
+      text: 'Say what you choose with **(으)로 할게요** (“I’ll go with…”): **이걸로 할게요** = I’ll take this one (이걸로 is short for 이것으로). It also says how you pay. Use **으로** after a consonant (현금으로) and **로** after a vowel or ㄹ (카드로, 색깔로).',
       examples: [
         { ko: '이걸로 할게요.', en: 'I’ll take this one.' },
         { ko: '카드로 할게요.', en: 'I’ll pay by card.' },
@@ -96,7 +96,7 @@ Mallang.content.registerTopic({
       example: { ko: '바지가 길어요.', en: 'The trousers are long.' } },
     { id: 'wear', ko: '입어요', en: 'wear / put on (clothes)', level: 2, pos: 'verb', emoji: '🧥', rom: 'ibeoyo', pron: '이버요',
       dict: '입다', enAlt: ['wear clothes'],
-      note: '입다 is for clothes; shoes use 신다 and hats use 쓰다. For what you have on right now, use the past: 청바지를 입었어요 = I’m wearing jeans.',
+      note: '입다 is for clothes; shoes use 신다 and hats use 쓰다. For what you have on right now, Korean often uses the past: 청바지를 입었어요 = I’m wearing jeans (I’ve put them on). You’ll also hear 입고 있어요.',
       example: { ko: '내일 뭐 입어요?', en: 'What are you wearing tomorrow?' } },
     { id: 'big', ko: '커요', en: "it's big", level: 2, pos: 'adjective', emoji: '🐘', rom: 'keoyo', dict: '크다',
       note: '크다 → 커요: the ㅡ drops before 어요.',
@@ -119,7 +119,7 @@ Mallang.content.registerTopic({
       example: { ko: '두 개 살게요. 좀 깎아 주세요.', en: 'I’ll buy two. Could you knock a bit off?' } },
     { id: 'takethis', ko: '이걸로 할게요', en: "I'll take this one", level: 3, pos: 'phrase', emoji: '🙆',
       rom: 'igeollo halgeyo', pron: '이걸로 할께요', enAlt: ['take this one', 'take this', "I'll take this", "I'll have this one"],
-      note: '이걸로 = 이거 + (으)로. (으)로 할게요 means “I’ll go with…”: 카드로 할게요 = I’ll pay by card.',
+      note: '이걸로 is the spoken short form of 이것으로 (this + (으)로). (으)로 할게요 means “I’ll go with…”: 카드로 할게요 = I’ll pay by card.',
       example: { ko: '이 가방 예뻐요. 이걸로 할게요.', en: 'This bag is pretty. I’ll take this one.' } },
     { id: 'tryon', ko: '입어 봐도 돼요?', en: 'can I try it on?', level: 3, pos: 'phrase', emoji: '🪞',
       rom: 'ibeo bwado dwaeyo', pron: '이버 봐도 돼요', enAlt: ['try it on', 'try on', 'can I try this on', 'may I try it on'],
@@ -136,8 +136,8 @@ Mallang.content.registerTopic({
       enAlt: ['sale'],
       note: 'The ㄹ slides into the next syllable: [하린]. 할인해요 = there’s a discount / it’s on sale.',
       example: { ko: '학생 할인 있어요?', en: 'Is there a student discount?' } },
-    { id: 'colour', ko: '색깔', en: 'colour', level: 3, pos: 'noun', emoji: '🎨', rom: 'saekkkal',
-      note: '색깔 and 색 both mean colour, and colour names end in 색: 빨간색, 파란색, 검은색.',
+    { id: 'colour', ko: '색깔', en: 'colour', level: 3, pos: 'noun', emoji: '🎨', rom: 'saek-kkal',
+      note: '색깔 and 색 both mean colour, and most colour names end in 색: 빨간색, 파란색, 검은색.',
       example: { ko: '무슨 색깔 좋아해요?', en: 'What colour do you like?' } },
     { id: 'blue', ko: '파란색', en: 'blue', level: 3, pos: 'noun', emoji: '🔵', rom: 'paransaek', accept: ['파랑'],
       note: '파란 (blue) + 색 (colour). Before a noun you can also say 파란: 파란 모자 = a blue hat.',
@@ -172,7 +172,7 @@ Mallang.content.registerTopic({
     // ---- Level 2 ----
     { id: 's-that', level: 2, en: 'How much is that?', ko: '저거 얼마예요?',
       tiles: ['저거', '얼마예요'], gloss: ['that (over there)', 'how much is it?'], words: ['that', 'cafe:howmuch'],
-      traps: [{ tile: '이거', why: '이거 means “this” (near you). For “that” over there, use 저거.' }] },
+      traps: [{ tile: '이거', why: '이거 means “this” (near the speaker). For “that” over there, use 저거.' }] },
     { id: 's-red', level: 2, en: "I'm wearing a red T-shirt tomorrow.", ko: '내일 빨간색 티셔츠를 입어요.',
       tiles: ['내일', '빨간색', '티셔츠를', '입어요'], gloss: ['tomorrow', 'red', 'T-shirt (object)', 'wear'],
       words: ['day:tomorrow', 'red', 'tshirt', 'wear'], alts: [['빨간색', '티셔츠를', '내일', '입어요']],
@@ -197,13 +197,16 @@ Mallang.content.registerTopic({
       words: ['cafe:this', 'tryon'] },
     { id: 's-discountplease', level: 3, en: "It's a bit expensive. Can you give me a discount?", ko: '좀 비싸요. 깎아 주세요.',
       tiles: ['좀', '비싸요', '깎아', '주세요'], gloss: ['a bit', "it's expensive", 'cut (the price)', 'please'],
-      words: ['expensive', 'discountplease'], alts: [['비싸요', '좀', '깎아', '주세요']],
+      words: ['expensive', 'discountplease'],
+      alts: [['비싸요', '좀', '깎아', '주세요'], ['깎아', '주세요', '좀', '비싸요'], ['좀', '깎아', '주세요', '비싸요']],
       traps: [{ tile: '싸요', why: '싸요 means “it’s cheap”. You ask for a discount because it’s expensive: 비싸요.' }] },
     { id: 's-cardcash', level: 3, en: "I don't have cash. I'll pay by card.", ko: '현금이 없어요. 카드로 할게요.',
       tiles: ['현금이', '없어요', '카드로', '할게요'], gloss: ['cash (subject)', "there isn't", 'by card', "I'll do (it)"],
       words: ['cash', 'day:nothave', 'card', 'takethis'], alts: [['카드로', '할게요', '현금이', '없어요']],
       traps: [{ tile: '현금을', why: '없어요 says that something isn’t there. That thing is the subject, so it takes 이: 현금이 없어요.' }] },
-    { id: 's-colour', level: 3, en: "I'll take this colour.", ko: '이 색깔로 할게요.',
+    // No particle questions here: the right answer's rule would read “로 means by (bus, card…) or toward”,
+    // which isn't what 로 does in (으)로 할게요 (choosing). The traps below still explain it in the Sentence Builder.
+    { id: 's-colour', level: 3, en: "I'll take this colour.", ko: '이 색깔로 할게요.', drill: false,
       tiles: ['이', '색깔로', '할게요'], gloss: ['this', 'with (this) colour', "I'll do (it)"], words: ['colour', 'takethis'],
       traps: [
         { tile: '색깔을', why: 'To say what you choose, use (으)로 할게요: 이 색깔로 할게요 = I’ll go with this colour.' },
