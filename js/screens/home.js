@@ -27,8 +27,14 @@
     if (sentences.due + sentences.fresh > 0) {
       return { game: 'sentence-builder', ko: `문장 ${sentences.due + sentences.fresh}개`, en: `${plural(sentences.due + sentences.fresh, 'sentence')} ready` };
     }
-    if (M.games.get('speed-match').status(topicId).ready) {
-      return { game: 'speed-match', ko: '복습 끝! 번개 짝꿍 한 판?', en: 'All caught up — a round of Speed Match?' };
+    // All caught up: suggest a different practice game each day.
+    const extras = ['balloon-pop', 'particle-lab', 'verb-magic', 'speed-match', 'number-shop', 'sound-twins']
+      .map((id) => M.games.get(id))
+      .filter((g) => g && g.status(topicId).ready);
+    if (extras.length) {
+      const [y, m, d] = U.dayKey().split('-').map(Number);
+      const game = extras[(y * 372 + m * 31 + d) % extras.length];
+      return { game: game.id, ko: `복습 끝! ${game.title.ko} 한 판?`, en: `All caught up — a round of ${game.title.en}?` };
     }
     return { game: 'word-cards', ko: '추가 연습', en: 'Extra practice' };
   }
@@ -112,6 +118,33 @@
     );
   }
 
+  /** The same word all day, a different one tomorrow. */
+  function wordOfTheDay() {
+    const words = M.content.words();
+    let hash = 7;
+    for (const ch of U.dayKey()) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+    return words[hash % words.length];
+  }
+
+  function wordOfDayCard() {
+    const w = wordOfTheDay();
+    if (!w) return null;
+    const stage = M.srs.stageOf(w.id);
+    return h(
+      'section.card.home-wotd',
+      h('span.wotd-label', ui.bi('오늘의 단어', 'Word of the day')),
+      h('span.wotd-emoji', { 'aria-hidden': 'true' }, w.emoji),
+      h('span.wotd-word', h('span.wotd-ko', { lang: 'ko' }, w.ko), ui.audioButton(w.ko, { size: 'small' }), h('span.wotd-en', w.en)),
+      w.example ? h('span.wotd-example', h('span', { lang: 'ko' }, w.example.ko), h('span.wotd-example-en', w.example.en)) : null,
+      h(
+        'button.link-btn.wotd-more',
+        { type: 'button', title: stage ? ui.STAGES[stage].en : 'Not learned yet', on: { click: () => ui.showWord && ui.showWord(w) } },
+        `${ui.plant(stage)} `,
+        ui.bi('자세히', 'More', 'inline')
+      )
+    );
+  }
+
   function gameCard(game, topicId) {
     const status = game.status(topicId);
     const body = [
@@ -174,6 +207,7 @@
           h(
             'div.home',
             h('div.home-top', heroCard(topicId), goalCard()),
+            wordOfDayCard(),
             h('h2.section-title', ui.bi('게임', 'Games')),
             h('div.game-grid', M.games.list().map((g) => gameCard(g, topicId))),
             h('h2.section-title', ui.bi('주제', 'Topics'), h('span.section-hint', ui.bi('연습할 주제를 골라요', 'Choose what to practise'))),

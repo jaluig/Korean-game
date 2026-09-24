@@ -28,6 +28,7 @@
   function buildTopbar() {
     const brandMascot = h('span.brand-mascot', { 'aria-hidden': 'true' });
     brandMascot.innerHTML = M.mascot.svg();
+    statEls.mascot = brandMascot;
     statEls.streak = h('span.stat-chip.streak', { title: 'Day streak' });
     statEls.points = h('span.stat-chip.points', { title: 'Total points' });
     statEls.level = h('span.stat-chip.level', { title: 'Level' });
@@ -47,6 +48,7 @@
 
   function updateStats() {
     if (!statEls.streak) return;
+    statEls.mascot.dataset.outfit = M.mascot.outfit();
     const streak = M.progress.currentStreak();
     statEls.streak.textContent = `🔥 ${streak}`;
     statEls.streak.classList.toggle('lit', M.progress.practisedToday());
@@ -65,9 +67,13 @@
 
   /* ---------- Settings that change the whole page ---------- */
 
+  const darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
   function applySettings() {
     const s = M.store.state.settings;
     document.body.classList.toggle('no-en', !s.showEnglish);
+    const dark = s.theme === 'dark' || (s.theme === 'system' && !!darkQuery && darkQuery.matches);
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   }
 
   /* ---------- Routing ---------- */
@@ -114,14 +120,49 @@
     if (name !== 'play') view.focus({ preventScroll: true });
   }
 
+  /* ---------- What's new (once per version, for returning players) ---------- */
+
+  function whatsNew() {
+    const profile = M.store.state.profile;
+    if (!profile.onboarded || profile.seenVersion === M.version) return;
+    profile.seenVersion = M.version;
+    M.store.save();
+    const games = ['balloon-pop', 'particle-lab', 'verb-magic', 'number-shop', 'sound-twins'].map((id) => M.games.get(id)).filter(Boolean);
+    const topics = M.content.topics();
+    const goal = M.progress.dailyGoal();
+    const features = [
+      ['✍️', 'Dictation: well-known sentences sometimes ask you to write down what you hear.'],
+      M.mic.supported() ? ['🎤', 'Speaking practice: press 🎤 next to a word or sentence and say it out loud.'] : null,
+      ['🌙', 'A dark theme (Settings → Display).'],
+      ['🏅', `${M.progress.BADGES.length} badges to collect, and outfits for 말랑이 as you level up (wardrobe in Stats).`],
+      ['🌅', 'A word of the day on the home screen.'],
+    ].filter(Boolean);
+    const dialog = ui.modal({
+      title: { ko: '새로워졌어요!', en: 'What’s new in Mallang Korean' },
+      cls: 'modal-wide whats-new',
+      body: [
+        h('h3', ui.bi(`새 게임 ${games.length}개`, `${games.length} new games`)),
+        h('ul.whats-new-list', games.map((g) => h('li', h('span.whats-new-icon', { 'aria-hidden': 'true' }, g.emoji), ui.bi(g.title.ko, `${g.title.en}: ${g.blurb.en}`)))),
+        h('h3', ui.bi('연습할 게 훨씬 많아요', 'Much more to practise')),
+        h('p', `${topics.length} topics ${topics.map((t) => t.emoji).join(' ')} with ${M.content.words().length} words and ${M.content.sentences().length} sentences. Words below your starting level were added as quick checks, a few a day.`),
+        h('ul.whats-new-list', features.map(([icon, text]) => h('li', h('span.whats-new-icon', { 'aria-hidden': 'true' }, icon), h('span', text)))),
+        h('p.notice', `🎯 Your daily goal is now ${goal} ⭐, about ${M.progress.goalMinutes(goal)} minutes of practice. You can change it in Settings.`),
+      ],
+      actions: [ui.button({ ko: '좋아요!', en: 'Let’s go', variant: 'primary', onClick: () => dialog.close() })],
+    });
+  }
+
   /* ---------- Start ---------- */
 
   function start() {
     M.store.load();
     const problems = M.content.check();
     if (problems.length) console.warn(`[content] ${problems.length} problem(s):\n- ${problems.join('\n- ')}`);
+    // New topics since last time: words below your starting level become quick checks.
+    if (M.store.state.profile.onboarded && M.srs.syncStartLevel()) M.store.save();
 
     applySettings();
+    if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', applySettings);
     buildTopbar();
     M.speech.init();
 
@@ -131,8 +172,17 @@
       updateStats();
     });
     // Mid-round level-ups show on the summary; elsewhere, a quick toast.
+    // A new outfit for 말랑이 is put on straight away (the wardrobe in Stats can change it).
     M.events.on('levelup', (level) => {
-      if (currentRoute !== 'play') ui.toast({ icon: '🎉', ko: `레벨 ${level}!`, en: `Level ${level}!`, tone: 'good' });
+      const outfit = M.mascot.OUTFITS.find((o) => o.id && o.level === level);
+      if (outfit) {
+        M.store.state.profile.outfit = outfit.id;
+        M.store.save();
+        updateStats();
+      }
+      if (currentRoute !== 'play') {
+        ui.toast({ icon: outfit ? outfit.emoji : '🎉', ko: `레벨 ${level}!`, en: outfit ? `Level ${level}! 말랑이 got a new outfit: ${outfit.en}` : `Level ${level}!`, tone: 'good' });
+      }
     });
 
     if (!M.store.available) {
@@ -144,6 +194,7 @@
     }
 
     window.addEventListener('hashchange', route);
+    setTimeout(whatsNew, 400);
     // Streaks and "due" counts depend on the date: refresh when the tab comes back.
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden && ['home', 'garden', 'stats'].includes(currentRoute)) route();

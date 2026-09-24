@@ -36,9 +36,11 @@
   }
 
   const SOUNDS = {
-    correct: () => {
-      tone(784, 0, 0.12); // G5
-      tone(1047, 0.09, 0.22); // C6
+    // A combo raises the pitch a little with every correct answer in a row.
+    correct: ({ combo = 0 } = {}) => {
+      const lift = 2 ** (Math.min(combo, 12) / 24);
+      tone(784 * lift, 0, 0.12); // G5
+      tone(1047 * lift, 0.09, 0.22); // C6
     },
     almost: () => {
       tone(659, 0, 0.12);
@@ -49,13 +51,25 @@
     tap: () => tone(1100, 0, 0.04, { volume: 0.04 }),
     complete: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.1, 0.26)),
     levelup: () => [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, i * 0.08, 0.3, { type: 'triangle' })),
+    balloon: () => {
+      tone(880, 0, 0.05, { type: 'square', volume: 0.05 });
+      tone(420, 0.02, 0.14, { slideTo: 1400, volume: 0.1 });
+    },
+    whoosh: () => tone(600, 0, 0.35, { type: 'triangle', volume: 0.07, slideTo: 200 }),
+    wave: () => [659, 880, 1175].forEach((f, i) => tone(f, i * 0.07, 0.18, { type: 'triangle', volume: 0.09 })),
+    coin: () => {
+      tone(1319, 0, 0.07, { type: 'square', volume: 0.05 });
+      tone(1760, 0.06, 0.16, { type: 'square', volume: 0.05 });
+    },
+    magic: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f, i * 0.05, 0.22, { volume: 0.08 })),
+    bubble: () => [0, 0.07, 0.13].forEach((t, i) => tone(500 + i * 220, t, 0.08, { slideTo: 900 + i * 200, volume: 0.07 })),
   };
 
   M.sfx = {
-    play(name) {
+    play(name, options) {
       if (!M.store.state.settings.sfx || !SOUNDS[name]) return;
       try {
-        SOUNDS[name]();
+        SOUNDS[name](options);
       } catch {
         // Sound is a nice-to-have; never let it break the game.
       }

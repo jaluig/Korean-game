@@ -59,6 +59,54 @@
     );
   }
 
+  /** Daily goal: a few presets, or any value on the slider. */
+  function goalSetting() {
+    const s = settings();
+    const { min, max, step } = M.config.customGoal;
+    const minutes = (points) => M.progress.goalMinutes(points);
+    const value = h('output.goal-custom-value', { for: 'goal-range' });
+    const show = (points) => {
+      value.textContent = `${points} ⭐ · ~${minutes(points)} min`;
+    };
+    const range = h('input.goal-range', {
+      id: 'goal-range',
+      type: 'range',
+      min,
+      max,
+      step,
+      value: s.dailyGoal,
+      dataset: { focus: 'goal-range' },
+      on: {
+        input: (event) => show(Number(event.target.value)),
+        change: (event) => {
+          s.dailyGoal = Number(event.target.value);
+          save();
+          redraw();
+        },
+      },
+    });
+    show(s.dailyGoal);
+    return h(
+      'div.setting',
+      h(
+        'span.setting-text',
+        h('span.setting-name', ui.bi('하루 목표', 'Daily goal')),
+        h('span.setting-desc', `Points (⭐) to earn each day. A focused minute of practice earns about ${M.config.pointsPerMinute} ⭐.`)
+      ),
+      choice(
+        'goal',
+        M.config.dailyGoals.map((g) => ({ value: g.points, ko: g.ko, en: `${g.en} · ${g.points} ⭐`, sub: `~${g.minutes} min` })),
+        s.dailyGoal,
+        (points) => {
+          s.dailyGoal = points;
+          save();
+          redraw();
+        }
+      ),
+      h('div.goal-custom', h('label', { for: 'goal-range' }, ui.bi('직접 정하기', 'Or choose your own', 'inline')), range, value)
+    );
+  }
+
   function section(icon, ko, en, ...rows) {
     return h('section.card.settings-section', h('h2.card-title', h('span', { 'aria-hidden': 'true' }, `${icon} `), ui.bi(ko, en)), rows);
   }
@@ -123,6 +171,11 @@
     );
     rows.push(toggle('autoPlayAudio', '자동 재생', 'Play pronunciation automatically', 'Hear each word when it appears and after you answer.'));
     rows.push(toggle('sfx', '효과음', 'Sound effects', 'Little dings and pops.'));
+    if (M.mic.supported()) {
+      rows.push(toggle('speaking', '말하기 연습', 'Speaking practice 🎤', 'Show 🎤 buttons next to words and sentences: say them out loud and the browser checks you. Needs a microphone; Chrome uses its online speech service for this.'));
+    } else {
+      rows.push(h('p.setting-desc', '🎤 Speaking practice needs a browser with speech recognition, like Chrome or Edge.'));
+    }
     return section('🔊', '소리', 'Sound', rows);
   }
 
@@ -211,6 +264,24 @@
               '🎨',
               '화면',
               'Display',
+              h(
+                'div.setting',
+                h('span.setting-text', h('span.setting-name', ui.bi('테마', 'Theme'))),
+                choice(
+                  'theme',
+                  [
+                    { value: 'light', ko: '☀️ 밝게', en: 'Light' },
+                    { value: 'dark', ko: '🌙 어둡게', en: 'Dark' },
+                    { value: 'system', ko: '💻 자동', en: 'Like my computer' },
+                  ],
+                  s.theme,
+                  (value) => {
+                    s.theme = value;
+                    save();
+                    redraw();
+                  }
+                )
+              ),
               toggle('showEnglish', '영어 도움말', 'English hints', 'Small English subtitles under the Korean interface text. Turn them off when you feel ready!'),
               toggle('showRomanization', '로마자', 'Romanization', 'Show romanized spelling (e.g. “gamsahamnida”) on word cards. Hangul-only is better for learning.')
             ),
@@ -219,15 +290,20 @@
               '📚',
               '연습',
               'Practice',
+              goalSetting(),
               h(
                 'div.setting',
-                h('span.setting-text', h('span.setting-name', ui.bi('하루 목표', 'Daily goal'))),
+                h(
+                  'span.setting-text',
+                  h('span.setting-name', ui.bi('하루 새 단어', 'New words per day')),
+                  h('span.setting-desc', 'How many brand-new words Word Cards may introduce each day. Reviews are never capped.')
+                ),
                 choice(
-                  'goal',
-                  M.config.dailyGoals.map((g) => ({ value: g.points, ko: g.ko, en: `${g.en} · ${g.points} ⭐`, sub: `~${g.minutes} min` })),
-                  s.dailyGoal,
+                  'newwords',
+                  M.config.session.newWordsChoices.map((n) => ({ value: n, ko: `${n}개`, en: n <= 10 ? 'gentle' : n >= 30 ? 'lots' : n === M.config.session.newWordsPerDay ? 'default' : '' })),
+                  s.newWordsPerDay,
                   (value) => {
-                    s.dailyGoal = value;
+                    s.newWordsPerDay = value;
                     save();
                     redraw();
                   }

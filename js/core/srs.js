@@ -148,8 +148,8 @@
 
   const topicOrder = (item) => M.content.topic(item.topicId)?.order ?? 99;
 
-  /** Curriculum order: easier levels first, alternating between topics. */
-  const byCurriculum = (a, b) => a.level - b.level || a.index - b.index || topicOrder(a) - topicOrder(b);
+  /** Curriculum order: easier levels first, one topic at a time (so sentences unlock sooner). */
+  const byCurriculum = (a, b) => a.level - b.level || topicOrder(a) - topicOrder(b) || a.index - b.index;
 
   /**
    * Starting level: words below it count as "probably known". They skip the
@@ -181,6 +181,25 @@
     M.store.state.profile.startLevel = level;
   }
 
+  /**
+   * Content added after onboarding (new topics, new words): words below the
+   * starting level that have no record yet become quick checks too, queued
+   * after the checks already waiting. Returns how many were added.
+   */
+  function syncStartLevel(now = U.now()) {
+    const c = cfg();
+    const { DAY } = M.config.time;
+    const level = M.store.state.profile.startLevel || 1;
+    const missing = M.content.words().filter((w) => w.level < level && !peek(w.id)).sort(byCurriculum);
+    let n = Object.values(items()).filter((r) => r.assumed).length;
+    for (const w of missing) {
+      const day = Math.floor(n / c.assumedChecksPerDay);
+      items()[w.id] = { ...blank(), stage: 2, assumed: true, introduced: 0, interval: c.intervals[2], due: now + day * DAY + n };
+      n++;
+    }
+    return missing.length;
+  }
+
   /** How many brand-new words were introduced today. */
   function newToday(now = U.now()) {
     const today = U.dayKey(now);
@@ -191,7 +210,8 @@
     return count;
   }
 
-  const newWordsLeftToday = (now) => Math.max(0, M.config.session.newWordsPerDay - newToday(now));
+  const newWordsPerDay = () => M.store.state.settings.newWordsPerDay || M.config.session.newWordsPerDay;
+  const newWordsLeftToday = (now) => Math.max(0, newWordsPerDay() - newToday(now));
 
   /** Most urgent first: tricky, then most overdue, then least grown. */
   function byUrgency(now) {
@@ -395,6 +415,7 @@
     review,
     practice,
     applyStartLevel,
+    syncStartLevel,
     newToday,
     interleave,
     wordPreview,

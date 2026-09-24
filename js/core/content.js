@@ -12,6 +12,7 @@
   const topics = [];
   const words = new Map();
   const sentences = new Map();
+  const soundSets = [];
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -66,6 +67,19 @@
     return topic;
   }
 
+  /**
+   * Sound Twins: sets of real words that differ in a single sound (달 / 탈 / 딸).
+   * Each set: { id, words: [{ ko, en, emoji, rom }] }. Ids become 'sound:<id>'.
+   */
+  function registerSoundSets(list) {
+    for (const set of list || []) {
+      const id = `sound:${set.id}`;
+      if (!set.id || !Array.isArray(set.words) || set.words.length < 2) problems.push(`sound set "${set.id}": needs an id and 2+ words`);
+      else if (soundSets.some((s) => s.id === id)) problems.push(`${id}: duplicate sound set`);
+      else soundSets.push(Object.freeze({ ...set, id, localId: set.id, index: soundSets.length, type: 'sound' }));
+    }
+  }
+
   /** Check every topic for authoring mistakes. Returns a list of messages. */
   function check() {
     const found = [...problems];
@@ -102,7 +116,10 @@
 
   M.content = {
     registerTopic,
+    registerSoundSets,
     check,
+    soundSets: () => soundSets.slice(),
+    soundSet: (id) => soundSets.find((s) => s.id === id) || null,
     topics: () => topics.slice(),
     topic: (id) => topics.find((t) => t.id === id) || null,
     word: (id) => words.get(id) || null,

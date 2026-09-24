@@ -22,6 +22,22 @@
     );
   }
 
+  /** Sound Twins sets you mixed up: each word with its own 🔊, to compare. */
+  function soundList(ids) {
+    const sets = (ids || []).map((id) => M.content.soundSet(id)).filter(Boolean);
+    if (!sets.length) return null;
+    return h(
+      'section.summary-list.mistakes',
+      h('h3', ui.bi('다시 들어 볼 소리', 'Sounds to listen to again')),
+      h(
+        'ul.word-chips',
+        sets.map((set) =>
+          h('li.word-chip', set.words.map((w) => [h('span.word-chip-ko', { lang: 'ko' }, w.ko), ui.audioButton(w.ko, { size: 'small', label: `Play ${w.ko}` })]))
+        )
+      )
+    );
+  }
+
   function wordList(title, ids, cls) {
     const items = ids.map(wordChip).filter(Boolean);
     if (!items.length) return null;
@@ -50,14 +66,17 @@
 
       const stats = [
         { icon: '⭐', value: `+${r.points}`, ko: '점수', en: 'points' },
-        r.gameId === 'speed-match'
-          ? { icon: '✔', value: r.matches, ko: '짝', en: 'matches' }
-          : { icon: '🎯', value: `${accuracy}%`, ko: '정확도', en: 'accuracy' },
+        r.mainStat ||
+          (r.gameId === 'speed-match'
+            ? { icon: '✔', value: r.matches, ko: '짝', en: 'matches' }
+            : { icon: '🎯', value: `${accuracy}%`, ko: '정확도', en: 'accuracy' }),
         { icon: '🔥', value: r.bestCombo || 0, ko: '최고 콤보', en: 'best combo' },
       ];
 
       const celebrations = [];
       if (r.levelUp) celebrations.push(h('div.banner.banner-lilac', '🎉 ', ui.bi(`레벨 ${r.levelUp} 달성!`, `You reached level ${r.levelUp}!`)));
+      const outfit = r.levelUp && M.mascot.OUTFITS.find((o) => o.id && o.level === r.levelUp);
+      if (outfit) celebrations.push(h('div.banner.banner-pink', `${outfit.emoji} `, ui.bi(`말랑이에게 선물이 왔어요: ${outfit.ko}!`, `A present for 말랑이: ${outfit.en}! Change outfits in the wardrobe (Stats).`)));
       if (r.goalReached) celebrations.push(h('div.banner.banner-mint', '🏆 ', ui.bi('오늘의 목표 달성!', 'Daily goal complete!')));
 
       const badges = (r.badges || []).map((b) =>
@@ -95,8 +114,10 @@
           ),
           badges.length ? h('section.summary-badges', h('h3', ui.bi('새 배지!', 'New badge!')), h('div.badge-grid', badges)) : null,
           wordList({ ko: '새로 배운 단어', en: 'New words' }, r.learned || [], 'learned'),
+          wordList({ ko: '쑥쑥 자랐어요', en: 'Words that grew a stage' }, (r.grown || []).filter((id) => !(r.learned || []).includes(id)), 'grown'),
           wordList({ ko: '새로 배운 문장', en: 'New sentences' }, r.sentencesLearned || [], 'learned'),
           wordList({ ko: '다시 연습할 것', en: 'To practise again — they’ll come back soon' }, r.mistakes || [], 'mistakes'),
+          soundList(r.soundMistakes),
           h(
             'div.summary-actions',
             home,

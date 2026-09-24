@@ -8,7 +8,7 @@
 (function (M) {
   'use strict';
 
-  const SCHEMA_VERSION = 1;
+  const SCHEMA_VERSION = 2;
 
   function defaultState() {
     return {
@@ -17,6 +17,8 @@
       profile: {
         onboarded: false,
         startLevel: 1,
+        seenVersion: '', // the version whose "what's new" was shown
+        outfit: '', // 말랑이's outfit (see mascot.js)
       },
       settings: {
         showEnglish: true, // small English subtitles under Korean UI text
@@ -28,7 +30,11 @@
         typing: true, // typing exercises with the Korean keyboard
         keyHints: true, // show QWERTY letters on the on-screen keyboard
         dailyGoal: M.config.defaultDailyGoal,
+        newWordsPerDay: M.config.session.newWordsPerDay,
         focusTopic: 'all',
+        theme: 'light', // 'light' | 'dark' | 'system'
+        balloonMode: 'ko', // Balloon Pop: 'ko' = Korean balloons (type English), 'en' = the reverse
+        speaking: true, // 🎤 "say it" buttons, where the browser supports speech recognition
       },
       totals: {
         points: 0,
@@ -39,7 +45,18 @@
         typedCorrect: 0,
         sentencesCorrect: 0,
         bestMatch: 0,
+        balloonsPopped: 0,
+        bestBalloon: 0,
+        skyCleared: 0,
+        particlesCorrect: 0,
+        verbsCorrect: 0,
+        numbersCorrect: 0,
+        soundsCorrect: 0,
+        dictationsCorrect: 0,
+        spokenGood: 0,
+        bestCombo: 0,
       },
+      skills: {}, // accuracy per skill (verb forms, particles, number tasks…): id → { seen, correct }
       streak: { current: 0, best: 0, lastDay: null },
       days: {}, // 'YYYY-MM-DD' → { points, answers, correct, rounds }
       items: {}, // word/sentence id → spaced-repetition record (see srs.js)
@@ -61,7 +78,15 @@
 
   /** Upgrade older saves. Add a step here whenever the shape of the state changes. */
   function migrate(state) {
-    // (No older versions yet.)
+    const from = Number(state.version) || 1;
+    if (from < 2) {
+      // v2: the daily goals were raised (the old ones took only a few minutes). Past days
+      // keep the goal they had, so their ★ in the history doesn't change.
+      const old = state.settings.dailyGoal;
+      for (const day of Object.values(state.days || {})) if (day && day.goal == null) day.goal = old;
+      const raised = { 50: 250, 100: 500, 200: 800 };
+      if (raised[old]) state.settings.dailyGoal = raised[old];
+    }
     state.version = SCHEMA_VERSION;
     return state;
   }

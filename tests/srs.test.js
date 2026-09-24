@@ -122,6 +122,23 @@ test('starting level assumes easier words are known and spreads their checks ove
   assert.notEqual(srs.peek('day:home'), null);
 });
 
+test('words added after onboarding below your level become quick checks, queued after the waiting ones', () => {
+  fresh();
+  M.store.state.profile.startLevel = 2;
+  const level1 = M.content.words().filter((w) => w.level === 1);
+  assert.equal(srs.syncStartLevel(NOON), level1.length);
+  for (const w of level1) assert.equal(srs.peek(w.id).assumed, true, w.id);
+  assert.equal(srs.syncStartLevel(NOON), 0, 'nothing twice');
+  // A word practised for real is never touched.
+  delete M.store.state.items[level1[0].id];
+  srs.introduce(level1[0].id, NOON);
+  delete M.store.state.items[level1[1].id];
+  assert.equal(srs.syncStartLevel(NOON), 1);
+  assert.equal(srs.peek(level1[0].id).assumed, false);
+  const lastDue = Math.max(...level1.slice(2).map((w) => srs.peek(w.id).due));
+  assert.ok(srs.peek(level1[1].id).due >= lastDue - DAY, 'the new check goes to the back of the queue');
+});
+
 test('the first round introduces a handful of words, each quizzed after its intro', () => {
   fresh();
   const { steps, freshIds } = srs.buildWordSession({ now: NOON });
@@ -132,9 +149,9 @@ test('the first round introduces a handful of words, each quizzed after its intr
     const quiz = steps.findIndex((s) => s.kind === 'quiz' && s.id === id);
     assert.ok(intro >= 0 && quiz > intro + 1, `${id} is quizzed after something else`);
   }
-  // Curriculum order: level 1 first, alternating topics.
-  const topics = freshIds.map((id) => id.split(':')[0]);
-  assert.deepEqual(topics.slice(0, 2).sort(), ['cafe', 'day']);
+  // Curriculum order: level 1 first, one topic at a time.
+  assert.ok(freshIds.every((id) => M.content.word(id).level === 1));
+  assert.deepEqual([...new Set(freshIds.map((id) => id.split(':')[0]))], ['cafe']);
 });
 
 test('lots of due reviews squeeze out new words', () => {

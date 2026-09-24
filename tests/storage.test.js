@@ -43,3 +43,20 @@ test('export and import round-trip; other files are rejected', () => {
   assert.throws(() => M.store.importJson('{"hello": 1}'), /not a Mallang Korean backup/);
   assert.throws(() => M.store.importJson('nope'));
 });
+
+test('version 1 saves get the raised daily goals, and old days keep their goal', () => {
+  const cases = [[50, 250], [100, 500], [200, 800], [150, 150]];
+  for (const [before, after] of cases) {
+    localStorage.setItem(key, JSON.stringify({ version: 1, settings: { dailyGoal: before }, items: {}, days: { '2026-09-20': { points: 120 } } }));
+    M.store.load();
+    assert.equal(M.store.state.settings.dailyGoal, after, `${before} → ${after}`);
+    assert.equal(M.store.state.days['2026-09-20'].goal, before);
+    assert.equal(M.store.state.version, 2);
+  }
+});
+
+test('new settings have defaults', () => {
+  M.store.reset();
+  assert.equal(M.store.state.settings.theme, 'light');
+  assert.equal(M.store.state.settings.dailyGoal, M.config.defaultDailyGoal);
+});

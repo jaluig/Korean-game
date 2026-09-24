@@ -72,7 +72,44 @@
   <g data-show="think" class="m-dots" fill="${INK}">
     <circle cx="94" cy="56" r="2.4"/><circle cx="101" cy="48" r="3"/><circle cx="109" cy="38" r="3.8"/>
   </g>
+  <!-- outfits: only the one named in data-outfit (on .mascot or .brand-mascot) is shown -->
+  <g class="m-outfit m-outfit-scarf" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M19 97 Q60 110 101 97 L102.5 104.5 Q60 118 17.5 104.5 Z" fill="#8fc7ff"/>
+    <path d="M76 104 L73 119 L83 119 L84 103 Z" fill="#8fc7ff"/>
+    <path d="M35 101.5 L37 108 M50 104 L51 111 M68 104 L67 111 M86 101 L84 108" stroke="#ffffff" fill="none" stroke-linecap="round"/>
+  </g>
+  <g class="m-outfit m-outfit-glasses" stroke="${INK}" stroke-width="2.4" fill="none">
+    <circle cx="46" cy="77" r="9.5" fill="rgba(255,255,255,0.3)"/><circle cx="74" cy="77" r="9.5" fill="rgba(255,255,255,0.3)"/>
+    <path d="M55.5 76 Q60 72.5 64.5 76"/><path d="M36.6 75 L27 70.5"/><path d="M83.4 75 L93 70.5"/>
+  </g>
+  <g class="m-outfit m-outfit-bow" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M86 45 L74 36.5 Q71.5 45 74 53.5 Z" fill="#ff8fb0"/><path d="M86 45 L98 36.5 Q100.5 45 98 53.5 Z" fill="#ff8fb0"/>
+    <circle cx="86" cy="45" r="4.4" fill="#ff5c8a"/>
+  </g>
+  <g class="m-outfit m-outfit-flower" stroke="${INK}" stroke-width="1.8">
+    <circle cx="34" cy="41" r="4.6" fill="#fff3a8"/><circle cx="40.7" cy="45.8" r="4.6" fill="#fff3a8"/><circle cx="38.1" cy="53.7" r="4.6" fill="#fff3a8"/>
+    <circle cx="29.9" cy="53.7" r="4.6" fill="#fff3a8"/><circle cx="27.3" cy="45.8" r="4.6" fill="#fff3a8"/><circle cx="34" cy="48" r="3.8" fill="#ffb347"/>
+  </g>
+  <g class="m-outfit m-outfit-beret" stroke="${INK}" stroke-width="2.4">
+    <ellipse cx="45" cy="48" rx="17" ry="7" transform="rotate(-16 45 48)" fill="#b89cf0"/><circle cx="43" cy="40.6" r="2.6" fill="#b89cf0"/>
+  </g>
+  <g class="m-outfit m-outfit-crown" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M49 50 L50 41.5 L55 46.5 L60 40.5 L65 46.5 L70 41.5 L71 50 Z" fill="#ffd66b"/>
+    <circle cx="60" cy="46.8" r="2" fill="#ff7aa2" stroke="none"/><circle cx="53.6" cy="47.8" r="1.5" fill="#8fd89c" stroke="none"/><circle cx="66.4" cy="47.8" r="1.5" fill="#8fc7ff" stroke="none"/>
+  </g>
 </svg>`;
+
+  /** Outfits unlock as you level up (level 1 = none). Choose one in the wardrobe (Stats). */
+  const OUTFITS = [
+    { id: '', level: 1, emoji: '🐰', ko: '기본', en: 'Just me' },
+    { id: 'bow', level: 2, emoji: '🎀', ko: '리본', en: 'Ribbon' },
+    { id: 'glasses', level: 3, emoji: '👓', ko: '안경', en: 'Glasses' },
+    { id: 'flower', level: 5, emoji: '🌼', ko: '꽃', en: 'Flower' },
+    { id: 'scarf', level: 7, emoji: '🧣', ko: '목도리', en: 'Scarf' },
+    { id: 'beret', level: 9, emoji: '🎨', ko: '베레모', en: 'Beret' },
+    { id: 'crown', level: 12, emoji: '👑', ko: '왕관', en: 'Crown' },
+  ];
+  const outfit = () => M.store.state.profile.outfit || '';
 
   /** Short Korean phrases (with English) the mascot says. */
   const PHRASES = {
@@ -120,7 +157,7 @@
    * With bubble: true it can show a speech bubble (Korean + English).
    */
   function create({ size = 120, mood = 'idle', bubble = false, idle = true } = {}) {
-    const figure = h('div.mascot', { style: { width: `${size}px`, height: `${size}px` }, dataset: { mood } });
+    const figure = h('div.mascot', { style: { width: `${size}px`, height: `${size}px` }, dataset: { mood, outfit: outfit() } });
     figure.innerHTML = SVG;
     if (idle) figure.classList.add('breathing');
     const bubbleEl = bubble ? h('div.bubble', { hidden: true }) : null;
@@ -171,5 +208,5 @@
     return { el, figure, setMood, say, react, squish: () => animate('squish') };
   }
 
-  M.mascot = { create, phrase, greeting, svg: () => SVG };
+  M.mascot = { create, phrase, greeting, svg: () => SVG, OUTFITS, outfit };
 })(window.Mallang);

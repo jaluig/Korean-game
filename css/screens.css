@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  background: linear-gradient(140deg, #fff 30%, var(--pink-soft) 100%);
+  background: linear-gradient(140deg, var(--card) 30%, var(--pink-soft) 100%);
 }
 
 .hero-mascot {
@@ -32,7 +32,7 @@
   position: relative;
   margin-bottom: 18px;
   padding: 14px 18px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 4px 0 var(--shadow);
@@ -45,7 +45,7 @@
   top: 28px;
   width: 16px;
   height: 16px;
-  background: #fff;
+  background: var(--card);
   border-left: 2px solid var(--line);
   border-bottom: 2px solid var(--line);
   transform: rotate(45deg);
@@ -273,7 +273,7 @@
   margin: 10px 0 0;
   padding: 5px 12px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--card);
   font-size: 0.92rem;
   font-weight: 800;
 }
@@ -394,7 +394,7 @@
   align-items: center;
   gap: 8px;
   padding: 4px 6px 4px 8px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 999px;
   font-size: 0.95rem;
@@ -466,7 +466,7 @@
   gap: 2px;
   min-height: 128px;
   padding: 14px 8px 12px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 4px 0 var(--shadow);
@@ -499,7 +499,7 @@
 }
 
 .plant-tile.stage-0 {
-  background: #fdf8f4;
+  background: var(--card-soft);
   box-shadow: 0 4px 0 var(--line);
 }
 
@@ -635,7 +635,7 @@
   display: flex;
   align-items: center;
   gap: 22px;
-  background: linear-gradient(140deg, #fff 30%, var(--lilac-soft) 100%);
+  background: linear-gradient(140deg, var(--card) 30%, var(--lilac-soft) 100%);
 }
 
 .level-main {
@@ -664,7 +664,7 @@
 .stat {
   padding: 14px 10px;
   text-align: center;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 4px 0 var(--shadow);
@@ -767,7 +767,7 @@
   gap: 4px;
   padding: 14px 10px;
   text-align: center;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 20px;
 }
@@ -943,7 +943,7 @@
 }
 
 .goal-options {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .level-option,
@@ -952,7 +952,7 @@
   align-items: center;
   gap: 14px;
   padding: 14px 18px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 4px 0 var(--shadow);
@@ -1072,7 +1072,7 @@
   align-items: center;
   gap: 18px;
   padding: 16px 20px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 22px;
   box-shadow: 0 4px 0 var(--shadow);
@@ -1113,14 +1113,14 @@
   align-items: center;
   gap: 8px;
   padding: 6px 8px 6px 12px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 16px;
 }
 
 .summary-list.mistakes .word-chip {
   background: var(--bad-soft);
-  border-color: #ffc6d1;
+  border-color: var(--bad-line);
 }
 
 .summary-list.learned .word-chip {
@@ -1194,4 +1194,132 @@
     flex-direction: column;
     text-align: center;
   }
+}
+
+/* ---------- Word of the day (home) ---------- */
+
+.home-wotd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  margin-top: 18px;
+  padding: 14px 20px;
+}
+
+.wotd-label {
+  font-family: var(--font-display);
+  color: var(--pink-deep);
+}
+
+.wotd-emoji {
+  font-family: var(--font-emoji);
+  font-size: 2rem;
+}
+
+.wotd-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wotd-ko {
+  font-family: var(--font-ko);
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.wotd-en {
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.wotd-example {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 220px;
+  font-size: 0.95rem;
+}
+
+.wotd-example-en {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.wotd-more {
+  margin-left: auto;
+}
+
+/* ---------- Wardrobe (stats) ---------- */
+
+.wardrobe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 12px;
+}
+
+.wardrobe-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px 10px;
+  border-radius: 18px;
+  border: 2px solid var(--line);
+  background: var(--card);
+  cursor: pointer;
+}
+
+.wardrobe-item .bi {
+  align-items: center;
+}
+
+.wardrobe-item.selected {
+  border-color: var(--pink-deep);
+  background: var(--pink-soft);
+  box-shadow: 0 4px 0 var(--pink-deep);
+}
+
+.wardrobe-item.locked {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.wardrobe-item.locked .mascot {
+  filter: grayscale(0.8);
+}
+
+.wardrobe-lock {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+/* ---------- What's new ---------- */
+
+.whats-new h3 {
+  margin-top: 6px;
+}
+
+.whats-new-list {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.whats-new-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.whats-new-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  font-family: var(--font-emoji);
+  font-size: 1.5rem;
+  text-align: center;
 }

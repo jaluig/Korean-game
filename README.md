@@ -5,18 +5,24 @@ Meet 말랑이 (Mallang-i), a squishy rice-cake bunny with a sprout on its head:
 every Korean word you learn becomes a plant in your **word garden**, and short
 practice rounds keep it growing.
 
-- **3 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match
-- **2 topics:** ☕ 카페에서 *At the café* (35 words, 17 sentences) and 🌞 나의 하루 *My day* (33 words, 18 sentences), each with short lesson notes
+- **8 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins
+- **10 topics** with {{WORDS}} words and {{SENTENCES}} sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans
 - **Built-in Korean keyboard**, so you never need a Korean input method
-- **Pronunciation audio** through your browser's own Korean voice
-- **Streaks, points, levels, a daily goal and badges**, saved on your computer
-- Korean interface with small English subtitles, which you can turn off once you're ready
+- **Pronunciation audio** through your browser's own Korean voice, **dictation** of whole sentences, and **🎤 speaking practice** in Chrome and Edge
+- **Streaks, points, levels, an adjustable daily goal, {{BADGES}} badges** and outfits for the mascot, saved on your computer
+- Korean interface with small English subtitles, which you can turn off once you're ready, and a **dark theme**
 
 <p align="center"><img src="docs/screenshots/home.png" alt="Home screen: the mascot, today's practice, the daily goal and the minigames" width="760"></p>
 
 | Meeting a new word | Typing with the built-in keyboard | Feedback that explains the mistake |
 | --- | --- | --- |
 | ![A new-word card for 맛있어요 with its pronunciation and an example](docs/screenshots/word-intro.png) | ![Typing 학교 on the on-screen Korean keyboard](docs/screenshots/typing.png) | ![Sentence Builder explaining 에서 vs 에](docs/screenshots/sentence-feedback.png) |
+
+| Balloon Pop | Particle Lab | Verb Magic |
+| --- | --- | --- |
+| ![Korean words floating across the sky as balloons](docs/screenshots/balloon-pop.png) | ![Choosing the missing particle from potion bottles](docs/screenshots/particle-lab.png) | ![Turning a verb into the past tense](docs/screenshots/verb-magic.png) |
+| **Number Shop** | **Sound Twins** | **Dark theme** |
+| ![A customer asking for three apples](docs/screenshots/number-shop.png) | ![Picking the word you heard: 달, 탈 or 딸](docs/screenshots/sound-twins.png) | ![The home screen in the dark theme](docs/screenshots/dark.png) |
 
 ## Quick start
 
@@ -42,16 +48,27 @@ The game follows a few well-established ideas about learning vocabulary:
 | **Spaced repetition** | Each word has a review date. Get it right and it waits longer (10 min → 1 day → 3 days → 1 week → 16 days → months). |
 | **Missed words come back sooner** | A wrong answer drops the word two stages, makes it due right away and lowers its "ease", so it keeps returning until it sticks. It is also asked again a few cards later in the same round. Words you missed recently are marked 🥀 *tricky*. |
 | **Active recall, step by step** | How you're asked depends on how well you know the word: 🌱 recognise it → 🌿 pick or hear the Korean → 🌷 build it from syllable tiles → 🌻 type it from memory. |
-| **New + old, mixed** | Each Word Cards round mixes due reviews with a few new words. The number of new words shrinks when many reviews are waiting, and there's a daily cap (15), so reviews never pile up. |
+| **New + old, mixed** | Each Word Cards round mixes due reviews with a few new words. The number of new words shrinks when many reviews are waiting, and there's a daily cap (20 by default, adjustable in Settings), so reviews never pile up. Within a level, words come one topic at a time, so their sentences open up quickly. |
 | **Your starting level** | You pick your level at the start (A1 / low A2 / A2). Words below it aren't thrown away: they come up as quick checks, 8 a day. Miss one and it goes back into your learning queue, so the gaps in what you know get found and filled. |
 | **Immediate feedback that explains** | After every answer you see the correct answer, what you gave, and why it's wrong: e.g. *"ㄸ is tense: a tight sound with no puff of air"*, *"커피 ends in a vowel, so it takes 를"*, *"Working is something you do there, so the place takes 에서"*. |
 | **Sentences only with words you know** | A sentence unlocks once you've learned all of its words. |
+| **Grammar you can see** | Particle Lab turns your sentences into "which particle?" questions (을/를, 이/가, 에/에서, (으)로…), and Verb Magic drills verb forms (past, future, negative, "want to"…). The wrong options are the mistakes learners really make (`듣어요`, `먹아요`, `안 공부해요`), each with the reason, and every answer shows how the form is built. |
+| **Train your ear** | Sound Twins plays one of two or three look-alike words (달 / 탈 / 딸, 거울 / 겨울, 반 / 방 / 밤) so you learn to hear the difference. Well-known sentences are sometimes dictated for you to write down. |
+| **Practice counts everywhere** | The fast games (Speed Match, Balloon Pop, Particle Lab, Verb Magic, Number Shop) use the words and sentences you've learned: a slip marks that word or sentence as tricky, so Word Cards and the Sentence Builder bring it back soon. |
+| **A daily goal that means real practice** | Presets from 250 ⭐ (about 6 minutes) to 1200 ⭐ (about 30), or any amount on a slider in Settings. |
 
 ### The minigames
 
 - **🎴 단어 카드 · Word Cards**: the main loop. New words get an introduction card (audio, pronunciation notes like `[감사함니다]`, dictionary form, an example sentence), then they're quizzed a few cards later. Keys: `1`–`4` pick an answer, `Enter` continues, `R` replays audio.
 - **🧩 문장 만들기 · Sentence Builder**: tap word tiles in order to build a Korean sentence. The decoy tiles are real traps: wrong particles (`커피을`), 에 vs 에서, 둘 vs 두 before a counter. Well-known sentences switch to listening mode ("build what you hear").
 - **⚡️ 번개 짝꿍 · Speed Match**: match Korean words to their meanings against a 60-second clock. Tricky and due words appear first; a mismatch sends that word back to Word Cards for a proper review. It unlocks after you've learned 6 words.
+- **🎈 풍선 터뜨리기 · Balloon Pop**: Korean words float across the sky as balloons. Type what they mean in English before they reach the left side; an exact answer pops the balloon by itself, and `Enter` also accepts a small typo. Every 5 pops the wind gets stronger, 3 balloons that get away end the round, and 10 waves clear the sky. **Reverse mode** shows English balloons that you pop by typing the Korean on the built-in keyboard.
+- **🧪 조사 실험실 · Particle Lab**: a sentence you know with one particle missing: pour in the right potion (을 or 를? 에 or 에서?). Wrong potions explain themselves, and the right one comes with its rule.
+- **🪄 동사 변신 · Verb Magic**: a verb you've learned and a spell: present, past, negative, then later the future, "want to", "shall we?" and "please do it". Pick the right form (or type it, for verbs you know well) and see how it's built step by step, including the irregular verbs (들어요, 추워요, 몰라요…).
+- **🏪 숫자 가게 · Number Shop**: run a little shop. Hand over "사과 세 개", read a price tag aloud (팔천오백 원), ring up the amount a customer says on the till, and tell the time (세 시 반). Native vs Sino-Korean mix-ups (삼 시, 셋 개) are the wrong answers, each explained.
+- **👂 소리 쌍둥이 · Sound Twins**: hear a word and find it among its look-alike twins, from plain / aspirated / tense consonants to vowels and final consonants. Without a Korean voice it becomes a reading warm-up (romanization → Hangul).
+
+**Dictation and speaking.** Sentences you know well are sometimes dictated in the Sentence Builder: listen and write the whole sentence (spaces and punctuation don't matter). In Chrome and Edge, 🎤 buttons next to new words and answers let you say them out loud: the browser's speech recognition checks how close you were. Both can be switched off in Settings.
 
 ## Typing Korean
 
@@ -73,11 +90,20 @@ and the game explains how to add a voice:
 - **Windows:** Settings → Time & language → Speech → Manage voices → Add voices → Korean, then restart the browser.
 - **macOS:** System Settings → Accessibility → Spoken Content → System voice → Manage Voices… → Korean (e.g. Yuna).
 
+Speaking practice uses the browser's speech recognition (`SpeechRecognition`), which Chrome and Edge provide. It
+needs a microphone, and Chrome sends the audio to its online speech service to recognise it. In browsers without
+it, the 🎤 buttons simply don't appear.
+
 ## Your progress
 
 Everything (garden, streak, points, badges, settings) is saved automatically in your browser's
 `localStorage`. In **Settings → Your data** you can download a backup file, restore it (for example
-on another computer), or reset everything.
+on another computer), or reset everything. Older saves are upgraded automatically: when new topics are
+added, words below your starting level become quick checks, a few a day.
+
+Settings also has the theme (light, dark, or like your computer), the daily goal, how many new words a day
+Word Cards may introduce, and speaking practice. 말랑이 gets a new outfit every few levels: pick one in the
+wardrobe on the Stats screen.
 
 ## Adding content
 
@@ -119,12 +145,18 @@ Mallang.content.registerTopic({
 `pos`, `emoji`, `rom` (romanization), `pron` (pronunciation in Hangul when it differs from the spelling),
 `dict` (dictionary form of a verb), `note`, `example`, `accept` (other answers to accept when typing),
 `avoid` (ids of words so close in meaning that they must never be offered as this word's wrong answers,
-e.g. 차 "tea" and 녹차 "green tea").
+e.g. 차 "tea" and 녹차 "green tea"), `enAlt` (more English answers to accept when the meaning is typed in
+Balloon Pop, e.g. `['to go', 'takeaway']`), and `form` (`'past'`, `'future'` or `'want'` for words that aren't
+in the present tense, like 갔어요). Verb forms are checked against the conjugation engine by the tests.
 
 **Sentence fields:** `en`, `ko`, `tiles` (the answer, in order), `words` (the words it uses; it unlocks
 once they're learned). Optional: `gloss` (English for each tile), `traps` (tempting wrong tiles with an
-explanation), `alts` (other correct word orders). Particle traps like `커피을` for `커피를` are generated
-automatically.
+explanation), `alts` (other correct word orders), `drill: false` (keep the sentence out of Particle Lab).
+Particle traps like `커피을` for `커피를` are generated automatically, and so are the Particle Lab questions.
+
+**Sound Twins** sets live in `content/sounds.js`: real words that differ in one sound, e.g.
+`{ id: 'dal', words: [{ ko: '달', en: 'moon', emoji: '🌙', rom: 'dal' }, { ko: '탈', en: 'mask', emoji: '🎭', rom: 'tal' }] }`.
+The game works out which letter differs and explains it.
 
 ## Adding a minigame
 
@@ -146,30 +178,36 @@ Mallang.games.register({
     // host.topicId           the chosen topic ('all' or a topic id)
     // host.setProgress(d, t) progress bar
     // host.award(points)     add points (updates goal, streak, level)
-    // host.react(result)     sound + mascot reaction to { correct, almost }
+    // host.react(result, combo)  sound + mascot reaction to { correct, almost }, combo counter
     // host.showFeedback({ tone, points, content, onContinue })
     // host.empty({ emoji, ko, en, text })   friendly "nothing to do / locked" card
     // host.onCleanup(fn)     called when the player leaves
-    // host.finish(result)    end of round → summary screen
+    // host.finish(result)    end of round → summary screen ({ gameId, answers, correct, bestCombo,
+    //                        mistakes, mainStat: { icon, value, ko, en } to replace the accuracy tile })
   },
 });
 ```
 
 Games can reuse the exercise types in `js/exercises/` (`intro`, `choice`, `tiles`, `typing`,
-`sentence`) and the spaced-repetition helpers in `js/core/srs.js`. `js/games/word-cards.js` is a
-good example to copy.
+`sentence`, `dictation`), the spaced-repetition helpers in `js/core/srs.js` (`practice(id, correct)`
+is the light update the fast games use), and the language engines: `M.numbers` (Korean number
+readings), `M.conjugate` (verb forms with explanations and typical mistakes), `M.particles` (particle
+questions from sentences) and `M.answers` (lenient checking of typed answers). `js/games/word-cards.js`
+is a good example to copy; `js/games/particle-lab.js` is a small one.
 
 ## Project structure
 
 ```
 index.html            loads everything (plain <script> tags, so it runs from file://)
-css/                  base (tokens, layout), components, screens, games
-content/              one file per topic: words, sentences, lesson notes
-js/core/              no UI: config, Hangul engine, storage, spaced repetition,
-                      progress & badges, distractor picking, speech, sound effects
-js/ui/                components, mascot, Korean keyboard, feedback sheet
-js/exercises/         intro · choice · tiles · typing · sentence
-js/games/             word-cards · sentence-builder · speed-match
+css/                  base (tokens, light and dark theme, layout), components, screens, games, minigames
+content/              one file per topic: words, sentences, lesson notes; sounds.js: Sound Twins sets
+js/core/              no UI: config, Hangul engine, numbers, verb conjugation, particles, answer checking,
+                      storage, spaced repetition, progress & badges, distractor picking, speech,
+                      speech recognition, sound effects
+js/ui/                components, mascot (and its outfits), Korean keyboard, feedback sheet, 🎤 buttons
+js/exercises/         intro · choice · tiles · typing · sentence · dictation
+js/games/             word-cards · sentence-builder · speed-match · balloon-pop · particle-lab ·
+                      verb-magic · number-shop · sound-twins
 js/screens/           onboarding · home · garden · stats · settings · play · summary
 js/app.js             start-up and routing (#/home, #/play/word-cards…)
 tests/                unit tests for the core and the content (Node's built-in runner)
@@ -185,8 +223,11 @@ The core logic and the content have unit tests that use Node's built-in test run
 npm test          # or: node --test tests/*.test.js
 ```
 
-They cover the Hangul typing engine, spaced-repetition scheduling and round building, streaks and
-levels, saving/loading, and they check every topic for authoring mistakes.
+They cover the Hangul typing engine, Korean numbers, the verb conjugation engine (checked against a
+hand-verified table of regular and irregular verbs), particle questions, answer checking,
+spaced-repetition scheduling and round building, the new games' round logic, streaks, levels, badges,
+saving, loading and upgrading old saves, and they check every topic for authoring mistakes (including
+that every verb form in the content matches the conjugation engine).
 
 ## Why plain JavaScript?
 
@@ -199,7 +240,7 @@ system fonts are used and everything still works.
 
 ## Ideas for next steps
 
-- More topics: numbers & time, past tense (어제 뭐 했어요?), shopping, directions, feelings
-- A Hangul reading warm-up for tricky letter pairs (ㅓ/ㅗ, ㄱ/ㅋ/ㄲ)
-- Listening dictation of whole sentences, and speaking practice with the browser's speech recognition
-- A dark theme and more badges
+- Grammar patterns as their own review items (-아서/어서, -(으)면, -지만…), with Particle-Lab-style questions
+- Short listening dialogues with comprehension questions
+- Your own word lists: add words you meet elsewhere and practise them in every game
+- Installable offline app (PWA) and a layout tuned for phones

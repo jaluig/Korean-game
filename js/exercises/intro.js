@@ -17,7 +17,7 @@
       const card = h(
         'div.intro-card',
         h('div.intro-emoji', { 'aria-hidden': 'true' }, word.emoji),
-        h('div.intro-word', h('span.ko-word', { lang: 'ko' }, word.ko), ui.audioButton(word.ko, { size: 'big' })),
+        h('div.intro-word', h('span.ko-word', { lang: 'ko' }, word.ko), ui.audioButton(word.ko, { size: 'big' }), ui.sayButton ? ui.sayButton(word.ko, { size: 'big' }) : null),
         word.pron ? h('div.intro-pron', { title: 'How it is pronounced' }, `[${word.pron}]`) : null,
         settings.showRomanization && word.rom ? h('div.intro-rom', word.rom) : null,
         h('div.intro-meaning', word.en),

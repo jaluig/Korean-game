@@ -21,6 +21,7 @@
         M.srs.applyStartLevel(choices.level);
         M.store.state.settings.dailyGoal = choices.goal;
         M.store.state.profile.onboarded = true;
+        M.store.state.profile.seenVersion = M.version; // everything is new: no "what's new" needed
         M.store.save();
         M.events.emit('settings');
         location.hash = goTo;

@@ -35,6 +35,21 @@
   --lilac-soft: #f2ecfd;
   --lilac-shadow: #7b5bbd;
 
+  /* Balloon Pop's sky */
+  --sky-top: #dcefff;
+  --sky-bottom: #fff6ec;
+  --cloud: #ffffff;
+
+  /* Surfaces and inks that change with the theme */
+  --card-soft: #fdf8f4;
+  --glass: rgba(255, 255, 255, 0.8);
+  --topbar-bg: rgba(255, 248, 241, 0.88);
+  --overlay-bg: rgba(255, 248, 241, 0.86);
+  --good-ink: #1f7a5a;
+  --almost-ink: #9a6a0c;
+  --bad-ink: #c23b55;
+  --bad-line: #ffc6d1;
+
   --good: #34ad83;
   --good-soft: #e2f7ed;
   --bad: #ee5f79;
@@ -53,6 +68,64 @@
   --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', 'EmojiOne Color', sans-serif;
 
   color-scheme: light;
+}
+
+/*
+ * Dark theme ("strawberry milk at night"): the same pastel accents on a cosy
+ * cocoa background. Chosen in Settings (Light / Dark / Like my computer).
+ */
+:root[data-theme='dark'] {
+  --bg: #1f1a1e;
+  --bg-dot: #2c252a;
+  --card: #2b2328;
+  --card-soft: #251f23;
+  --ink: #f4e9e6;
+  --ink-soft: #cbb8b4;
+  --ink-faint: #8d7a76;
+  --line: #45393f;
+  --shadow: #141013;
+
+  --pink: #ef8fab;
+  --pink-deep: #ff7ea5;
+  --pink-soft: #3b2731;
+  --pink-shadow: #b0466c;
+  --mint: #74c9a4;
+  --mint-deep: #4fcf9f;
+  --mint-soft: #1f3530;
+  --mint-shadow: #217558;
+  --butter: #e9c56d;
+  --butter-deep: #f1b43a;
+  --butter-soft: #3a3223;
+  --butter-shadow: #a2741a;
+  --sky: #86b9ea;
+  --sky-deep: #72b4f2;
+  --sky-soft: #1f2d3e;
+  --sky-shadow: #2f68a1;
+  --lilac: #baa5e9;
+  --lilac-deep: #b597f0;
+  --lilac-soft: #2d2640;
+  --lilac-shadow: #6a50ae;
+
+  --good: #4fcf9f;
+  --good-soft: #1f3a31;
+  --bad: #ff7d94;
+  --bad-soft: #43242c;
+  --almost: #f3be4c;
+  --almost-soft: #3c3321;
+
+  --sky-top: #22344b;
+  --sky-bottom: #2e2533;
+  --cloud: rgba(255, 255, 255, 0.13);
+
+  --glass: rgba(255, 255, 255, 0.07);
+  --topbar-bg: rgba(31, 26, 30, 0.9);
+  --overlay-bg: rgba(31, 26, 30, 0.86);
+  --good-ink: #8fe6c2;
+  --almost-ink: #f6d27c;
+  --bad-ink: #ffa6b7;
+  --bad-line: #6e3542;
+
+  color-scheme: dark;
 }
 
 /* ---------- Reset ---------- */
@@ -152,7 +225,7 @@ button {
   margin: 60px auto;
   padding: 20px;
   text-align: center;
-  background: #fff;
+  background: var(--card);
   border-radius: 20px;
 }
 
@@ -323,7 +396,7 @@ body [lang='ko'],
   z-index: 20;
   margin: 0 -20px;
   padding: 0 20px;
-  background: rgba(255, 248, 241, 0.88);
+  background: var(--topbar-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 2px dashed var(--line);
@@ -385,12 +458,12 @@ body [lang='ko'],
 }
 
 .nav-link:hover {
-  background: #fff;
+  background: var(--card);
   border-color: var(--line);
 }
 
 .nav-link.active {
-  background: #fff;
+  background: var(--card);
   border-color: var(--pink);
   box-shadow: 0 3px 0 var(--pink);
 }
@@ -410,7 +483,7 @@ body [lang='ko'],
   align-items: center;
   padding: 5px 12px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   font-weight: 800;
   font-size: 0.95rem;

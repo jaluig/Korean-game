@@ -49,11 +49,16 @@
     start(host) {
       const plan = M.srs.buildWordSession({ topicId: host.topicId });
       if (!plan.steps.length) {
+        // Point to a practice game that has something to do.
+        const extra = ['balloon-pop', 'particle-lab', 'verb-magic', 'number-shop', 'sound-twins']
+          .map((id) => M.games.get(id))
+          .find((g) => g && g.status(host.topicId).ready);
         host.empty({
           emoji: '🌙',
           ko: '오늘은 다 했어요!',
           en: 'All done for today!',
-          text: 'You have learned all of today’s new words and nothing is due. Come back tomorrow — your garden needs time to grow.',
+          text: 'You have learned all of today’s new words and nothing is due. Your garden needs time to grow, so come back tomorrow, or keep practising in another game. (You can raise the number of new words per day in Settings.)',
+          actions: extra ? [{ ko: extra.title.ko, en: `Play ${extra.title.en}`, href: `#/play/${extra.id}` }] : [],
         });
         return;
       }

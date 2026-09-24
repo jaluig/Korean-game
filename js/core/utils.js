@@ -21,6 +21,16 @@
     return a;
   };
   U.sample = (list, n) => U.shuffle(list).slice(0, n);
+  /** Pick one item, with the chance given by weightFn(item). */
+  U.weightedPick = (list, weightFn) => {
+    const weights = list.map((x) => Math.max(0, weightFn(x)));
+    let roll = U.random() * weights.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < list.length; i++) {
+      roll -= weights[i];
+      if (roll < 0) return list[i];
+    }
+    return list[list.length - 1];
+  };
   U.clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   U.uniqueBy = (list, keyFn) => {
     const seen = new Set();

@@ -38,6 +38,7 @@ test('the streak counts consecutive days with practice', () => {
 
 test('events fire when the daily goal and a new level are reached', () => {
   M.store.reset();
+  M.store.state.settings.dailyGoal = 100;
   const seen = [];
   const offGoal = M.events.on('goal', () => seen.push('goal'));
   const offLevel = M.events.on('levelup', (level) => seen.push(`level ${level}`));
@@ -53,6 +54,7 @@ test('events fire when the daily goal and a new level are reached', () => {
 
 test('recent activity lists the last days, oldest first', () => {
   M.store.reset();
+  M.store.state.settings.dailyGoal = 100;
   P.addPoints(120, NOON);
   const week = P.recentActivity(7, NOON);
   assert.equal(week.length, 7);
@@ -60,6 +62,41 @@ test('recent activity lists the last days, oldest first', () => {
   assert.equal(week[6].points, 120);
   assert.equal(week[6].goalMet, true);
   assert.equal(week[5].practised, false);
+});
+
+test('each day keeps the goal it had, so raising the goal doesn’t rewrite history', () => {
+  M.store.reset();
+  M.store.state.settings.dailyGoal = 100;
+  P.addPoints(150, NOON - DAY);
+  M.store.state.settings.dailyGoal = 500;
+  const [yesterday, today] = P.recentActivity(2, NOON);
+  assert.equal(yesterday.goal, 100);
+  assert.equal(yesterday.goalMet, true);
+  assert.equal(today.goal, 500);
+  assert.equal(P.goalMet(NOON), false);
+});
+
+test('the daily goal presets need real practice', () => {
+  const goals = M.config.dailyGoals.map((g) => g.points);
+  assert.ok(goals[0] >= 200, 'even the lightest goal is more than one quick round');
+  assert.ok(goals.every((g, i) => i === 0 || g > goals[i - 1]));
+  assert.ok(goals.includes(M.config.defaultDailyGoal));
+});
+
+test('new badges: goal days, combos, games and topics', () => {
+  M.store.reset();
+  const has = () => Object.keys(M.store.state.badges);
+  M.store.state.settings.dailyGoal = 100;
+  for (let i = 0; i < 5; i++) P.addPoints(120, NOON - i * DAY);
+  P.best('bestCombo', 20);
+  P.finishRound({ gameId: 'word-cards' }, NOON);
+  assert.ok(has().includes('goal-5'));
+  assert.ok(has().includes('combo-20'));
+  assert.ok(!has().includes('all-games'), 'not every game played yet');
+  assert.ok(!has().includes('explorer'));
+  const ids = P.BADGES.map((b) => b.id);
+  assert.equal(new Set(ids).size, ids.length, 'badge ids are unique');
+  assert.ok(P.BADGES.length >= 30);
 });
 
 test('badges are awarded once', () => {

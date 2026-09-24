@@ -59,7 +59,7 @@
       cls: 'modal-word',
       body: [
         h('div.word-detail-top', h('span.word-detail-emoji', { 'aria-hidden': 'true' }, word.emoji), h('span.word-detail-plant', { title: info.en }, info.emoji)),
-        h('div.intro-word', h('span.ko-word', { lang: 'ko' }, word.ko), ui.audioButton(word.ko, { size: 'big' })),
+        h('div.intro-word', h('span.ko-word', { lang: 'ko' }, word.ko), ui.audioButton(word.ko, { size: 'big' }), ui.sayButton ? ui.sayButton(word.ko, { size: 'big' }) : null),
         word.pron ? h('div.intro-pron', `[${word.pron}]`) : null,
         settings.showRomanization && word.rom ? h('div.intro-rom', word.rom) : null,
         h('div.intro-meaning', word.en),
@@ -77,6 +77,8 @@
       actions: [ui.button({ ko: '닫기', en: 'Close', variant: 'primary', onClick: () => dialog.close() })],
     });
   }
+
+  ui.showWord = showWord;
 
   /* ---------- Filters ---------- */
 

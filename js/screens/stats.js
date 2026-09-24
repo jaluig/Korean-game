@@ -34,6 +34,53 @@
     );
   }
 
+  /** 말랑이's wardrobe: outfits unlock with levels; pick any unlocked one. */
+  function wardrobe(level, levelMascot) {
+    const section = h('section.card.wardrobe');
+    const draw = () => {
+      const current = M.mascot.outfit();
+      const outfits = M.mascot.OUTFITS;
+      U.clear(section).append(
+        h('h2.card-title', ui.bi('말랑이 옷장', '말랑이’s wardrobe'), h('span.card-count', `${outfits.filter((o) => o.level <= level).length} / ${outfits.length}`)),
+        h(
+          'div.wardrobe-grid',
+          outfits.map((o) => {
+            const open = o.level <= level;
+            const mini = M.mascot.create({ size: 70, mood: open ? 'happy' : 'sleepy', idle: false });
+            mini.figure.dataset.outfit = o.id;
+            return h(
+              'button',
+              {
+                type: 'button',
+                class: `wardrobe-item ${o.id === current ? 'selected' : ''} ${open ? '' : 'locked'}`.replace(/\s+/g, ' ').trim(),
+                disabled: !open,
+                'aria-pressed': String(o.id === current),
+                title: open ? o.en : `Unlocks at level ${o.level}`,
+                dataset: { focus: `outfit-${o.id || 'none'}` },
+                on: {
+                  click: () => {
+                    M.store.state.profile.outfit = o.id;
+                    M.store.save();
+                    M.events.emit('settings');
+                    levelMascot.figure.dataset.outfit = o.id;
+                    levelMascot.react('cheer');
+                    M.sfx.play('pop');
+                    ui.keepFocus(draw);
+                  },
+                },
+              },
+              mini.figure,
+              h('span.wardrobe-name', ui.bi(`${o.emoji} ${o.ko}`, o.en)),
+              open ? null : h('span.wardrobe-lock', `🔒 Lv ${o.level}`)
+            );
+          })
+        )
+      );
+    };
+    draw();
+    return section;
+  }
+
   M.screens.register({
     id: 'stats',
 
@@ -72,6 +119,7 @@
             tile('📅', daysPractised, '연습한 날', 'days practised')
           ),
           h('section.card', h('h2.card-title', ui.bi('최근 2주', 'Last two weeks')), activityChart(P.recentActivity(14), P.dailyGoal())),
+          wardrobe(level.level, mascot),
           h(
             'section.card',
             h('h2.card-title', ui.bi('배지', 'Badges'), h('span.card-count', `${Object.keys(s.badges).length} / ${P.BADGES.length}`)),

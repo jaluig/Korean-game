@@ -92,7 +92,7 @@
 }
 
 .btn-ghost:hover:not(:disabled) {
-  --btn-bg: rgba(255, 255, 255, 0.8);
+  --btn-bg: var(--glass);
   --btn-border: var(--line);
   box-shadow: none;
 }
@@ -119,7 +119,7 @@
   place-items: center;
   border-radius: 14px;
   border: 2px solid var(--line);
-  background: #fff;
+  background: var(--card);
   box-shadow: 0 3px 0 var(--shadow);
   font-size: 1.1rem;
   font-weight: 800;
@@ -395,7 +395,7 @@ body.no-voice .audio-btn {
   align-items: center;
   gap: 12px;
   padding: 10px 14px 10px 16px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 18px;
   box-shadow: 0 5px 0 var(--shadow), 0 12px 30px rgba(79, 59, 59, 0.12);
@@ -444,6 +444,19 @@ body.no-voice .audio-btn {
   height: 100%;
   overflow: visible;
   transform-origin: 50% 92%;
+}
+
+.m-outfit {
+  display: none;
+}
+
+[data-outfit='bow'] .m-outfit-bow,
+[data-outfit='glasses'] .m-outfit-glasses,
+[data-outfit='flower'] .m-outfit-flower,
+[data-outfit='scarf'] .m-outfit-scarf,
+[data-outfit='beret'] .m-outfit-beret,
+[data-outfit='crown'] .m-outfit-crown {
+  display: inline;
 }
 
 .mascot [data-show] {
@@ -576,7 +589,7 @@ body.no-voice .audio-btn {
   width: max-content;
   max-width: 240px;
   padding: 8px 13px;
-  background: #fff;
+  background: var(--card);
   border: 2px solid var(--line);
   border-radius: 16px;
   box-shadow: 0 4px 0 var(--shadow);
@@ -590,7 +603,7 @@ body.no-voice .audio-btn {
   bottom: -9px;
   width: 14px;
   height: 14px;
-  background: #fff;
+  background: var(--card);
   border-right: 2px solid var(--line);
   border-bottom: 2px solid var(--line);
   transform: rotate(45deg);
@@ -646,7 +659,7 @@ body.no-voice .audio-btn {
   font-family: var(--font-display);
   font-size: 1.5rem;
   color: var(--butter-deep);
-  text-shadow: 0 2px 0 #fff, 0 -2px 0 #fff, 2px 0 0 #fff, -2px 0 0 #fff;
+  text-shadow: 0 2px 0 var(--card), 0 -2px 0 var(--card), 2px 0 0 var(--card), -2px 0 0 var(--card);
   pointer-events: none;
   animation: float-up 1s ease-out forwards;
 }
@@ -735,6 +748,11 @@ body.no-voice .audio-btn {
   border-color: var(--lilac);
 }
 
+.banner-pink {
+  background: var(--pink-soft);
+  border-color: var(--pink);
+}
+
 .chip {
   display: inline-flex;
   align-items: center;
@@ -742,7 +760,7 @@ body.no-voice .audio-btn {
   padding: 6px 12px;
   border-radius: 999px;
   border: 2px solid var(--line);
-  background: #fff;
+  background: var(--card);
   font-weight: 700;
   cursor: pointer;
 }
@@ -754,7 +772,7 @@ body.no-voice .audio-btn {
 .chip.active {
   background: var(--ink);
   border-color: var(--ink);
-  color: #fff;
+  color: var(--bg);
 }
 
 .chip-count {
@@ -769,7 +787,11 @@ body.no-voice .audio-btn {
 
 .chip.active .chip-count {
   background: rgba(255, 255, 255, 0.25);
-  color: #fff;
+  color: var(--bg);
+}
+
+:root[data-theme='dark'] .chip.active .chip-count {
+  background: rgba(0, 0, 0, 0.16);
 }
 
 .new-badge {
@@ -839,7 +861,7 @@ body.no-voice .audio-btn {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--card);
   box-shadow: 0 2px 0 var(--shadow);
   transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
 }
@@ -872,7 +894,7 @@ body.no-voice .audio-btn {
   padding: 8px 14px;
   border-radius: 14px;
   border: 2px solid var(--line);
-  background: #fff;
+  background: var(--card);
   cursor: pointer;
   text-align: center;
 }
@@ -898,12 +920,30 @@ body.no-voice .audio-btn {
   color: var(--ink-soft);
 }
 
+.goal-custom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-top: 12px;
+}
+
+.goal-range {
+  flex: 1 1 220px;
+  accent-color: var(--pink-deep);
+}
+
+.goal-custom-value {
+  min-width: 9.5em;
+  font-weight: 800;
+}
+
 .select {
   min-height: 42px;
   max-width: 100%;
   padding: 6px 12px;
   border-radius: 12px;
   border: 2px solid var(--line);
-  background: #fff;
+  background: var(--card);
   font-weight: 700;
 }

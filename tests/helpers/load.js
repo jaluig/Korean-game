@@ -11,13 +11,19 @@ const CORE = [
   'js/core/config.js',
   'js/core/utils.js',
   'js/core/hangul.js',
+  'js/core/numbers.js',
+  'js/core/conjugate.js',
   'js/core/storage.js',
   'js/core/content.js',
   'js/core/srs.js',
   'js/core/progress.js',
   'js/core/distractors.js',
+  'js/core/particles.js',
+  'js/core/answers.js',
 ];
-const CONTENT = ['content/cafe.js', 'content/my-day.js'];
+const CONTENT = ['content/cafe.js', 'content/my-day.js', 'content/sounds.js'];
+// Minigames only touch the DOM when a round starts, so their round-building logic can be tested.
+const GAMES = ['js/games/balloon-pop.js', 'js/games/particle-lab.js', 'js/games/verb-magic.js', 'js/games/number-shop.js', 'js/games/sound-twins.js'];
 
 function fakeStorage() {
   const data = new Map();
@@ -30,10 +36,10 @@ function fakeStorage() {
 }
 
 /** Each test file runs in its own process, so loading once per file is enough. */
-function loadMallang({ content = true } = {}) {
+function loadMallang({ content = true, games = false } = {}) {
   global.window = global;
   global.localStorage = fakeStorage();
-  for (const file of [...CORE, ...(content ? CONTENT : [])]) require(path.join(ROOT, file));
+  for (const file of [...CORE, ...(content ? CONTENT : []), ...(games ? GAMES : [])]) require(path.join(ROOT, file));
   global.Mallang.store.load();
   return global.Mallang;
 }

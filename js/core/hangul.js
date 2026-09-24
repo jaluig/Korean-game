@@ -265,6 +265,10 @@
     'ㄱ|ㅋ': 'As a final (받침), ㄱ and ㅋ sound the same unless a vowel follows — remember the spelling.',
     'ㄲ|ㅋ': 'As a final (받침), ㄲ and ㅋ sound the same unless a vowel follows — remember the spelling.',
     'ㅂ|ㅍ': 'As a final (받침), ㅂ and ㅍ sound the same unless a vowel follows — remember the spelling.',
+    'ㄲ|ㅂ': 'Final ㄲ is a clipped “k” (tongue at the back); final ㅂ is a clipped “p” (your lips close).',
+    'ㄴ|ㄹ': 'Final ㄹ is an “l” (the tongue stays up on the roof of your mouth); final ㄴ is “n”.',
+    'ㄹ|ㅅ': 'Final ㄹ is an “l”; final ㅅ sounds like a clipped “t”.',
+    'ㅁ|ㅂ': 'Both close your lips: final ㅁ hums (“m”), final ㅂ is a silent, clipped “p”.',
   };
 
   /** One-sentence tip about two letters in the same position of a syllable. */

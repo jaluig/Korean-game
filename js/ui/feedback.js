@@ -86,6 +86,7 @@
       label('정답', 'Answer'),
       h('span.fb-ko', { lang: 'ko' }, word.ko),
       ui.audioButton(word.ko, { size: 'small' }),
+      ui.sayButton ? ui.sayButton(word.ko) : null,
       word.pron ? h('span.fb-pron', `[${word.pron}]`) : null,
       s.showRomanization && word.rom ? h('span.fb-rom', word.rom) : null,
       h('span.fb-en', `= ${word.en}`)
@@ -134,20 +135,34 @@
     );
   }
 
+  /** A dictation answer with the words that differ from the sentence highlighted. */
+  function markedWords(expected, given) {
+    const want = U.normalize(expected).split(' ');
+    return U.normalize(given)
+      .split(' ')
+      .map((word, i) => [i ? ' ' : '', want.includes(word) ? word : h('mark', word)]);
+  }
+
   function forSentence(sentence, result) {
     const answer = h(
       'div.fb-row.fb-answer',
       label('정답', 'Answer'),
       h('span.fb-ko', { lang: 'ko' }, sentence.ko),
-      ui.audioButton(sentence.ko, { size: 'small' })
+      ui.audioButton(sentence.ko, { size: 'small' }),
+      ui.sayButton ? ui.sayButton(sentence.ko) : null
     );
     const rows = [answer];
     if (result.listening || !result.correct) rows.push(h('div.fb-en-line', `“${sentence.en}”`));
     rows.push(gloss(sentence));
+    if (result.almost && result.given) {
+      rows.push(h('div.fb-row.fb-given', label('내 답', 'You'), h('span.fb-ko', { lang: 'ko' }, markedWords(sentence.ko, result.given))));
+      rows.push(tipRow('Almost! Check the highlighted spelling.'));
+    }
     if (!result.correct) {
-      if (result.given) rows.push(h('div.fb-row.fb-given', label('내 답', 'You'), h('span.fb-ko', { lang: 'ko' }, result.given)));
+      if (result.given) rows.push(h('div.fb-row.fb-given', label('내 답', 'You'), h('span.fb-ko', { lang: 'ko' }, result.dictation ? markedWords(sentence.ko, result.given) : result.given)));
       for (const reason of result.reasons || []) rows.push(tipRow(reason));
     }
+    if (result.note) rows.push(tipRow(result.note));
     if (result.hintUsed && result.correct) rows.push(tipRow('You used a hint, so this one will come back a little sooner.'));
     return rows;
   }

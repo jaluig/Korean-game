@@ -32,6 +32,8 @@
       const progress = ui.bar(0, { color: game.color, label: 'Round progress' });
       const pointsNum = h('span.play-points-num', '0');
       const pointsEl = h('div.play-points', { title: 'Points this round' }, h('span', { 'aria-hidden': 'true' }, '⭐'), pointsNum);
+      const comboNum = h('span.play-combo-num', '0');
+      const comboEl = h('div.play-combo', { title: 'Correct answers in a row', hidden: true }, h('span', { 'aria-hidden': 'true' }, '🔥'), comboNum);
       const quitBtn = h('button.icon-btn.play-quit', { type: 'button', title: '그만하기 · Quit', 'aria-label': 'Quit this round', on: { click: quit } }, '✕');
       const stage = h('div.play-stage');
       const feedbackRoot = h('div.play-feedback');
@@ -47,6 +49,7 @@
             quitBtn,
             h('div.play-title', h('span', { 'aria-hidden': 'true' }, game.emoji), ui.bi(game.title.ko, topic ? `${game.title.en} · ${topic.title.en}` : game.title.en)),
             h('div.play-progress', progress),
+            comboEl,
             pointsEl
           ),
           stage,
@@ -77,7 +80,7 @@
           M.progress.addPoints(amount);
         },
 
-        /** Sound + mascot reaction to an answer. */
+        /** Sound + mascot reaction to an answer, and the combo counter. */
         react(result, combo = 0) {
           if (!result.correct) {
             M.sfx.play('wrong');
@@ -86,8 +89,21 @@
             M.sfx.play('almost');
             mascot.react('almost');
           } else {
-            M.sfx.play('correct');
+            M.sfx.play('correct', { combo });
             mascot.react(combo && combo % M.config.points.comboEvery === 0 ? 'combo' : 'correct');
+          }
+          host.combo(result.correct ? combo : 0);
+        },
+
+        /** Show the combo flame (from 3 in a row) and remember the best one. */
+        combo(count) {
+          M.progress.best('bestCombo', count);
+          comboEl.hidden = count < 3;
+          if (count >= 3) {
+            comboNum.textContent = String(count);
+            comboEl.classList.remove('bump');
+            void comboEl.offsetWidth;
+            comboEl.classList.add('bump');
           }
         },
 

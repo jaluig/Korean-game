@@ -67,7 +67,10 @@
         const sentence = M.content.sentence(steps[index].id);
         const stage = M.srs.stageOf(sentence.id);
         if (stage === 0) round.learned.push(sentence.id);
-        cleanup = M.exercises.get('sentence').render({
+        // Sentences you know well are sometimes written from dictation instead.
+        const d = M.config.session.dictation;
+        const dictate = stage >= d.fromStage && M.speech.isReady() && M.store.state.settings.typing && U.random() < d.chance;
+        cleanup = M.exercises.get(dictate ? 'dictation' : 'sentence').render({
           el: host.stage,
           item: sentence,
           stage,
@@ -84,8 +87,10 @@
           round.correct++;
           round.combo++;
           round.bestCombo = Math.max(round.bestCombo, round.combo);
-          earned = result.grade === 'good' ? points().sentence : points().sentenceWithHint;
+          if (result.dictation) earned = result.grade === 'good' ? points().dictation : points().almost;
+          else earned = result.grade === 'good' ? points().sentence : points().sentenceWithHint;
           M.progress.bump('sentencesCorrect');
+          if (result.dictation && result.grade === 'good') M.progress.bump('dictationsCorrect');
         } else {
           round.combo = 0;
           round.mistakes.add(sentence.id);
@@ -100,7 +105,7 @@
         if (M.store.state.settings.autoPlayAudio) M.speech.speakLater(sentence.ko, 250, { quiet: true });
 
         host.showFeedback({
-          tone: result.correct ? 'good' : 'bad',
+          tone: result.almost ? 'almost' : result.correct ? 'good' : 'bad',
           points: earned,
           content: M.ui.feedback.forSentence(sentence, result),
           speak: sentence.ko,

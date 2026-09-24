@@ -9,7 +9,7 @@
   'use strict';
 
   const M = global.Mallang || (global.Mallang = {});
-  M.version = '0.1.0';
+  M.version = '0.2.0';
 
   /** Tiny publish/subscribe bus so separate parts of the UI can stay in sync. */
   const listeners = new Map();
