@@ -19,7 +19,7 @@
     ],
     almost: [
       ['거의 맞았어요!', 'Almost!'],
-      ['아깝다!', 'So close!'],
+      ['아까워요!', 'So close!'],
     ],
     bad: [
       ['아쉬워요!', 'Not quite'],

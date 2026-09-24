@@ -86,16 +86,16 @@
     ],
     almost: [
       ['거의 다 왔어요!', 'Almost there!'],
-      ['아깝다!', 'So close!'],
+      ['아까워요!', 'So close!'],
     ],
     wrong: [
       ['괜찮아요!', "It's okay!"],
-      ['다시 해 봐요!', "We'll try it again!"],
+      ['다시 해 봐요!', "Let's try again!"],
       ['천천히 해요.', 'Take your time.'],
-      ['실수는 괜찮아요.', 'Mistakes help you learn.'],
+      ['실수해도 괜찮아요.', "It's okay to make mistakes."],
     ],
     combo: [
-      ['불타고 있어요!', "You're on fire!"],
+      ['물 올랐어요!', "You're on a roll!"],
       ['멈출 수 없어요!', 'Unstoppable!'],
       ['천재예요!', "You're a genius!"],
     ],
@@ -111,7 +111,7 @@
     const hour = now.getHours();
     if (hour >= 5 && hour < 11) return { ko: '좋은 아침이에요!', en: 'Good morning!' };
     if (hour >= 11 && hour < 17) return { ko: '안녕하세요!', en: 'Hello!' };
-    if (hour >= 17 && hour < 23) return { ko: '좋은 저녁이에요!', en: 'Good evening!' };
+    if (hour >= 17 && hour < 23) return { ko: '오늘 하루 어땠어요?', en: 'How was your day?' };
     return { ko: '아직 안 자요?', en: 'Still up?' };
   }
 

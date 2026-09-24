@@ -63,7 +63,7 @@
       {
         level: 1,
         emoji: '🐣',
-        ko: '처음 단계',
+        ko: '처음이에요',
         en: 'Starting out',
         cefr: 'A1',
         desc: 'I can read Hangul and know a handful of words.',
@@ -79,7 +79,7 @@
       {
         level: 3,
         emoji: '🐤',
-        ko: '기초 탄탄',
+        ko: '기초가 탄탄해요',
         en: 'Solid basics',
         cefr: 'A2',
         desc: 'I can order at a café and talk a little about my day.',

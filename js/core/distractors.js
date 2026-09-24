@@ -23,10 +23,24 @@
     return out;
   }
 
+  /**
+   * Could `other` also be a defensible answer for `word`? True when one English
+   * meaning contains the other ("tea" / "green tea") or when the content lists
+   * the pair in `avoid` (e.g. 만나요 "meet" / 봐요 "see").
+   */
+  function tooClose(word, other) {
+    const words = (w) => new Set(w.en.toLowerCase().match(/[a-z']+/g) || []);
+    const within = (small, big) => [...small].every((t) => big.has(t));
+    const a = words(word);
+    const b = words(other);
+    const listed = (w, x) => (w.avoid || []).some((ref) => ref === x.id || `${w.topicId}:${ref}` === x.id);
+    return within(a, b) || within(b, a) || listed(word, other) || listed(other, word);
+  }
+
   /** Wrong English meanings for a word: same topic and word type make it a real test. */
   function meaningOptions(word, pool, count = 3) {
     const scored = pool
-      .filter((w) => w.id !== word.id && w.en !== word.en)
+      .filter((w) => w.id !== word.id && !tooClose(word, w))
       .map((w) => ({
         item: w,
         score: (w.topicId === word.topicId ? 1.5 : 0) + (w.pos === word.pos ? 2 : 0) + U.random() * 2.5,
@@ -38,7 +52,7 @@
   function formOptions(word, pool, count = 3) {
     const length = [...U.noSpaces(word.ko)].length;
     const scored = pool
-      .filter((w) => w.id !== word.id && w.ko !== word.ko && w.en !== word.en)
+      .filter((w) => w.id !== word.id && w.ko !== word.ko && !tooClose(word, w))
       .map((w) => {
         const distance = H.spellingDistance(word.ko, w.ko);
         const lengthGap = Math.abs([...U.noSpaces(w.ko)].length - length);
@@ -119,10 +133,19 @@
       .filter((t) => !answer.includes(t.tile))
       .slice(0, decoys);
 
+    // Other known words as fillers — but never the bare form of an answer tile
+    // (아침 next to 아침을, 얼마예요? next to 얼마예요): those could build a correct
+    // sentence and be marked wrong.
+    const answerForms = answer.map(U.normalize);
     const fillers = U.sample(
-      U.uniqueBy(knownWords, (w) => w.ko).filter(
-        (w) => !w.ko.includes(' ') && !answer.includes(w.ko) && !traps.some((t) => t.tile === w.ko)
-      ),
+      U.uniqueBy(knownWords, (w) => w.ko).filter((w) => {
+        const bare = U.normalize(w.ko);
+        return (
+          !bare.includes(' ') &&
+          !answerForms.some((t) => t.startsWith(bare)) &&
+          !traps.some((t) => U.normalize(t.tile) === bare)
+        );
+      }),
       Math.max(0, decoys - traps.length)
     );
 

@@ -46,7 +46,7 @@
       const mascot = M.mascot.create({ size: 130, mood: 'happy' });
       let headline = { ko: '수고했어요!', en: 'Great work!' };
       if (r.perfect) headline = { ko: '완벽해요!', en: 'A perfect round!' };
-      else if (r.answers && accuracy < 60) headline = { ko: '잘하고 있어요!', en: 'Mistakes mean you’re learning!' };
+      else if (r.answers && accuracy < 60) headline = { ko: '잘하고 있어요!', en: 'You’re doing well!' };
 
       const stats = [
         { icon: '⭐', value: `+${r.points}`, ko: '점수', en: 'points' },

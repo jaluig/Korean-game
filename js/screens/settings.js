@@ -107,7 +107,7 @@
           [
             { value: 0.7, ko: '천천히', en: 'Slow' },
             { value: 0.9, ko: '보통', en: 'Normal' },
-            { value: 1.05, ko: '빠르게', en: 'Natural' },
+            { value: 1.05, ko: '빠르게', en: 'Fast' },
           ],
           settings().speechRate,
           (value) => {

@@ -140,7 +140,7 @@
         h('div.storage-warning', '⚠️ ', ui.bi('저장이 안 돼요', 'This browser is blocking storage, so progress will be lost when the tab closes. See the README to run the game from a local server.', 'inline'))
       );
     } else if (M.store.recovered) {
-      ui.toast({ icon: '🩹', ko: '저장 파일을 복구했어요', en: 'Your saved data was damaged, so a fresh start was made (a copy was kept).', tone: 'warn', duration: 8000 });
+      ui.toast({ icon: '🩹', ko: '저장 데이터가 손상돼서 새로 시작했어요', en: 'Your saved data was damaged, so the game started fresh (a copy was kept).', tone: 'warn', duration: 8000 });
     }
 
     window.addEventListener('hashchange', route);

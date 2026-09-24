@@ -56,6 +56,38 @@ test('sentence tiles always contain the answer plus decoys', () => {
   }
 });
 
+test('filler tiles are never the bare form of an answer tile', () => {
+  const known = M.content.words();
+  for (let round = 0; round < 25; round++) {
+    for (const s of M.content.sentences()) {
+      const { tiles } = D.sentenceTiles(s, { decoys: 3, knownWords: known });
+      const answers = s.tiles.map(M.utils.normalize);
+      for (const t of tiles.filter((x) => x.word)) {
+        const bare = M.utils.normalize(t.text);
+        assert.ok(!answers.some((a) => a.startsWith(bare)), `${s.id}: filler ${t.text}`);
+      }
+    }
+  }
+});
+
+test('near-synonyms never appear as each other’s wrong options', () => {
+  const pool = M.content.words();
+  const pairs = [
+    ['cafe:tea', 'cafe:greentea'],
+    ['cafe:coffee', 'cafe:americano'],
+    ['day:meet', 'day:watch'],
+  ];
+  for (let round = 0; round < 25; round++) {
+    for (const [a, b] of pairs) {
+      for (const [x, y] of [[a, b], [b, a]]) {
+        const word = M.content.word(x);
+        const ids = [...D.meaningOptions(word, pool, 3), ...D.formOptions(word, pool, 3)].map((w) => w.id);
+        assert.ok(!ids.includes(y), `${x} offered ${y}`);
+      }
+    }
+  }
+});
+
 test('syllable tiles contain every syllable of the answer', () => {
   for (const w of M.content.words()) {
     const tiles = D.syllableTiles(w);

@@ -69,6 +69,11 @@
   /** Check every topic for authoring mistakes. Returns a list of messages. */
   function check() {
     const found = [...problems];
+    for (const w of words.values()) {
+      for (const ref of w.avoid || []) {
+        if (!words.has(qualify(w.topicId, ref))) found.push(`${w.id}: "avoid" lists unknown word "${ref}"`);
+      }
+    }
     for (const s of sentences.values()) {
       const label = `sentence ${s.id}`;
       if (!s.en || !Array.isArray(s.tiles) || !s.tiles.length) {

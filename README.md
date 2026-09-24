@@ -117,7 +117,9 @@ Mallang.content.registerTopic({
 
 **Word fields:** `id`, `ko`, `en` and `level` (1 = A1, 2 = low A2, 3 = A2) are required. Optional:
 `pos`, `emoji`, `rom` (romanization), `pron` (pronunciation in Hangul when it differs from the spelling),
-`dict` (dictionary form of a verb), `note`, `example`, `accept` (other answers to accept when typing).
+`dict` (dictionary form of a verb), `note`, `example`, `accept` (other answers to accept when typing),
+`avoid` (ids of words so close in meaning that they must never be offered as this word's wrong answers,
+e.g. 차 "tea" and 녹차 "green tea").
 
 **Sentence fields:** `en`, `ko`, `tiles` (the answer, in order), `words` (the words it uses; it unlocks
 once they're learned). Optional: `gloss` (English for each tile), `traps` (tempting wrong tiles with an

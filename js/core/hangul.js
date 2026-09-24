@@ -250,7 +250,7 @@
     'ㅙ|ㅚ': 'ㅚ, ㅙ and ㅞ all sound like “we” — you just have to remember the spelling.',
     'ㅚ|ㅞ': 'ㅚ, ㅙ and ㅞ all sound like “we” — you just have to remember the spelling.',
     'ㅙ|ㅞ': 'ㅚ, ㅙ and ㅞ all sound like “we” — you just have to remember the spelling.',
-    'ㅘ|ㅝ': 'ㅘ is “wa” (ㅗ+ㅏ); ㅝ is “wo” (ㅜ+ㅓ).',
+    'ㅘ|ㅝ': 'ㅘ is “wa” (ㅗ+ㅏ); ㅝ is “wuh” (ㅜ+ㅓ, written “wo” in romanization).',
     'ㅟ|ㅢ': 'ㅟ is “wi” (ㅜ+ㅣ); ㅢ is “ui” (ㅡ+ㅣ).',
     'ㅢ|ㅣ': 'ㅢ is “ui” (ㅡ+ㅣ); ㅣ is just “i”.',
   };
@@ -261,10 +261,10 @@
     'ㄴ|ㅁ': 'Final ㅁ closes your lips (“m”); final ㄴ keeps them open (“n”).',
     'ㅁ|ㅇ': 'Final ㅁ closes your lips (“m”); final ㅇ is “ng” as in “sing”.',
     'ㄱ|ㅂ': 'Final ㄱ is a clipped “k”; final ㅂ is a clipped “p” (your lips close).',
-    'ㄱ|ㄲ': 'As a final (받침), ㄱ and ㄲ sound the same — remember the spelling.',
-    'ㄱ|ㅋ': 'As a final (받침), ㄱ and ㅋ sound the same — remember the spelling.',
-    'ㄲ|ㅋ': 'As a final (받침), ㄲ and ㅋ sound the same — remember the spelling.',
-    'ㅂ|ㅍ': 'As a final (받침), ㅂ and ㅍ sound the same — remember the spelling.',
+    'ㄱ|ㄲ': 'As a final (받침), ㄱ and ㄲ sound the same unless a vowel follows — remember the spelling.',
+    'ㄱ|ㅋ': 'As a final (받침), ㄱ and ㅋ sound the same unless a vowel follows — remember the spelling.',
+    'ㄲ|ㅋ': 'As a final (받침), ㄲ and ㅋ sound the same unless a vowel follows — remember the spelling.',
+    'ㅂ|ㅍ': 'As a final (받침), ㅂ and ㅍ sound the same unless a vowel follows — remember the spelling.',
   };
 
   /** One-sentence tip about two letters in the same position of a syllable. */
@@ -273,7 +273,7 @@
       if (!given) return `Don't forget the final consonant (받침) ${expected}.`;
       if (!expected) return `There's no final consonant (받침) here — no ${given}.`;
       if (T_SOUND.has(expected) && T_SOUND.has(given)) {
-        return `As a final (받침), ${expected} and ${given} both sound like a clipped “t” — remember which one is written.`;
+        return `As a final (받침), ${expected} and ${given} both sound like a clipped “t” unless a vowel follows — remember which one is written.`;
       }
     }
     const key = [expected, given].sort().join('|');
