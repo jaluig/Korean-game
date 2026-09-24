@@ -6,10 +6,10 @@ every Korean word you learn becomes a plant in your **word garden**, and short
 practice rounds keep it growing.
 
 - **8 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins
-- **10 topics** with {{WORDS}} words and {{SENTENCES}} sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans
+- **10 topics** with 324 words and 190 sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans
 - **Built-in Korean keyboard**, so you never need a Korean input method
 - **Pronunciation audio** through your browser's own Korean voice, **dictation** of whole sentences, and **🎤 speaking practice** in Chrome and Edge
-- **Streaks, points, levels, an adjustable daily goal, {{BADGES}} badges** and outfits for the mascot, saved on your computer
+- **Streaks, points, levels, an adjustable daily goal, 32 badges** and outfits for the mascot, saved on your computer
 - Korean interface with small English subtitles, which you can turn off once you're ready, and a **dark theme**
 
 <p align="center"><img src="docs/screenshots/home.png" alt="Home screen: the mascot, today's practice, the daily goal and the minigames" width="760"></p>
@@ -22,7 +22,7 @@ practice rounds keep it growing.
 | --- | --- | --- |
 | ![Korean words floating across the sky as balloons](docs/screenshots/balloon-pop.png) | ![Choosing the missing particle from potion bottles](docs/screenshots/particle-lab.png) | ![Turning a verb into the past tense](docs/screenshots/verb-magic.png) |
 | **Number Shop** | **Sound Twins** | **Dark theme** |
-| ![A customer asking for three apples](docs/screenshots/number-shop.png) | ![Picking the word you heard: 달, 탈 or 딸](docs/screenshots/sound-twins.png) | ![The home screen in the dark theme](docs/screenshots/dark.png) |
+| ![A customer ordering four juices (주스 네 잔)](docs/screenshots/number-shop.png) | ![Picking the word you heard: 달, 탈 or 딸](docs/screenshots/sound-twins.png) | ![The home screen in the dark theme](docs/screenshots/dark.png) |
 
 ## Quick start
 
