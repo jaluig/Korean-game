@@ -447,6 +447,26 @@
   font-weight: 800;
 }
 
+/* Short screens (small laptops): keep the sky, the answer and the keyboard in view. */
+@media (max-height: 820px) {
+  .ex-balloon.reverse .balloon-sky:not(.waiting) {
+    height: 200px;
+  }
+
+  .ex-balloon.reverse {
+    gap: 10px;
+  }
+
+  .ex-balloon.reverse .balloon-typed {
+    min-height: 48px;
+    font-size: 1.5rem;
+  }
+
+  .ex-balloon.reverse .kb-key {
+    height: 44px;
+  }
+}
+
 @media (max-width: 700px) {
   .balloon-sky {
     height: 300px;

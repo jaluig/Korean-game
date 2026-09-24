@@ -161,6 +161,10 @@
     };
     add(n * 10);
     if (n % 10 === 0) add(n / 10);
+    // One step up or down in the biggest place: 9000 → 8000, 10000.
+    const lead = 10 ** (String(n).length - 1);
+    add(n - lead);
+    add(n + lead);
     const digits = String(n).split('');
     // Move a non-zero digit one place (8500 → 8050), or swap two different digits (8500 → 5800).
     for (let i = 0; i < digits.length; i++) {

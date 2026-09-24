@@ -57,7 +57,9 @@
     '아침', '점심', '저녁', '밤', '낮', '주말', '오전', '오후', '새벽', '봄', '여름', '가을', '겨울', '방학', '생일', '평일',
     '휴가', '연말', '다음 주', '지난주', '작년', '내년', '올해', '어젯밤', '크리스마스', '장마', '계절',
   ]);
-  const MOTION = /(가요|와요|가고|오고|갈|올|갔|왔|다녀|도착|출발|들어가|나가|돌아)/;
+  // Verbs of going and coming (가요, 와요, 갔어요, 가세요, 다녀요, 도착해요…), looked for in the last two tiles.
+  const MOTION = /(^|\s)(가|와|오|갔|왔|갈|올|다녀|다니|도착|출발|들어|나가|나와|돌아|올라|내려)/;
+  const isMotion = (sentence) => MOTION.test(sentence.tiles.slice(-2).join(' '));
 
   const HERE = {
     object: (stem) => `${stem} is the object (what the action is done to)`,
@@ -73,7 +75,7 @@
 
   function placeTimeHere(stem, sentence) {
     if (TIME_WORDS.has(stem) || /[시분월]$/.test(stem) || /요일$/.test(stem)) return `${stem} is when it happens`;
-    if (MOTION.test(sentence.ko)) return `${stem} is the destination (where someone goes)`;
+    if (isMotion(sentence)) return `${stem} is the destination (where someone goes)`;
     return `${stem} is where something is`;
   }
 
@@ -149,6 +151,8 @@
     const out = [];
     if (sentence.drill === false) return out; // opted out in the content
     const skipCross = /싶어요|싶었어요|수 있|수 없/.test(sentence.ko); // 물이/물을 마시고 싶어요 are both fine
+    // With verbs of going, spoken Korean also marks the goal with 을/를 (회사를 가요), so it's never a wrong option there.
+    const motion = isMotion(sentence);
     sentence.tiles.forEach((tile, index) => {
       const found = split(tile);
       if (!found || !DRILLED.has(found.particle.role)) return;
@@ -171,6 +175,7 @@
       }
       for (const id of WRONG_FOR[role]) {
         if (skipCross && ((role === 'object' && id === 'i') || (role === 'subject' && id === 'eul'))) continue;
+        if (motion && id === 'eul' && role !== 'object') continue;
         const wrong = byId[id];
         const text = rightForm(stem, wrong);
         add(text, `${text} ${wrong.desc}. Here, ${here}, so it takes ${form}.`);
