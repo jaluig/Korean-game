@@ -46,8 +46,8 @@
     ttae: { name: '-(으)ㄹ 때', meaning: '“when …”', base: 'future', tail: ' 때', past: true },
     gijeone: { name: '-기 전에', meaning: '“before …”', base: 'stem', tail: '기 전에', verbOnly: true },
     hue: { name: '-(으)ㄴ 후에', meaning: '“after …”', base: 'modifier', tail: ' 후에', verbOnly: true },
-    aya: { name: '-아/어야 해요', meaning: '“have to / must”', base: 'inf', tail: '야 해요', alsoOk: ['야 돼요'] },
-    ado: { name: '-아/어도 돼요', meaning: '“may / it’s okay to”', base: 'inf', tail: '도 돼요', alsoOk: ['도 괜찮아요'], verbOnly: true },
+    aya: { name: '-아/어야 해요 (or 돼요)', meaning: '“have to / must”', base: 'inf', tail: '야 해요', alsoOk: ['야 돼요'] },
+    ado: { name: '-아/어도 돼요 (or 괜찮아요)', meaning: '“may / it’s okay to”', base: 'inf', tail: '도 돼요', alsoOk: ['도 괜찮아요'], verbOnly: true },
     su: { name: '-(으)ㄹ 수 있어요', meaning: '“can”', base: 'future', tail: ' 수 있어요', verbOnly: true },
     suNot: { name: '-(으)ㄹ 수 없어요', meaning: '“can’t”', base: 'future', tail: ' 수 없어요', verbOnly: true },
   };
@@ -184,7 +184,7 @@
       return {
         text,
         steps: [inf.why, `For ${e.name}, take ${inf.text}요, drop the 요 and add ${e.tail} → ${text}.`],
-        variants: [...inf.variants.map((v) => `${v}${e.tail}`), ...also(text)],
+        variants: [...inf.variants.flatMap((v) => [`${v}${e.tail}`, ...(e.alsoOk || []).map((alt) => `${v}${alt}`)]), ...also(text)],
         rule: infRule(stem, inf),
       };
     }
@@ -354,8 +354,14 @@
     const at = q.ko.indexOf(q.answer);
     const here = q.meaning || e.meaning;
     const seen = new Set([right.text, ...right.variants].map(squash));
-    // The sentence may use an accepted variant (가야 돼요); then that's the right option.
+    // The sentence may use an accepted variant (가야 돼요, 앉아도 괜찮아요): then that's the right
+    // option, and the slips and explanations end the same way, so the ending gives nothing away.
     const said = seen.has(squash(q.answer)) ? q.answer : right.text;
+    const altTail = said === right.text ? null : (e.alsoOk || []).find((alt) => squash(said).endsWith(squash(alt)));
+    const follow = (text) => {
+      const t = said === right.text ? text : text.split(right.text).join(said);
+      return altTail && t.endsWith(e.tail) ? `${t.slice(0, -e.tail.length)}${altTail}` : t;
+    };
     const pool = { traps: [], contrasts: [], slips: [] };
     const push = (list, text, why, kind) => {
       if (!text || seen.has(squash(text))) return;
@@ -365,9 +371,9 @@
     for (const t of q.traps || []) push(pool.traps, t.text, t.why, 'trap');
     const contrasts = (q.contrast || []).map((id) => contrast(q.dict, id, { pos: q.pos, tense: q.tense })).filter(Boolean);
     for (const c of U.shuffle(contrasts)) {
-      push(pool.contrasts, c.text, `${c.text} is ${c.name}: ${c.meaning}. This sentence needs ${e.name}, ${here}: ${right.text}.`, 'contrast');
+      push(pool.contrasts, c.text, `${c.text} is ${c.name}: ${c.meaning}. This sentence needs ${e.name}, ${here}: ${said}.`, 'contrast');
     }
-    for (const s of U.shuffle(slips(q.dict, q.form, { pos: q.pos, tense: q.tense }))) push(pool.slips, s.text, s.why, 'slip');
+    for (const s of U.shuffle(slips(q.dict, q.form, { pos: q.pos, tense: q.tense }))) push(pool.slips, follow(s.text), follow(s.why), 'slip');
 
     const wrong = pool.traps.slice(0, size - 1);
     const take = (list) => {

@@ -187,3 +187,18 @@ test('question(): hand-written traps come first, and a variant in the sentence i
   assert.equal(b3.answer, '바빴지만');
   assert.ok(b3.options.some((o) => !o.correct && o.text === '바쁘지만'), b3.options.map((o) => o.text).join());
 });
+
+test('question(): with a variant ending (가야 돼요), the slips and explanations end the same way', () => {
+  const q = { ko: '내일 아침 일찍 일어나야 돼요.', en: 'I have to get up early tomorrow morning.', answer: '일어나야 돼요', dict: '일어나다', form: 'aya', contrast: ['su'], traps: [] };
+  for (let i = 0; i < 10; i++) {
+    const built = G.question(q);
+    assert.equal(built.answer, '일어나야 돼요');
+    const slips = built.options.filter((o) => o.kind === 'slip');
+    assert.ok(slips.length, 'there are slips');
+    for (const s of slips) {
+      assert.ok(s.text.endsWith('야 돼요'), s.text);
+      assert.ok(!s.why.includes('일어나야 해요'), s.why);
+    }
+  }
+  assert.ok(G.form('내리다', 'aya').variants.includes('내리어야 돼요'), 'unmerged forms with 돼요 are accepted too');
+});
