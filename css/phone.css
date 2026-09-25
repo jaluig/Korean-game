@@ -21,10 +21,11 @@ label,
   touch-action: manipulation;
 }
 
-/* Korean headings wrap between words, not in the middle of one. */
+/* Korean headings and short blurbs wrap between words, not in the middle of one. */
 h1,
 h2,
-h3 {
+h3,
+.game-blurb {
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
@@ -38,6 +39,10 @@ h3 {
 body {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+}
+
+.toasts {
+  top: calc(16px + env(safe-area-inset-top));
 }
 
 /* ---------- Phones ---------- */

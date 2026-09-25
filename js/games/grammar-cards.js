@@ -173,7 +173,7 @@
     emoji: '🔗',
     color: 'sky',
     title: { ko: '문법 카드', en: 'Grammar Cards' },
-    blurb: { ko: '-고, -지만, -아서… 문장을 이어요', en: 'Join ideas: and, but, so, if…' },
+    blurb: { ko: '-고, -지만, -아서… 문장 잇기', en: 'Join ideas: and, but, so, if…' },
 
     status() {
       const all = patterns();
