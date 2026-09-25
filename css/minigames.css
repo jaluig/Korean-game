@@ -1297,3 +1297,473 @@ body.no-en .shop-say-en {
   width: min(680px, 100%);
   font-size: 1.8rem;
 }
+
+/* ---------- Grammar Cards ---------- */
+
+.grammar-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(660px, 100%);
+  padding: 22px 24px 20px;
+  text-align: left;
+  background: var(--card);
+  border: 3px solid var(--sky);
+  border-radius: 26px;
+  box-shadow: 0 6px 0 var(--sky-shadow);
+}
+
+.modal-grammar .grammar-card {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.grammar-card-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.grammar-card-emoji {
+  font-family: var(--font-emoji);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.grammar-card-title {
+  margin: 0;
+  font-family: var(--font-ko);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--sky-deep);
+}
+
+.grammar-card-en {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+}
+
+.grammar-meaning {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.grammar-how h3 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.grammar-how p,
+.grammar-note {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.grammar-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--sky-soft);
+}
+
+.grammar-table td {
+  padding: 6px 10px;
+  vertical-align: middle;
+}
+
+.grammar-table tr + tr td {
+  border-top: 1px solid var(--line);
+}
+
+.grammar-table-dict {
+  font-family: var(--font-ko);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.grammar-table-arrow {
+  width: 1.4em;
+  color: var(--ink-faint);
+}
+
+.grammar-table-form {
+  width: 100%;
+  font-family: var(--font-ko);
+  font-size: 1.1rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.grammar-table-form .audio-btn {
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.grammar-table-rule {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.grammar-note {
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--butter-soft);
+}
+
+.grammar-examples {
+  display: grid;
+  gap: 8px;
+}
+
+.grammar-q-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: min(680px, 100%);
+  padding: 24px 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--sky);
+  box-shadow: 0 6px 0 var(--sky-shadow);
+}
+
+.grammar-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 10px;
+  font-family: var(--font-ko);
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.grammar-word.target {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.grammar-slot {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  min-height: 58px;
+  padding: 2px 12px;
+  border-radius: 14px;
+  border: 3px dashed var(--sky-deep);
+  background: var(--sky-soft);
+  color: var(--sky-deep);
+  line-height: 1.15;
+}
+
+.grammar-slot-q {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  animation: slot-wait 1.6s ease-in-out infinite;
+}
+
+.grammar-slot-dict {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.grammar-slot.good {
+  border-style: solid;
+  border-color: var(--good);
+  background: var(--good-soft);
+  color: var(--good);
+  animation: pop-in 0.35s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.grammar-slot.bad {
+  border-style: solid;
+  border-color: var(--bad);
+  background: var(--bad-soft);
+  color: var(--bad);
+  animation: shake 0.4s ease;
+}
+
+.grammar-en {
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.ex-grammar .options {
+  width: min(680px, 100%);
+}
+
+.fb-hl {
+  padding: 0 3px;
+  border-radius: 6px;
+  background: var(--good-soft);
+  color: var(--good-ink);
+}
+
+.grammar-fb-card {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ---------- Dialogues ---------- */
+
+.dlg-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: min(680px, 100%);
+  padding: 22px 22px 20px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--lilac);
+  box-shadow: 0 6px 0 var(--lilac-shadow);
+}
+
+.dlg-card-small {
+  gap: 10px;
+  padding: 14px 18px;
+}
+
+.dlg-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+
+.dlg-scene {
+  font-family: var(--font-emoji);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.dlg-card-small .dlg-title {
+  font-size: 1.1rem;
+}
+
+.dlg-card-small .dlg-scene {
+  font-size: 1.5rem;
+}
+
+.dlg-cast {
+  display: flex;
+  justify-content: center;
+  gap: clamp(28px, 10vw, 90px);
+}
+
+.dlg-speaker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px 8px;
+  border-radius: 20px;
+  transition: background 0.2s ease;
+}
+
+.dlg-speaker.who-A {
+  --who: var(--pink-deep);
+  --who-soft: var(--pink-soft);
+}
+
+.dlg-speaker.who-B {
+  --who: var(--sky-deep);
+  --who-soft: var(--sky-soft);
+}
+
+.dlg-speaker-emoji {
+  font-family: var(--font-emoji);
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.dlg-card-small .dlg-speaker-emoji {
+  font-size: 1.8rem;
+}
+
+.dlg-speaker-name .ko {
+  font-weight: 800;
+  color: var(--who);
+}
+
+.dlg-bubble {
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  font-family: var(--font-emoji);
+  font-size: 1.3rem;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.15s ease, transform 0.2s ease;
+}
+
+.dlg-speaker.speaking {
+  background: var(--who-soft);
+}
+
+.dlg-speaker.speaking .dlg-bubble {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.dlg-speaker.speaking .dlg-speaker-emoji {
+  animation: hop 0.6s ease-in-out infinite;
+}
+
+.dlg-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.ex-dialogue:not(.is-playing) .dlg-stop {
+  display: none;
+}
+
+.dlg-script-box {
+  width: 100%;
+}
+
+details.dlg-script-box > summary {
+  width: max-content;
+  margin: 0 auto 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--lilac-soft);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+details.dlg-script-box > summary .bi {
+  display: inline-flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.dlg-script {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.dlg-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--card-soft);
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.dlg-line.playing {
+  border-color: var(--lilac-deep);
+  background: var(--lilac-soft);
+}
+
+.dlg-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 5.2em;
+  padding-top: 2px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.dlg-line.who-A .dlg-who-name {
+  color: var(--pink-deep);
+}
+
+.dlg-line.who-B .dlg-who-name {
+  color: var(--sky-deep);
+}
+
+.dlg-who-emoji {
+  font-family: var(--font-emoji);
+}
+
+.dlg-line-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dlg-line-ko {
+  font-family: var(--font-ko);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.dlg-line-ko .audio-btn {
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.dlg-line-en {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.dlg-script-fb {
+  margin: 4px 0;
+}
+
+.dlg-question {
+  margin: 4px 0 0;
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.dlg-options {
+  grid-template-columns: 1fr;
+  max-width: 560px;
+}
+
+.dlg-option {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.dlg-option .option-text .ko {
+  font-family: var(--font-ko);
+  font-weight: 800;
+}
+
+.chip-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted var(--ink-faint);
+  text-underline-offset: 4px;
+}

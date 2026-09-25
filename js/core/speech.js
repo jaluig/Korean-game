@@ -77,20 +77,23 @@
   /**
    * Say Korean text. Returns false when no Korean voice exists — and, unless
    * `quiet` (used for automatic playback), emits 'speech:unavailable' so the UI
-   * can explain how to add one. Options: { rate, onEnd, quiet }.
+   * can explain how to add one. Options: { rate, onEnd, quiet }, and for the
+   * two speakers of a dialogue: pitch (1 = normal), voice (a voice or its
+   * voiceURI, instead of the chosen one) and onError(code).
    */
-  function speak(text, { rate, onEnd, quiet = false } = {}) {
+  function speak(text, { rate, onEnd, quiet = false, pitch, voice: wanted, onError } = {}) {
     if (status !== 'ready' || !text) {
       if (status !== 'ready' && !quiet) M.events.emit('speech:unavailable', status);
       return false;
     }
     clearPending();
     try {
-      const v = voice();
+      const v = (typeof wanted === 'string' ? voices.find((x) => x.voiceURI === wanted) : wanted) || voice();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.voice = v;
       utterance.lang = v?.lang || 'ko-KR';
       utterance.rate = rate || M.store.state.settings.speechRate || 0.9;
+      if (pitch) utterance.pitch = pitch;
       utterance.onend = () => {
         if (current === utterance) current = null;
         if (onEnd) onEnd();
@@ -101,6 +104,7 @@
           console.warn('Speech failed:', event.error);
           M.events.emit('speech:error', event.error);
         }
+        if (onError) onError(event.error);
       };
       current = utterance;
       if (synth.speaking || synth.pending) {

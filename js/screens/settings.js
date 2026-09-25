@@ -248,6 +248,28 @@
     location.hash = '#/onboarding';
   }
 
+  /** Install as an app / play offline (js/pwa.js): what's possible depends on how the game was opened. */
+  function appSection() {
+    const pwa = M.pwa || {};
+    let status;
+    let action = null;
+    if (pwa.installed) status = '✅ You’re using the installed app. It works offline, too.';
+    else if (pwa.installPrompt) {
+      status = 'Install 말랑 한국어 as an app: it gets its own icon and window, and works offline.';
+      action = ui.button({ icon: '📲', ko: '앱 설치하기', en: 'Install the app', variant: 'mint', onClick: () => pwa.install().then(() => redraw()) });
+    } else if (pwa.web && pwa.ios) status = 'On iPhone or iPad: tap Share, then “Add to Home Screen”. It works offline once it has been opened.';
+    else if (pwa.web) status = 'This page works offline once it has loaded. To install it as an app, use your browser’s menu (Install app / Add to Home Screen).';
+    else status = 'You opened the game as a file, which works fine. To install it as an app (for your phone, or to play offline), open it from a web address: see “Install as an app” in the README.';
+    return section(
+      '📲',
+      '앱',
+      'App',
+      h('p.setting-desc', status),
+      action ? h('div.data-actions', action) : null,
+      h('p.setting-desc', 'Progress is saved separately for each way of opening the game (file, web address, installed app). To move it, download a backup below and restore it there.')
+    );
+  }
+
   M.screens.register({
     id: 'settings',
 
@@ -322,6 +344,7 @@
               toggle('typing', '타자 연습', 'Typing exercises', 'Well-known words are typed with the Korean keyboard. Off = build them from tiles instead.'),
               toggle('keyHints', '키보드 힌트', 'Keyboard letter hints', 'Show the matching English key (q, w, e…) on the on-screen keyboard.')
             ),
+            appSection(),
             section(
               '💾',
               '데이터',
@@ -341,8 +364,10 @@
       });
       redraw();
       const off = M.events.on('speech:status', () => redraw());
+      const offApp = M.events.on('pwa', () => redraw());
       return () => {
         off();
+        offApp();
         redraw = () => {};
       };
     },

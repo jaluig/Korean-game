@@ -34,9 +34,19 @@ const CONTENT = [
   'content/feelings.js',
   'content/weather.js',
   'content/sounds.js',
+  'content/grammar.js',
+  'content/dialogues.js',
 ];
 // Minigames only touch the DOM when a round starts, so their round-building logic can be tested.
-const GAMES = ['js/games/balloon-pop.js', 'js/games/particle-lab.js', 'js/games/verb-magic.js', 'js/games/number-shop.js', 'js/games/sound-twins.js'];
+const GAMES = [
+  'js/games/balloon-pop.js',
+  'js/games/particle-lab.js',
+  'js/games/verb-magic.js',
+  'js/games/number-shop.js',
+  'js/games/sound-twins.js',
+  'js/games/grammar-cards.js',
+  'js/games/dialogues.js',
+];
 
 function fakeStorage() {
   const data = new Map();

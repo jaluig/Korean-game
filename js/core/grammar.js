@@ -377,7 +377,7 @@
       take(pool.contrasts);
       take(pool.slips);
     }
-    const answer = { text: said, correct: true, kind: 'answer', why: `${said}: ${e.name}, ${here}.` };
+    const answer = { text: said, correct: true, kind: 'answer', why: `${said} = ${e.name}: ${here}.` };
     return {
       before: q.ko.slice(0, at),
       after: q.ko.slice(at + q.answer.length),

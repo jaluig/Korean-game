@@ -115,8 +115,9 @@
 
   /**
    * Listening dialogues (content/dialogues.js). Ids become 'dialogue:<id>'.
-   * Two speakers, a few lines, and comprehension questions whose answers are
-   * in one of the lines (`line`, a 0-based index or a list of them).
+   * Two speakers, a few lines, and comprehension questions: q { ko, en },
+   * options [{ ko, en }] with `answer` the index of the right one, and `line`
+   * (a 0-based index or a list of them): where in the dialogue the answer is.
    */
   function registerDialogues(list) {
     for (const d of list || []) {
@@ -159,8 +160,10 @@
       d.questions.forEach((q, i) => {
         const label = `${d.id} question ${i + 1}`;
         if (!q.q || !q.q.ko || !q.q.en) found.push(`${label}: needs q: { ko, en }`);
-        if (!Array.isArray(q.options) || q.options.length < 3 || new Set(q.options).size !== q.options.length) found.push(`${label}: needs 3+ different options`);
-        else if (!(q.answer >= 0 && q.answer < q.options.length)) found.push(`${label}: answer must be an option index`);
+        const options = Array.isArray(q.options) ? q.options : [];
+        if (options.some((o) => !o || !o.ko || !o.en)) found.push(`${label}: each option needs ko and en`);
+        else if (options.length < 3 || new Set(options.map((o) => o.ko)).size !== options.length) found.push(`${label}: needs 3+ different options`);
+        else if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer < options.length)) found.push(`${label}: answer must be an option index`);
         const lines = [].concat(q.line);
         if (!lines.length || lines.some((n) => !(n >= 0 && n < d.lines.length))) found.push(`${label}: "line" must point to the line(s) with the answer`);
       });

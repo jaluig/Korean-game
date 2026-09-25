@@ -111,6 +111,39 @@
     );
   }
 
+  /** Grammar patterns grow like words: click one for its card. */
+  function patternTile(pattern, now) {
+    const r = M.srs.peek(pattern.id);
+    const stage = r ? r.stage : 0;
+    const due = r && stage >= 1 && r.due <= now;
+    return h(
+      'button',
+      {
+        type: 'button',
+        class: `plant-tile stage-${stage} ${r && r.flag ? 'tricky' : ''}`.trim(),
+        title: `${pattern.title.en} — ${ui.STAGES[stage].en}`,
+        on: { click: () => ui.showGrammar(pattern) },
+      },
+      h('span.plant', { 'aria-hidden': 'true' }, ui.plant(stage)),
+      h('span.plant-ko', { lang: 'ko' }, pattern.title.ko),
+      h('span.plant-en', pattern.title.en),
+      due ? h('span.plant-badge.due', { title: 'Ready for review' }, '💧') : null,
+      r && r.flag ? h('span.plant-badge.tricky', { title: 'Tricky' }, '🥀') : null
+    );
+  }
+
+  function grammarSection(active, now) {
+    const patterns = M.content.grammar();
+    if (!patterns.length || !ui.showGrammar) return null;
+    const shown = patterns.filter((g) => active.test(g, M.srs.peek(g.id), now));
+    if (!shown.length) return null;
+    return h(
+      'section.garden-topic.garden-grammar.tone-sky',
+      h('div.garden-topic-head', h('h2', h('span', { 'aria-hidden': 'true' }, '🔗 '), ui.bi('문법', 'Grammar patterns'))),
+      h('div.plant-grid', shown.map((g) => patternTile(g, now)))
+    );
+  }
+
   M.screens.register({
     id: 'garden',
 
@@ -179,7 +212,8 @@
             ),
             legend,
             chips,
-            sections
+            sections,
+            grammarSection(active, now)
           )
         );
       };

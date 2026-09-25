@@ -43,6 +43,10 @@
       verbMagic: { size: 10, minVerbs: 4, typeFromStage: 4, harderFormsAfter: 12 },
       numberShop: { size: 8 },
       soundTwins: { size: 10 },
+      // Grammar patterns have their own daily allowance; a new one gets its card and a few questions right away.
+      grammarCards: { size: 10, newPerDay: 2, questionsNew: 3, questionsDue: 2, maxDueForNew: 4, minWords: 15 },
+      // Two dialogues a round. The voices differ in pitch (and voice, when the browser has two Korean ones).
+      dialogues: { perRound: 2, slowRate: 0.7, linePause: 350, pitch: { high: 1.25, low: 0.8 } },
       // A well-known sentence is sometimes written from dictation instead of built from tiles.
       dictation: { fromStage: 4, chance: 0.35 },
       newWordsPerDay: 20, // default cap (adjustable in Settings) so reviews never pile up
@@ -67,6 +71,9 @@
       number: 10,
       register: 12,
       sound: 8,
+      grammar: 12,
+      dialogue: 12,
+      dialogueRead: 6, // answered after reading the script
       dictation: 20,
       spoken: 3,
       comboEvery: 5, // every 5 correct in a row…

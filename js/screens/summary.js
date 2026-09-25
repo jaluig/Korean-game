@@ -38,6 +38,27 @@
     );
   }
 
+  /** Grammar patterns met or missed in Grammar Cards: click one to see its card again. */
+  function patternList(title, ids, cls) {
+    const patterns = (ids || []).map((id) => M.content.grammarPattern(id)).filter(Boolean);
+    if (!patterns.length) return null;
+    return h(
+      'section',
+      { class: `summary-list ${cls}` },
+      h('h3', ui.bi(title.ko, title.en)),
+      h(
+        'ul.word-chips',
+        patterns.map((g) =>
+          h(
+            'li.word-chip',
+            h('span.word-chip-plant', { 'aria-hidden': 'true' }, g.emoji || '🔗'),
+            h('button.chip-link', { type: 'button', on: { click: () => ui.showGrammar(g) } }, h('span.word-chip-ko', { lang: 'ko' }, g.title.ko), h('span.word-chip-en', g.title.en))
+          )
+        )
+      )
+    );
+  }
+
   function wordList(title, ids, cls) {
     const items = ids.map(wordChip).filter(Boolean);
     if (!items.length) return null;
@@ -118,6 +139,8 @@
           wordList({ ko: '새로 배운 문장', en: 'New sentences' }, r.sentencesLearned || [], 'learned'),
           wordList({ ko: '다시 연습할 것', en: 'To practise again — they’ll come back soon' }, r.mistakes || [], 'mistakes'),
           soundList(r.soundMistakes),
+          patternList({ ko: '새로 배운 문법', en: 'New grammar' }, r.grammarLearned, 'learned'),
+          patternList({ ko: '다시 볼 문법', en: 'Grammar to look at again — it’ll come back soon' }, r.grammarMistakes, 'mistakes'),
           h(
             'div.summary-actions',
             home,

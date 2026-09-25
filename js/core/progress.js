@@ -177,6 +177,10 @@
     const topics = M.content.topics();
     return topics.length > 0 && topics.every((t) => t.wordIds.some((id) => s.items[id] && s.items[id].stage >= 1 && !s.items[id].assumed));
   };
+  const everyPatternMet = (s) => {
+    const patterns = M.content.grammar();
+    return patterns.length > 0 && patterns.every((g) => s.items[g.id] && s.items[g.id].stage >= 1);
+  };
   const everyGamePlayed = (s) => {
     const games = M.games.list();
     return games.length > 0 && games.every((g) => (s.totals.gamesPlayed || {})[g.id]);
@@ -237,6 +241,14 @@
       earned: (s) => count(s, 'dictationsCorrect') >= 5 },
     { id: 'brave-voice', emoji: '🎤', ko: '용감한 목소리', en: 'Brave voice', desc: 'Say 10 words or sentences well with 🎤.',
       earned: (s) => count(s, 'spokenGood') >= 10 },
+    { id: 'grammar-30', emoji: '🔗', ko: '문법 달인', en: 'Grammar master', desc: 'Fill 30 blanks correctly in Grammar Cards.',
+      earned: (s) => count(s, 'grammarCorrect') >= 30 },
+    { id: 'all-patterns', emoji: '📚', ko: '문법 수집가', en: 'Pattern collector', desc: 'Meet every grammar pattern in Grammar Cards.',
+      earned: everyPatternMet },
+    { id: 'listener-20', emoji: '🎧', ko: '듣기 왕', en: 'Listening star', desc: 'Answer 20 dialogue questions correctly.',
+      earned: (s) => count(s, 'dialoguesCorrect') >= 20 },
+    { id: 'chatterbox', emoji: '💬', ko: '수다쟁이', en: 'Chatterbox', desc: 'Listen to 10 dialogues all the way through.',
+      earned: (s) => count(s, 'dialoguesHeard') >= 10 },
     { id: 'all-games', emoji: '🎮', ko: '게임 탐험가', en: 'Game explorer', desc: 'Play every minigame at least once.',
       earned: everyGamePlayed },
     { id: 'night-owl', emoji: '🦉', ko: '올빼미', en: 'Night owl', desc: 'Finish a round after 10 p.m.',

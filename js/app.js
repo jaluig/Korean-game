@@ -74,6 +74,9 @@
     document.body.classList.toggle('no-en', !s.showEnglish);
     const dark = s.theme === 'dark' || (s.theme === 'system' && !!darkQuery && darkQuery.matches);
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    // The phone's status bar (installed app) follows the theme.
+    const bar = document.querySelector('meta[name="theme-color"]');
+    if (bar) bar.content = dark ? '#1f1a1e' : '#fff8f1';
   }
 
   /* ---------- Routing ---------- */
@@ -123,31 +126,75 @@
 
   /* ---------- What's new (once per version, for returning players) ---------- */
 
+  const newer = (a, b) => {
+    const pa = String(a).split('.').map(Number);
+    const pb = String(b).split('.').map(Number);
+    for (let i = 0; i < 3; i++) if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) > (pb[i] || 0);
+    return false;
+  };
+  const gameList = (ids) => {
+    const games = ids.map((id) => M.games.get(id)).filter(Boolean);
+    return h('ul.whats-new-list', games.map((g) => h('li', h('span.whats-new-icon', { 'aria-hidden': 'true' }, g.emoji), ui.bi(g.title.ko, `${g.title.en}: ${g.blurb.en}`))));
+  };
+  const featureList = (features) =>
+    h('ul.whats-new-list', features.filter(Boolean).map(([icon, text]) => h('li', h('span.whats-new-icon', { 'aria-hidden': 'true' }, icon), h('span', text))));
+
+  /** What each version added, newest first. */
+  const NOTES = [
+    {
+      version: '0.3.0',
+      body: () => {
+        const patterns = M.content.grammar();
+        const questions = patterns.reduce((n, g) => n + g.questions.length, 0);
+        const dialogues = M.content.dialogues();
+        return [
+          h('h3', ui.bi('새 게임 2개', '2 new games')),
+          gameList(['grammar-cards', 'dialogues']),
+          featureList([
+            ['🔗', `${patterns.length} grammar patterns (${patterns.slice(0, 4).map((g) => g.title.ko).join(', ')}…) with ${questions} practice sentences. Every option is explained: the other meanings and the typical slips.`],
+            ['🎧', `${dialogues.length} short conversations with two voices, then questions about them.`],
+            ['📲', 'Install the game as an app on your phone or computer, and play offline (Settings → App).'],
+            ['📱', 'A layout made for phones.'],
+          ]),
+        ];
+      },
+    },
+    {
+      version: '0.2.0',
+      body: () => {
+        const topics = M.content.topics();
+        const goal = M.progress.dailyGoal();
+        return [
+          h('h3', ui.bi('새 게임 5개', '5 new games')),
+          gameList(['balloon-pop', 'particle-lab', 'verb-magic', 'number-shop', 'sound-twins']),
+          h('h3', ui.bi('연습할 게 훨씬 많아요', 'Much more to practise')),
+          h('p', `${topics.length} topics ${topics.map((t) => t.emoji).join(' ')} with ${M.content.words().length} words and ${M.content.sentences().length} sentences. Words below your starting level were added as quick checks, a few a day.`),
+          featureList([
+            ['✍️', 'Dictation: well-known sentences sometimes ask you to write down what you hear.'],
+            M.mic.supported() ? ['🎤', 'Speaking practice: press 🎤 next to a word or sentence and say it out loud.'] : null,
+            ['🌙', 'A dark theme (Settings → Display).'],
+            ['🌅', 'A word of the day on the home screen.'],
+          ]),
+          h('p.notice', `🎯 Your daily goal is now ${goal} ⭐, about ${M.progress.goalMinutes(goal)} minutes of practice. You can change it in Settings.`),
+        ];
+      },
+    },
+  ];
+
   function whatsNew() {
     const profile = M.store.state.profile;
     if (!profile.onboarded || profile.seenVersion === M.version) return;
+    const seen = profile.seenVersion || '0.1.0';
     profile.seenVersion = M.version;
     M.store.save();
-    const games = ['balloon-pop', 'particle-lab', 'verb-magic', 'number-shop', 'sound-twins'].map((id) => M.games.get(id)).filter(Boolean);
-    const topics = M.content.topics();
-    const goal = M.progress.dailyGoal();
-    const features = [
-      ['✍️', 'Dictation: well-known sentences sometimes ask you to write down what you hear.'],
-      M.mic.supported() ? ['🎤', 'Speaking practice: press 🎤 next to a word or sentence and say it out loud.'] : null,
-      ['🌙', 'A dark theme (Settings → Display).'],
-      ['🏅', `${M.progress.BADGES.length} badges to collect, and outfits for 말랑이 as you level up (wardrobe in Stats).`],
-      ['🌅', 'A word of the day on the home screen.'],
-    ].filter(Boolean);
+    const notes = NOTES.filter((n) => newer(n.version, seen) && !newer(n.version, M.version));
+    if (!notes.length) return;
     const dialog = ui.modal({
       title: { ko: '새로워졌어요!', en: 'What’s new in Mallang Korean' },
       cls: 'modal-wide whats-new',
       body: [
-        h('h3', ui.bi(`새 게임 ${games.length}개`, `${games.length} new games`)),
-        h('ul.whats-new-list', games.map((g) => h('li', h('span.whats-new-icon', { 'aria-hidden': 'true' }, g.emoji), ui.bi(g.title.ko, `${g.title.en}: ${g.blurb.en}`)))),
-        h('h3', ui.bi('연습할 게 훨씬 많아요', 'Much more to practise')),
-        h('p', `${topics.length} topics ${topics.map((t) => t.emoji).join(' ')} with ${M.content.words().length} words and ${M.content.sentences().length} sentences. Words below your starting level were added as quick checks, a few a day.`),
-        h('ul.whats-new-list', features.map(([icon, text]) => h('li', h('span.whats-new-icon', { 'aria-hidden': 'true' }, icon), h('span', text)))),
-        h('p.notice', `🎯 Your daily goal is now ${goal} ⭐, about ${M.progress.goalMinutes(goal)} minutes of practice. You can change it in Settings.`),
+        ...notes.flatMap((n, i) => (i === 0 ? n.body() : [h('h3.whats-new-older', ui.bi(`버전 ${n.version}`, `Also new since your last visit (version ${n.version})`)), ...n.body()])),
+        h('p.notice', `🏅 ${M.progress.BADGES.length} badges to collect, and outfits for 말랑이 as you level up (wardrobe in Stats).`),
       ],
       actions: [ui.button({ ko: '좋아요!', en: 'Let’s go', variant: 'primary', onClick: () => dialog.close() })],
     });

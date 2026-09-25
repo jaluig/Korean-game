@@ -27,8 +27,12 @@
     if (sentences.due + sentences.fresh > 0) {
       return { game: 'sentence-builder', ko: `문장 ${sentences.due + sentences.fresh}개`, en: `${plural(sentences.due + sentences.fresh, 'sentence')} ready` };
     }
+    const patterns = M.content.grammar().filter((g) => M.srs.isDue(g.id)).length;
+    if (patterns && M.games.get('grammar-cards').status(topicId).ready) {
+      return { game: 'grammar-cards', ko: `문법 복습 ${patterns}개`, en: `${plural(patterns, 'grammar pattern')} to review` };
+    }
     // All caught up: suggest a different practice game each day.
-    const extras = ['balloon-pop', 'particle-lab', 'verb-magic', 'speed-match', 'number-shop', 'sound-twins']
+    const extras = ['balloon-pop', 'particle-lab', 'verb-magic', 'speed-match', 'number-shop', 'sound-twins', 'grammar-cards', 'dialogues']
       .map((id) => M.games.get(id))
       .filter((g) => g && g.status(topicId).ready);
     if (extras.length) {

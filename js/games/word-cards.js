@@ -50,7 +50,7 @@
       const plan = M.srs.buildWordSession({ topicId: host.topicId });
       if (!plan.steps.length) {
         // Point to a practice game that has something to do.
-        const extra = ['balloon-pop', 'particle-lab', 'verb-magic', 'number-shop', 'sound-twins']
+        const extra = ['balloon-pop', 'particle-lab', 'verb-magic', 'number-shop', 'sound-twins', 'grammar-cards', 'dialogues']
           .map((id) => M.games.get(id))
           .find((g) => g && g.status(host.topicId).ready);
         host.empty({
