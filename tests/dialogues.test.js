@@ -62,7 +62,8 @@ test('the two speakers sound different: a second voice if there is one, else the
   M.speech = { voice: () => yuna, voices: () => [yuna] };
   let v = M.dialogues.voicesFor(d);
   assert.equal(v[low].voice, yuna);
-  assert.ok(v[high].pitch > 1 && v[low].pitch < 1);
+  assert.equal(v[high].pitch, 1, 'never pitched up: that makes the voice hard to understand');
+  assert.ok(v[low].pitch < 1);
   M.speech = { voice: () => yuna, voices: () => [yuna, { name: 'Sora', voiceURI: 'sora' }, injoon] };
   v = M.dialogues.voicesFor(d);
   assert.equal(v[low].voice, injoon, 'a male voice for the low speaker when there is one');

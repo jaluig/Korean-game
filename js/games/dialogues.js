@@ -3,8 +3,9 @@
  * café, in a shop, making plans…) with the script hidden, then answer a few
  * questions about it. After each answer you see the line that holds it; at
  * the end, the whole script with translations and a 🔊 for every line.
- * The two speakers sound different: another pitch, or another Korean voice
- * when the browser has two. Without a Korean voice it becomes reading practice.
+ * The two speakers sound different: a male and a female Korean voice when the
+ * browser has both, otherwise the male speaker a little lower (the female one
+ * keeps the natural pitch). Without a Korean voice it becomes reading practice.
  *
  * Every dialogue has its own spaced-repetition record ('dialogue:<id>') and
  * opens once you know its key words. The dialogues live in content/dialogues.js.
@@ -49,7 +50,7 @@
   /**
    * Each speaker's voice. The "high" speaker gets a female voice and the "low"
    * one a male voice when the browser has both (starting from the voice chosen
-   * in Settings); with a single voice, the pitch tells them apart.
+   * in Settings); with a single voice, the low speaker is pitched down a little.
    */
   function voicesFor(dialogue) {
     const main = M.speech.voice();
