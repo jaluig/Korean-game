@@ -45,6 +45,20 @@ body {
   top: calc(16px + env(safe-area-inset-top));
 }
 
+/* Fixed sheets and dialogs keep clear of the notch and the home indicator
+   (a phone on its side too). On a computer these are the usual paddings. */
+.feedback {
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+.modal-backdrop {
+  padding-left: max(18px, env(safe-area-inset-left));
+  padding-right: max(18px, env(safe-area-inset-right));
+  padding-bottom: max(18px, env(safe-area-inset-bottom));
+}
+
 /* ---------- Phones ---------- */
 
 @media (max-width: 600px) {
@@ -161,12 +175,12 @@ body {
 
   /* Dialogs fill the width and scroll inside. */
   .modal-backdrop {
-    padding: 10px;
+    padding: 10px 10px max(10px, env(safe-area-inset-bottom));
   }
 
   .modal {
     max-height: calc(100vh - 20px);
-    max-height: calc(100dvh - 20px);
+    max-height: calc(100dvh - 10px - max(10px, env(safe-area-inset-bottom)));
     padding: 22px 16px 18px;
   }
 

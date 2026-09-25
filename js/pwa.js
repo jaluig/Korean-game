@@ -10,13 +10,19 @@
   'use strict';
 
   const web = location.protocol === 'http:' || location.protocol === 'https:';
+  // Browsers allow offline copies and installing only on https:// addresses and on this computer (localhost).
+  const secure = web && window.isSecureContext === true && 'serviceWorker' in navigator;
   const standalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
 
   M.pwa = {
-    /** Served from a web address (installable, can work offline). */
+    /** Served from a web address. */
     web,
-    /** Running as an installed app. */
+    /** …where the offline copy and installing are allowed. */
+    secure,
+    /** Running as the installed app. */
     installed: standalone(),
+    /** Just installed from this page (which is still a browser tab). */
+    justInstalled: false,
     /** The browser's install prompt, once it offers one (Chrome, Edge). */
     installPrompt: null,
     /** iPhone / iPad Safari: installing is done from the Share menu. */
@@ -49,11 +55,11 @@
   });
   window.addEventListener('appinstalled', () => {
     M.pwa.installPrompt = null;
-    M.pwa.installed = true;
+    M.pwa.justInstalled = true;
     M.events.emit('pwa');
   });
 
-  if ('serviceWorker' in navigator) {
+  if (secure) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Offline mode is not available:', err));
     });

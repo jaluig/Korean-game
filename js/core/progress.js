@@ -206,7 +206,7 @@
     { id: 'lightning', emoji: '⚡', ko: '번개 손', en: 'Lightning hands', desc: 'Make 15 matches in one Speed Match round.',
       earned: (s) => s.totals.bestMatch >= 15 },
     { id: 'bloom-again', emoji: '🌸', ko: '다시 피었어요', en: 'Bloom again', desc: 'Grow a word you once struggled with to 🌻.',
-      earned: (s) => Object.values(s.items).some((r) => r.lapses >= 2 && r.stage >= 4) },
+      earned: (s) => Object.entries(s.items).some(([id, r]) => M.content.word(id) && r.lapses >= 2 && r.stage >= 4) },
     { id: 'first-tree', emoji: '🌲', ko: '첫 나무', en: 'First tree', desc: 'Grow a word all the way to 🌳.',
       earned: (s) => Object.entries(s.items).some(([id, r]) => M.content.word(id) && r.stage >= 5 && !r.assumed) },
     { id: 'words-60', emoji: '🌳', ko: '작은 숲', en: 'Little forest', desc: 'Grow 60 words to 🌿 or beyond.',

@@ -374,7 +374,7 @@
         content.push(
           h(
             'div.grammar-fb-card',
-            h('button.btn.btn-soft.btn-small', { type: 'button', on: { click: () => showGrammar(pattern) } }, h('span.btn-icon', { 'aria-hidden': 'true' }, '📖'), ui.bi(`${nb(pattern.title.ko)} 카드`, `${pattern.title.en}: the card`))
+            h('button.btn.btn-soft.btn-small', { type: 'button', on: { ...M.keys.noMouseFocus, click: () => showGrammar(pattern) } }, h('span.btn-icon', { 'aria-hidden': 'true' }, '📖'), ui.bi(`${nb(pattern.title.ko)} 카드`, `${pattern.title.en}: the card`))
           )
         );
         host.showFeedback({ tone: correct ? 'good' : 'bad', points: earned, content: content.filter(Boolean), speak: q.ko, onContinue: advance });

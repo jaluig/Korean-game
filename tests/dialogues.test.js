@@ -68,3 +68,86 @@ test('the two speakers sound different: a second voice if there is one, else the
   assert.equal(v[low].voice, injoon, 'a male voice for the low speaker when there is one');
   assert.equal(v[high].voice, yuna);
 });
+
+test('voices: a male main voice speaks for the low speaker, and "female" is not male', () => {
+  const d = M.content.dialogues()[0];
+  const low = Object.keys(d.speakers).find((k) => d.speakers[k].voice === 'low');
+  const high = Object.keys(d.speakers).find((k) => d.speakers[k].voice === 'high');
+  const injoon = { name: 'Microsoft InJoon Online (Natural)', voiceURI: 'injoon' };
+  const sunhi = { name: 'Microsoft SunHi Online (Natural)', voiceURI: 'sunhi' };
+  M.speech = { voice: () => injoon, voices: () => [injoon, sunhi] };
+  let v = M.dialogues.voicesFor(d);
+  assert.equal(v[low].voice, injoon);
+  assert.equal(v[high].voice, sunhi);
+  const female = { name: 'Korean+female1', voiceURI: 'f1' };
+  const other = { name: 'Korean+female2', voiceURI: 'f2' };
+  M.speech = { voice: () => female, voices: () => [female, other] };
+  v = M.dialogues.voicesFor(d);
+  assert.equal(v[low].voice, female, 'no male voice: the same voice, a lower pitch');
+  assert.ok(v[low].pitch < v[high].pitch);
+});
+
+/** A fake speech engine: each line "ends" when the test says so. */
+function fakeSpeech() {
+  const said = [];
+  const voice = { name: 'Yuna', voiceURI: 'yuna' };
+  M.speech = {
+    voice: () => voice,
+    voices: () => [voice],
+    speak: (text, opts) => {
+      said.push({ text, ...opts });
+      return true;
+    },
+    stop: () => {},
+  };
+  return said;
+}
+const tick = (ms = 5) => new Promise((resolve) => setTimeout(resolve, ms));
+
+test('the player plays only the lines asked for, then reports the end', async () => {
+  M.config.session.dialogues.linePause = 1;
+  const d = M.content.dialogues().find((x) => x.lines.length >= 4);
+  const said = fakeSpeech();
+  const seen = [];
+  const p = M.dialogues.player(d, (i) => seen.push(i));
+  p.play({ lines: [1, 3] });
+  assert.equal(said.length, 1);
+  assert.equal(said[0].text, d.lines[1].ko);
+  said[0].onEnd();
+  await tick();
+  assert.equal(said.length, 2);
+  assert.equal(said[1].text, d.lines[3].ko);
+  said[1].onEnd();
+  await tick();
+  assert.equal(said.length, 2, 'line 2 is skipped');
+  assert.deepEqual(seen.filter((i) => i >= 0), [1, 3]);
+  assert.equal(seen[seen.length - 1], -1);
+});
+
+test('the player stops when other audio cuts it off, and after stop()', async () => {
+  M.config.session.dialogues.linePause = 1;
+  const d = M.content.dialogues()[0];
+  let said = fakeSpeech();
+  const p = M.dialogues.player(d);
+  p.play();
+  said[0].onError('interrupted');
+  await tick();
+  said[0].onEnd(); // a late "end" from the same line changes nothing
+  await tick();
+  assert.equal(said.length, 1, 'cut off: no more lines');
+  said = fakeSpeech();
+  const q = M.dialogues.player(d);
+  q.play();
+  q.stop();
+  said[0].onEnd();
+  await tick();
+  assert.equal(said.length, 1, 'stopped: no more lines');
+  // A real error (not an interruption) moves on to the next line.
+  said = fakeSpeech();
+  const r = M.dialogues.player(d);
+  r.play();
+  said[0].onError('synthesis-failed');
+  await tick();
+  assert.equal(said.length, 2);
+  r.stop();
+});

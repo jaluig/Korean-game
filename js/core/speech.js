@@ -95,8 +95,11 @@
       utterance.rate = rate || M.store.state.settings.speechRate || 0.9;
       if (pitch) utterance.pitch = pitch;
       utterance.onend = () => {
+        // Some browsers report a line cut off by a newer speak() as ended: tell callers who ask.
+        const superseded = current !== utterance;
         if (current === utterance) current = null;
-        if (onEnd) onEnd();
+        if (superseded && onError) onError('interrupted');
+        else if (onEnd) onEnd();
       };
       utterance.onerror = (event) => {
         if (current === utterance) current = null;

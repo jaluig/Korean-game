@@ -254,10 +254,12 @@
     let status;
     let action = null;
     if (pwa.installed) status = '✅ You’re using the installed app. It works offline, too.';
+    else if (pwa.justInstalled) status = '✅ Installed! Open 말랑 한국어 from your home screen or your list of apps.';
     else if (pwa.installPrompt) {
       status = 'Install 말랑 한국어 as an app: it gets its own icon and window, and works offline.';
       action = ui.button({ icon: '📲', ko: '앱 설치하기', en: 'Install the app', variant: 'mint', onClick: () => pwa.install().then(() => redraw()) });
-    } else if (pwa.web && pwa.ios) status = 'On iPhone or iPad: tap Share, then “Add to Home Screen”. It works offline once it has been opened.';
+    } else if (pwa.web && !pwa.secure) status = 'From this address, the game can’t be installed or kept for offline play: browsers allow that only on https:// addresses and on this computer (localhost). Everything else works as usual.';
+    else if (pwa.web && pwa.ios) status = 'On iPhone or iPad: tap Share, then “Add to Home Screen”. It works offline once it has been opened.';
     else if (pwa.web) status = 'This page works offline once it has loaded. To install it as an app, use your browser’s menu (Install app / Add to Home Screen).';
     else status = 'You opened the game as a file, which works fine. To install it as an app (for your phone, or to play offline), open it from a web address: see “Install as an app” in the README.';
     return section(

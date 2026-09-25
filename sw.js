@@ -3,19 +3,20 @@
  * offline once it has been loaded from a web address (see js/pwa.js).
  *
  * Files come from the network first, so an update shows up on the next
- * visit; the copy is used when there's no connection (or it's very slow).
- * The web fonts are kept too, so offline play looks the same.
+ * visit. The copy is used when there's no connection, or when the server
+ * answers with an error. It is saved in one go when a new VERSION installs,
+ * so it never mixes files from two versions. The web fonts are kept too,
+ * so offline play looks the same.
  * Every file the game loads must be listed in FILES (a unit test checks it).
  */
 'use strict';
 
 const VERSION = '0.3.0'; // keep in step with Mallang.version (js/core/namespace.js)
 const CACHE = `mallang-${VERSION}`;
-const FONT_CACHE = 'mallang-fonts';
-const SLOW_MS = 4000; // after this long without an answer, use the copy if there is one
+const FONT_CACHE = `mallang-fonts-${VERSION}`; // fetched again with each version, so a bad copy can't stay
+const PAGE = 'index.html'; // what a page load gets from the copy
 
 const FILES = [
-  './',
   'index.html',
   'manifest.webmanifest',
   'icons/icon-192.png',
@@ -111,39 +112,22 @@ self.addEventListener('activate', (event) => {
 /** The saved copy of a request (for a page: the game itself). */
 async function fromCache(request) {
   const cache = await caches.open(CACHE);
-  const hit = await cache.match(request, { ignoreSearch: true });
-  if (hit) return hit;
-  return request.mode === 'navigate' ? cache.match('index.html') : undefined;
+  return request.mode === 'navigate' ? cache.match(PAGE) : cache.match(request, { ignoreSearch: true });
 }
 
-/** Network first; the copy when offline or when the network is very slow. */
-function networkFirst(request) {
-  return new Promise((resolve) => {
-    let done = false;
-    const answer = (response) => {
-      if (done || !response) return false;
-      done = true;
-      resolve(response);
-      return true;
-    };
-    const timer = setTimeout(() => fromCache(request).then(answer), SLOW_MS);
-    fetch(request)
-      .then((response) => {
-        clearTimeout(timer);
-        if (response.ok && response.type === 'basic') {
-          const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(request, copy));
-        }
-        answer(response);
-      })
-      .catch(() => {
-        clearTimeout(timer);
-        fromCache(request).then((hit) => answer(hit || Response.error()));
-      });
-  });
+/** The network first; the saved copy when offline or when the server answers with an error. */
+async function networkFirst(request) {
+  let response;
+  try {
+    response = await fetch(request);
+  } catch {
+    return (await fromCache(request)) || Response.error();
+  }
+  if (response.ok || response.type === 'opaqueredirect') return response; // (a redirect: the browser follows it)
+  return (await fromCache(request)) || response;
 }
 
-/** Web fonts never change: the copy first, the network only the first time. */
+/** Web fonts: the copy first, the network only the first time (with each version). */
 async function cacheFirst(request) {
   const cache = await caches.open(FONT_CACHE);
   const hit = await cache.match(request);

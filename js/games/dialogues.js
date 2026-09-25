@@ -42,47 +42,57 @@
 
   /* ---------- Voices ---------- */
 
-  const MALE = /injoon|hyunsu|bongjin|gookmin|male|남성/i;
+  // Korean voices with a male name (Edge, Windows) or labelled male (not "female").
+  const MALE = /injoon|hyunsu|bongjin|gookmin|minsu|(^|[^a-z])male|남성/i;
+  const isMale = (voice) => !!voice && MALE.test(voice.name || '');
 
   /**
-   * Each speaker's voice: the "low" speaker gets a second Korean voice when
-   * there is one (a male one if possible); otherwise the pitch tells them apart.
+   * Each speaker's voice. The "high" speaker gets a female voice and the "low"
+   * one a male voice when the browser has both (starting from the voice chosen
+   * in Settings); with a single voice, the pitch tells them apart.
    */
   function voicesFor(dialogue) {
     const main = M.speech.voice();
-    const others = M.speech.voices().filter((v) => v !== main);
-    const second = others.find((v) => MALE.test(v.name || '')) || others[0] || null;
+    const other = (test) => M.speech.voices().find((v) => v !== main && test(v)) || null;
+    let high = main;
+    let low = main;
+    if (isMale(main)) high = other((v) => !isMale(v)) || main;
+    else low = other(isMale) || main;
+    const shared = high === low;
     const out = {};
     for (const [key, s] of Object.entries(dialogue.speakers)) {
-      const own = s.voice === 'low' && second;
-      out[key] = own ? { voice: second, pitch: 1 } : { voice: main, pitch: cfg().pitch[s.voice] || 1 };
+      const voice = s.voice === 'low' ? low : high;
+      out[key] = { voice, pitch: shared ? cfg().pitch[s.voice] || 1 : 1 };
     }
     return out;
   }
+
+  /** "Slowly" is always slower than the speed chosen in Settings. */
+  const slowRate = () => Math.min(cfg().slowRate, (M.store.state.settings.speechRate || 0.9) * 0.75);
 
   /** Generous: a line that never reports its end still moves on, without cutting a slow voice short. */
   const safetyMs = (text, rate) => [...text].length * 350 * (0.9 / (rate || 0.9)) + 4000;
 
   /**
-   * Plays a dialogue line by line with a short pause between speakers.
-   * onLine(i) is called as line i starts, and onLine(-1) when playback ends.
+   * Plays a dialogue's lines one after another, with a short pause between
+   * speakers. onLine(i) is called as line i starts, and onLine(-1) when the
+   * playback ends: finished, stopped, or cut off by other audio.
    */
   function player(dialogue, onLine = () => {}) {
     const voices = voicesFor(dialogue);
     let token = 0;
     let timer = null;
 
-    function say(i, { slow = false, onEnd } = {}) {
+    function say(i, { rate, onEnd, onCut }) {
       const line = dialogue.lines[i];
       const v = voices[line.who];
-      const rate = slow ? cfg().slowRate : undefined;
       return M.speech.speak(line.ko, {
         quiet: true,
         rate,
         pitch: v.pitch,
         voice: v.voice,
         onEnd,
-        onError: (code) => code !== 'interrupted' && code !== 'canceled' && onEnd && onEnd(),
+        onError: (code) => (code === 'interrupted' || code === 'canceled' ? onCut() : onEnd()),
       });
     }
 
@@ -93,34 +103,45 @@
       onLine(-1);
     }
 
-    function play({ from = 0, to = dialogue.lines.length - 1, slow = false } = {}) {
+    /** lines: the line numbers to play, in order (all of them by default). */
+    function play({ lines = dialogue.lines.map((_, i) => i), slow = false } = {}) {
       stop();
       const mine = ++token;
-      const step = (i) => {
+      const rate = slow ? slowRate() : undefined;
+      const step = (k) => {
         if (mine !== token) return;
-        if (i > to) {
+        if (k >= lines.length) {
           onLine(-1);
           return;
         }
+        const i = lines[k];
         let ended = false;
         const next = () => {
           if (ended || mine !== token) return;
           ended = true;
           clearTimeout(timer);
-          timer = setTimeout(() => step(i + 1), cfg().linePause);
+          timer = setTimeout(() => step(k + 1), cfg().linePause);
+        };
+        // Other audio took over (a 🔊 button, another player): this playback is over.
+        const cut = () => {
+          if (ended || mine !== token) return;
+          ended = true;
+          token++;
+          clearTimeout(timer);
+          onLine(-1);
         };
         onLine(i);
-        if (!say(i, { slow, onEnd: next })) {
+        if (!say(i, { rate, onEnd: next, onCut: cut })) {
           stop();
           return;
         }
         clearTimeout(timer);
-        timer = setTimeout(next, safetyMs(dialogue.lines[i].ko, slow ? cfg().slowRate : 0.9));
+        timer = setTimeout(next, safetyMs(dialogue.lines[i].ko, rate || 0.9));
       };
-      step(from);
+      step(0);
     }
 
-    return { play, stop, line: (i, slow) => play({ from: i, to: i, slow }) };
+    return { play, stop, line: (i, slow) => play({ lines: [i], slow }) };
   }
 
   /** A 🔊 button for one line, in its speaker's voice. */
@@ -194,15 +215,36 @@
 
       const total = list.reduce((n, d) => n + d.questions.length, 0);
       const round = { answers: 0, correct: 0, combo: 0, bestCombo: 0 };
-      let current = null; // the dialogue's player, stopped on cleanup
+      let current = null; // the player of the screen on show
+      let left = false; // left the game: nothing may play after that
       let stopKeys = null;
+      let offVoices = null; // waiting for the Korean voices to load
+      const timers = new Set();
+      const later = (fn, ms) => {
+        const t = setTimeout(() => {
+          timers.delete(t);
+          if (!left) fn();
+        }, ms);
+        timers.add(t);
+      };
       const release = () => {
         if (stopKeys) stopKeys();
         stopKeys = null;
+        if (offVoices) offVoices();
+        offVoices = null;
+      };
+      /** Each screen has its own player; the one before it stops. */
+      const takeOver = (play) => {
+        if (current && current !== play) current.stop();
+        current = play;
+        return play;
       };
       host.onCleanup(() => {
+        left = true;
         release();
+        timers.forEach(clearTimeout);
         if (current) current.stop();
+        current = null;
       });
 
       let di = 0;
@@ -259,11 +301,12 @@
       }
 
       function listen(dialogue) {
-        const listening = M.speech.isReady();
-        const state = { read: false, wrong: 0 };
+        // Voices often arrive just after the page loads: wait for them in listening mode.
+        const loading = M.speech.status() === 'loading';
+        const listening = M.speech.isReady() || loading;
+        const state = { read: false, wrong: 0, listening }; // the mode stays the same for the whole dialogue
         const root = h('div.ex.ex-dialogue');
-        const play = player(dialogue, (i) => follow(root, dialogue)(i));
-        current = play;
+        const play = takeOver(player(dialogue, follow(root, dialogue)));
         // Reading the script first is allowed, but the answers then count for fewer points.
         const scriptBox = h('div.dlg-script-box', { hidden: listening }, scriptList(dialogue, play, { audio: listening }));
         const showScript = listening
@@ -295,26 +338,25 @@
         );
         screen(root);
         go.focus({ preventScroll: true });
-        if (listening && M.store.state.settings.autoPlayAudio) setTimeout(() => current === play && play.play(), 500);
+        if (listening && !loading && M.store.state.settings.autoPlayAudio) later(() => current === play && play.play(), 500);
         stopKeys = M.keys.push((event) => {
           if (event.key === 'Enter' && !M.keys.isControl(event)) {
             event.preventDefault();
             ask(dialogue, state, 0);
           } else if (listening && M.keys.isReplay(event)) play.play();
         });
+        if (loading) offVoices = M.events.on('speech:status', () => later(() => current === play && listen(dialogue), 0));
         if (!listening) host.mascot.say('읽기 모드예요', 'Reading mode', { duration: 3000 });
       }
 
       function ask(dialogue, state, k) {
-        const play = current;
-        play.stop();
         const q = dialogue.questions[k];
-        const listening = M.speech.isReady();
+        // No Korean voice after all (it was still loading): read the conversation instead.
+        if (state.listening && !M.speech.isReady() && M.speech.status() !== 'loading') state.listening = false;
+        const { listening } = state;
         const options = U.shuffle(q.options.map((o, i) => ({ ...o, correct: i === q.answer })));
         const root = h('div.ex.ex-dialogue.ex-dialogue-q');
-        const follower = follow(root, dialogue);
-        const replay = player(dialogue, follower);
-        current = replay;
+        const replay = takeOver(player(dialogue, follow(root, dialogue)));
         let locked = false;
         const buttons = options.map((o, i) =>
           h(
@@ -370,7 +412,7 @@
       function onAnswer(dialogue, state, k, picked, right, play) {
         const q = dialogue.questions[k];
         const correct = picked.correct;
-        const listening = M.speech.isReady();
+        const { listening } = state;
         M.progress.recordAnswer(correct);
         M.progress.skill('dialogue', correct);
         round.answers++;
@@ -392,7 +434,7 @@
         M.store.save();
 
         const lines = [].concat(q.line);
-        if (listening && M.store.state.settings.autoPlayAudio) setTimeout(() => current === play && play.play({ from: lines[0], to: lines[lines.length - 1] }), 300);
+        if (listening && M.store.state.settings.autoPlayAudio) later(() => current === play && play.play({ lines }), 300);
         const tip = (text) => (text ? h('div.fb-row.fb-tip', h('span.fb-tip-icon', { 'aria-hidden': 'true' }, '💡'), h('span', text)) : null);
         const content = [
           h('div.fb-row.fb-answer', h('span.fb-label', ui.bi('정답', 'Answer')), h('span.fb-ko', { lang: 'ko' }, right.ko), h('span.fb-en', `= ${right.en}`)),
@@ -430,10 +472,9 @@
         M.progress.bump('dialoguesHeard');
         M.store.save();
 
-        const listening = M.speech.isReady();
+        const { listening } = state;
         const root = h('div.ex.ex-dialogue.ex-dialogue-review');
-        const play = player(dialogue, (i) => follow(root, dialogue)(i));
-        current = play;
+        const play = takeOver(player(dialogue, follow(root, dialogue)));
         const last = di + 1 >= list.length;
         const button = ui.button({ ko: last ? '끝내기' : '다음 대화', en: last ? 'Finish' : 'Next dialogue', variant: 'primary', size: 'big', onClick: done });
         root.append(
