@@ -108,10 +108,12 @@ it, the 🎤 buttons simply don't appear.
 
 When the game is opened from a web address rather than as a file, it can be installed like an app,
 with its own icon and window, and it keeps working offline (a service worker, `sw.js`, keeps a copy
-of every file). Browsers only allow this from a web address:
+of every file). Browsers allow this only on `https://` addresses and on `localhost`:
 
-1. Put this folder on any static web host (for example GitHub Pages), or run `npm start`
-   (`python3 -m http.server 8000`) and open http://localhost:8000 on the same computer.
+1. Put this folder on any static web host with https (for example GitHub Pages), or, just for this
+   computer, run `npm start` (`python3 -m http.server 8000`) and open http://localhost:8000.
+   To play on your phone, use the https address: from `http://` plus your computer's network address,
+   the game works but can't be installed or kept for offline play.
 2. Install it:
    - **Chrome / Edge (computer or Android):** **Settings → App → Install the app** in the game, or the
      install icon in the address bar (Android: menu ⋮ → *Install app* / *Add to Home screen*).
