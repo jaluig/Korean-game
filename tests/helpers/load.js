@@ -13,6 +13,7 @@ const CORE = [
   'js/core/hangul.js',
   'js/core/numbers.js',
   'js/core/conjugate.js',
+  'js/core/grammar.js',
   'js/core/storage.js',
   'js/core/content.js',
   'js/core/srs.js',

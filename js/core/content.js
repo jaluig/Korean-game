@@ -13,6 +13,8 @@
   const words = new Map();
   const sentences = new Map();
   const soundSets = [];
+  const grammar = [];
+  const dialogues = [];
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -80,6 +82,91 @@
     }
   }
 
+  /**
+   * Grammar patterns (content/grammar.js), practised in Grammar Cards. Ids become
+   * 'grammar:<id>'. Each pattern has an intro (title, meaning, how, note,
+   * examples) and questions: a sentence (ko, en) whose `answer` is the form of
+   * `dict` with the pattern's ending. Word refs are 'topic:id'.
+   */
+  function registerGrammar(list) {
+    for (const g of list || []) {
+      const id = `grammar:${g.id}`;
+      if (!g.id || !g.form || !Array.isArray(g.questions)) problems.push(`grammar "${g.id}": needs id, form and questions`);
+      else if (grammar.some((x) => x.id === id)) problems.push(`${id}: duplicate grammar pattern`);
+      else {
+        const questions = g.questions.map((q, i) =>
+          Object.freeze({
+            ...q,
+            id: `${id}#${q.id || i + 1}`,
+            pattern: id,
+            form: q.form || g.form,
+            pos: q.pos || 'verb',
+            tense: q.tense || 'present',
+            needs: q.words || [],
+            contrast: q.contrast || [],
+            traps: q.traps || [],
+          })
+        );
+        grammar.push(Object.freeze({ ...g, id, localId: g.id, level: g.level || 1, type: 'grammar', examples: g.examples || [], questions }));
+      }
+    }
+    grammar.sort((a, b) => a.level - b.level || (a.order ?? 99) - (b.order ?? 99));
+  }
+
+  /**
+   * Listening dialogues (content/dialogues.js). Ids become 'dialogue:<id>'.
+   * Two speakers, a few lines, and comprehension questions whose answers are
+   * in one of the lines (`line`, a 0-based index or a list of them).
+   */
+  function registerDialogues(list) {
+    for (const d of list || []) {
+      const id = `dialogue:${d.id}`;
+      if (!d.id || !Array.isArray(d.lines) || !Array.isArray(d.questions)) problems.push(`dialogue "${d.id}": needs id, lines and questions`);
+      else if (dialogues.some((x) => x.id === id)) problems.push(`${id}: duplicate dialogue`);
+      else dialogues.push(Object.freeze({ ...d, id, localId: d.id, level: d.level || 1, type: 'dialogue', needs: d.words || [], index: dialogues.length }));
+    }
+  }
+
+  function checkGrammar(found) {
+    for (const g of grammar) {
+      if (!g.title || !g.meaning || !g.how) found.push(`${g.id}: needs title, meaning and how`);
+      if (g.examples.length < 2) found.push(`${g.id}: needs 2+ examples`);
+      if (g.questions.length < 5) found.push(`${g.id}: needs 5+ questions`);
+      for (const q of g.questions) {
+        if (!q.ko || !q.en || !q.answer || !q.dict) {
+          found.push(`${q.id}: needs ko, en, answer and dict`);
+          continue;
+        }
+        const at = q.ko.indexOf(q.answer);
+        if (at < 0 || q.ko.indexOf(q.answer, at + 1) >= 0) found.push(`${q.id}: the answer "${q.answer}" must appear exactly once in "${q.ko}"`);
+        for (const ref of q.needs) if (!words.has(ref)) found.push(`${q.id}: unknown word "${ref}" (use topic:id)`);
+        for (const t of q.traps) if (!t.text || !t.why) found.push(`${q.id}: each trap needs "text" and "why"`);
+      }
+    }
+  }
+
+  function checkDialogues(found) {
+    for (const d of dialogues) {
+      const who = Object.keys(d.speakers || {});
+      if (who.length !== 2) found.push(`${d.id}: needs exactly two speakers`);
+      if (!topics.some((t) => t.id === d.topic)) found.push(`${d.id}: unknown topic "${d.topic}"`);
+      if (d.lines.length < 3) found.push(`${d.id}: needs 3+ lines`);
+      d.lines.forEach((l, i) => {
+        if (!who.includes(l.who) || !l.ko || !l.en) found.push(`${d.id} line ${i}: needs who (${who.join('/')}), ko and en`);
+      });
+      for (const ref of d.needs) if (!words.has(ref)) found.push(`${d.id}: unknown word "${ref}" (use topic:id)`);
+      if (d.questions.length < 2) found.push(`${d.id}: needs 2+ questions`);
+      d.questions.forEach((q, i) => {
+        const label = `${d.id} question ${i + 1}`;
+        if (!q.q || !q.q.ko || !q.q.en) found.push(`${label}: needs q: { ko, en }`);
+        if (!Array.isArray(q.options) || q.options.length < 3 || new Set(q.options).size !== q.options.length) found.push(`${label}: needs 3+ different options`);
+        else if (!(q.answer >= 0 && q.answer < q.options.length)) found.push(`${label}: answer must be an option index`);
+        const lines = [].concat(q.line);
+        if (!lines.length || lines.some((n) => !(n >= 0 && n < d.lines.length))) found.push(`${label}: "line" must point to the line(s) with the answer`);
+      });
+    }
+  }
+
   /** Check every topic for authoring mistakes. Returns a list of messages. */
   function check() {
     const found = [...problems];
@@ -109,6 +196,8 @@
         if ([...alt].sort().join('|') !== sorted) found.push(`${label}: alternative order must use the same tiles`);
       }
     }
+    checkGrammar(found);
+    checkDialogues(found);
     return found;
   }
 
@@ -117,7 +206,13 @@
   M.content = {
     registerTopic,
     registerSoundSets,
+    registerGrammar,
+    registerDialogues,
     check,
+    grammar: () => grammar.slice(),
+    grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
+    dialogues: (topicId = 'all') => dialogues.filter((d) => !topicId || topicId === 'all' || d.topic === topicId),
+    dialogue: (id) => dialogues.find((d) => d.id === id) || null,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,
     topics: () => topics.slice(),
