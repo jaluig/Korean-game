@@ -86,7 +86,7 @@
       case 'ㅅ':
         return { text: `${bare}으`, rule: 'ㅅ drops', why: `${dict} is ㅅ-irregular: the ㅅ drops before 으 → ${bare}으${tail}.` };
       case 'ㅎ':
-        return { text: bare, rule: 'ㅎ drops', why: `${dict} is ㅎ-irregular: the ㅎ drops, and there's no 으 → ${bare}${tail}.` };
+        return { text: bare, rule: 'ㅎ drops', why: `${dict} is ㅎ-irregular: the ㅎ drops, and there’s no 으 → ${bare}${tail}.` };
       case 'ㄹ':
         if (tail.startsWith('니')) return { text: bare, rule: 'ㄹ drops', why: `${dict} ends in ㄹ, and ㄹ drops before ㄴ → ${bare}${tail}.` };
         return { text: stem, rule: 'ㄹ stem', why: `${dict} ends in ㄹ, which takes ${tail} directly (no 으) → ${stem}${tail}.` };
@@ -163,7 +163,7 @@
       const text = `${ps}${glue}${e.tail}`;
       return {
         text,
-        steps: [`It happened in the past: ${past} → ${ps}, then add ${glue}${e.tail.trim()} → ${text}.`],
+        steps: [`It happened in the past: ${past} → ${ps}, then add ${(glue + e.tail).trim()} → ${text}.`],
         variants: [],
         rule: 'past',
       };
@@ -251,7 +251,7 @@
 
     if (e.base === 'stem') {
       if (inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes straight onto the stem, not the 아/어 form: ${stem} + ${e.tail.trim()} → ${right.text}.`); // 먹어지만
-      if (type === 'ㄷ') add(`${head}${withFinal(last, 'ㄹ')}${e.tail}`, `${dict}'s ㄷ only turns into ㄹ before a vowel. Before ${e.tail.trim().charAt(0)}, it stays ㄷ: ${right.text}.`); // 들지만
+      if (type === 'ㄷ') add(`${head}${withFinal(last, 'ㄹ')}${e.tail}`, `${dict}’s ㄷ only turns into ㄹ before a vowel. Before ${e.tail.trim().charAt(0)}, it stays ㄷ: ${right.text}.`); // 들지만
       if (id === 'gijeone') {
         add(`${pastStem(dict, pos)}${e.tail}`, `기 전에 never takes the past. Even for the past, say ${right.text}: the verb at the end shows the tense.`); // 먹었기 전에
         add(`${modifierStem(stem).text} 전에`, `The (으)ㄴ form goes with 후에 (after). “Before” is 기 전에: ${right.text}.`); // 먹은 전에
@@ -264,7 +264,7 @@
       if (['ㅂ', 'ㄷ', 'ㅅ', 'ㅎ'].includes(type)) add(shape(`${stem}${harmony(last)}`), rightWhy); // 듣어서, 춥어서, 짓어서
       if (type === 'ㅅ') {
         const merged = { ㅣ: 'ㅕ', ㅏ: 'ㅏ', ㅓ: 'ㅓ', ㅜ: 'ㅝ', ㅡ: 'ㅓ' }[parts(last).vowel];
-        if (merged) add(shape(`${head}${H.compose(parts(last).initial, merged, '')}`), `After the ㅅ drops, the vowels don't merge: ${right.text}.`); // 져서
+        if (merged) add(shape(`${head}${H.compose(parts(last).initial, merged, '')}`), `After the ㅅ drops, the vowels don’t merge: ${right.text}.`); // 져서
       }
       if (type === '르') add(shape(`${head}${H.compose(parts(last).initial, inf.text.endsWith('라') ? 'ㅏ' : 'ㅓ', '')}`), rightWhy); // 모라서
       if (type === 'ㅡ') {
@@ -273,7 +273,7 @@
       }
       if ((!type || type === 'ㄹ') && final) {
         add(shape(`${stem}${harmony(last) === '아' ? '어' : '아'}`), rightWhy); // 먹아서, 살어서
-        add(`${stem}${e.tail}`, `After a consonant, the 아/어 can't be left out: ${right.text}.`); // 먹서
+        add(`${stem}${e.tail}`, `After a consonant, the 아/어 can’t be left out: ${right.text}.`); // 먹서
       }
       if (type === '하') add(`${stem}${e.tail}`, `하다 always becomes 해 here: ${right.text}.`); // 공부하서
       if (!type && !final && inf.text !== stem) add(`${stem}${e.tail}`, rightWhy); // 마시서, 되서
@@ -286,7 +286,7 @@
       // The wrong one of "with 으" / "without 으" (and the irregular change missed): 먹면, 가으면, 살으면, 살니까, 듣으면, 춥으면.
       add(`${stem}${e.tail}`, right.steps[0]);
       add(`${stem}으${e.tail}`, right.steps[0]);
-      if (id === 'reo' && inf.text !== stem) add(`${inf.text}${e.tail}`, `러 goes on the stem, not the 아/어 form: ${right.text}.`); // 먹어러
+      if (id === 'reo' && inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes on the stem, not the 아/어 form: ${right.text}.`); // 먹어러
     }
 
     if (e.base === 'future') {
@@ -389,7 +389,8 @@
       after: q.ko.slice(at + q.answer.length),
       answer: said,
       options: U.shuffle([answer, ...wrong]),
-      steps: right.steps,
+      // How it's made, ending the way the sentence does (…add 야 돼요 → 일어나야 돼요).
+      steps: altTail ? right.steps.map((s) => follow(s).split(`add ${e.tail}`).join(`add ${altTail}`)) : right.steps,
       ending: e,
       here,
     };

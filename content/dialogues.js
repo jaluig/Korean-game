@@ -670,7 +670,7 @@ Mallang.content.registerDialogues([
     },
     lines: [
       { who: 'A', ko: '수아 씨 집에 어떻게 가요?', en: 'Sua, how do I get to your place?' },
-      { who: 'B', ko: '지하철 이 호선을 타고 시청역에서 내리세요.', en: 'Take subway Line 2 and get off at City Hall Station.' },
+      { who: 'B', ko: '지하철 이호선을 타고 시청역에서 내리세요.', en: 'Take subway Line 2 and get off at City Hall Station.' },
       { who: 'A', ko: '시청역이요? 몇 번 출구로 나가요?', en: 'City Hall? Which exit do I take?' },
       { who: 'B', ko: '삼 번 출구로 나와서 오 분쯤 걸어오세요.', en: 'Come out of Exit 3 and walk for about five minutes.' },
       { who: 'A', ko: '버스는 없어요?', en: 'Isn’t there a bus?' },
@@ -688,7 +688,7 @@ Mallang.content.registerDialogues([
         ],
         answer: 0,
         line: 1,
-        why: 'Sua says 지하철 이 호선을 타고…: take subway Line 2 (이 = 2).',
+        why: 'Sua says 지하철 이호선을 타고…: take subway Line 2 (이 = 2).',
       },
       {
         q: { ko: '몇 번 출구로 나가요?', en: 'Which exit does he take?' },

@@ -202,3 +202,14 @@ test('question(): with a variant ending (가야 돼요), the slips and explanati
   }
   assert.ok(G.form('내리다', 'aya').variants.includes('내리어야 돼요'), 'unmerged forms with 돼요 are accepted too');
 });
+
+test('question(): the how-to steps follow the sentence, and the past steps read well', () => {
+  const q = { ko: '내일 아침 일찍 일어나야 돼요.', en: 'I have to get up early tomorrow morning.', answer: '일어나야 돼요', dict: '일어나다', form: 'aya', contrast: ['su'], traps: [] };
+  const steps = G.question(q).steps.join(' ');
+  assert.ok(steps.includes('add 야 돼요 → 일어나야 돼요'), steps);
+  assert.ok(!steps.includes('일어나야 해요'), steps);
+  const seat = { ko: '이 자리에 앉아도 괜찮아요?', en: 'Is it okay if I sit here?', answer: '앉아도 괜찮아요', dict: '앉다', form: 'ado', contrast: ['aya'], traps: [] };
+  assert.ok(G.question(seat).steps.join(' ').includes('add 도 괜찮아요 → 앉아도 괜찮아요'));
+  assert.ok(G.form('만나다', 'ttae', { tense: 'past' }).steps[0].includes('then add 을 때 → 만났을 때'));
+  assert.ok(G.form('가다', 'nikka', { tense: 'past' }).steps[0].includes('then add 으니까 → 갔으니까'));
+});
