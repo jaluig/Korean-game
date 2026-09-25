@@ -7,7 +7,7 @@ practice rounds keep it growing.
 
 - **10 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins · 🔗 Grammar Cards · 🎧 Dialogues
 - **10 topics** with 324 words and 190 sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans
-- **12 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -(으)니까…) with about 90 practice sentences, and **16 listening dialogues** with two voices
+- **12 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -(으)니까…) with 97 practice sentences, and **16 listening dialogues** with two voices
 - **Built-in Korean keyboard**, so you never need a Korean input method
 - **Pronunciation audio** through your browser's own Korean voice, **dictation** of whole sentences, and **🎤 speaking practice** in Chrome and Edge
 - **Streaks, points, levels, an adjustable daily goal, 36 badges** and outfits for the mascot, saved on your computer
@@ -26,7 +26,7 @@ practice rounds keep it growing.
 | **Number Shop** | **Sound Twins** | **Dark theme** |
 | ![A customer ordering four juices (주스 네 잔)](docs/screenshots/number-shop.png) | ![Picking the word you heard: 달, 탈 or 딸](docs/screenshots/sound-twins.png) | ![The home screen in the dark theme](docs/screenshots/dark.png) |
 | **Grammar Cards** | **Dialogues** | **On a phone** |
-| ![Grammar Cards explaining why 와서 can't go before a request, and 오니까 can](docs/screenshots/grammar-cards.png) | ![A café conversation playing, with the speaker highlighted](docs/screenshots/dialogues.png) | ![The home screen on a phone, with the tab bar at the bottom](docs/screenshots/phone.png) |
+| ![Grammar Cards explaining why 바빠서 can't come before a suggestion, and 바쁘니까 can](docs/screenshots/grammar-cards.png) | ![A conversation playing, with the speaker highlighted and the script hidden](docs/screenshots/dialogues.png) | ![Home, a Grammar Cards question and a dialogue on a phone](docs/screenshots/phone.png) |
 
 ## Quick start
 
@@ -127,11 +127,12 @@ On a phone, the menu moves to a tab bar at the bottom and the games fit the scre
 Everything (garden, streak, points, badges, settings) is saved automatically in your browser's
 `localStorage`. In **Settings → Your data** you can download a backup file, restore it (for example
 on another computer), or reset everything. Progress is kept separately for each way of opening the
-game (as a file, from a web address, as the installed app), so use a backup to move it from one to another. Older saves are upgraded automatically: when new topics are
+game (as a file, from a web address, as the installed app), so use a backup to move it from one to
+another. Older saves are upgraded automatically: when new topics are
 added, words below your starting level become quick checks, a few a day.
 
 Settings also has the theme (light, dark, or like your computer), the daily goal, how many new words a day
-Word Cards may introduce, and speaking practice. 말랑이 gets a new outfit every few levels: pick one in the
+Word Cards may introduce, speaking practice, and installing the game as an app. 말랑이 gets a new outfit every few levels: pick one in the
 wardrobe on the Stats screen.
 
 ## Adding content
@@ -194,14 +195,14 @@ must make clear) and the typical slips for that word (`먹아서`, `들으면` v
 hand-written wrong options:
 
 ```js
-{ id: 'nikka', order: 8, level: 3, emoji: '👉', form: 'nikka',
+{ id: 'nikka', order: 8, level: 3, emoji: '💬', form: 'nikka',
   title: { ko: '-(으)니까', en: 'because / since' },
   meaning: '…', how: '…', note: '…', examples: [{ ko: '…', en: '…' }],
   questions: [
-    { id: 'umbrella', ko: '비가 오니까 우산을 가져가세요.', en: 'It’s raining, so take an umbrella.',
-      answer: '오니까', dict: '오다', words: ['weather:rain', 'weather:umbrella'],
+    { id: 'rain', ko: '지금 비가 오니까 우산을 가져가세요.', en: 'It’s raining now, so take an umbrella.',
+      answer: '오니까', dict: '오다', words: ['day:now', 'weather:raining', 'weather:umbrella'],
       contrast: ['myeon', 'jiman'],
-      traps: [{ text: '와서', why: '-아서/어서 can’t give the reason for a request (…세요). Use -(으)니까: 오니까.' }] },
+      traps: [{ text: '와서', why: '-아서/어서 can’t give the reason for a request or suggestion (…세요, …(으)ㄹ까요?). Use -(으)니까: 오니까.' }] },
     // pos: 'adjective' for adjectives, tense: 'past' for 갔지만 / 먹었으니까 / 갔을 때
   ] },
 ```
@@ -219,7 +220,7 @@ and questions whose options are `{ ko, en }` and whose `line` points at the line
   speakers: { A: { name: '직원', en: 'Barista', emoji: '🧑‍🍳', voice: 'low' },
               B: { name: '서연', en: 'Seoyeon', emoji: '👩', voice: 'high' } },
   lines: [{ who: 'A', ko: '어서 오세요. 뭐 드릴까요?', en: 'Welcome! What can I get you?' }, …],
-  words: ['cafe:latte', 'cafe:cake'],          // it opens once these are learned
+  words: ['cafe:latte', 'cafe:cookie', 'cafe:cake'],   // it opens once these are learned
   questions: [{ q: { ko: '서연 씨는 뭘 마셔요?', en: 'What does Seoyeon drink?' },
                 options: [{ ko: '라테', en: 'a latte' }, { ko: '녹차', en: 'green tea' }, { ko: '주스', en: 'juice' }],
                 answer: 0, line: 1, why: 'Seoyeon says 라테 한 잔하고 쿠키 하나 주세요.' }] },

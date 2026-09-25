@@ -21,13 +21,23 @@ label,
   touch-action: manipulation;
 }
 
-/* Korean headings and short blurbs wrap between words, not in the middle of one. */
+/* Korean headings, blurbs and explanations wrap between words, not in the middle of one. */
 h1,
 h2,
 h3,
 .game-blurb {
   word-break: keep-all;
   overflow-wrap: anywhere;
+}
+
+.fb-tip,
+.grammar-meaning,
+.grammar-how p,
+.grammar-note,
+.dlg-line-ko,
+.dlg-line-en {
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 @media (hover: none) and (pointer: coarse) {
