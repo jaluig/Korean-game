@@ -5,12 +5,12 @@ Meet 말랑이 (Mallang-i), a squishy rice-cake bunny with a sprout on its head:
 every Korean word you learn becomes a plant in your **word garden**, and short
 practice rounds keep it growing.
 
-- **10 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins · 🔗 Grammar Cards · 🎧 Dialogues
-- **10 topics** with 324 words and 190 sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans
-- **12 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -(으)니까…) with 97 practice sentences, and **16 listening dialogues** with two voices
+- **11 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins · 🔗 Grammar Cards · 🎧 Dialogues · 📖 Reading
+- **10 topics** with 424 words and 220 sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans
+- **18 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -는데, -고 있어요, -(으)세요…) with 146 practice sentences, **16 listening dialogues** with two voices and a 🎭 role-play where you speak one part, and **16 short texts to read** (a diary, a text message, a menu, a notice…)
 - **Built-in Korean keyboard**, so you never need a Korean input method
 - **Pronunciation audio** through your browser's own Korean voice, **dictation** of whole sentences, and **🎤 speaking practice** in Chrome and Edge
-- **Streaks, points, levels, an adjustable daily goal, 36 badges** and outfits for the mascot, saved on your computer
+- **Streaks, points, levels, an adjustable daily goal, 38 badges** and outfits for the mascot, saved on your computer
 - Korean interface with small English subtitles, which you can turn off once you're ready, and a **dark theme**
 - Works on **phones** too, and can be **installed as an app** that plays offline
 
@@ -27,6 +27,8 @@ practice rounds keep it growing.
 | ![A customer ordering four juices (주스 네 잔)](docs/screenshots/number-shop.png) | ![Picking the word you heard: 달, 탈 or 딸](docs/screenshots/sound-twins.png) | ![The home screen in the dark theme](docs/screenshots/dark.png) |
 | **Grammar Cards** | **Dialogues** | **On a phone** |
 | ![Grammar Cards explaining why 바빠서 can't come before a suggestion, and 바쁘니까 can](docs/screenshots/grammar-cards.png) | ![A conversation playing, with the speaker highlighted and the script hidden](docs/screenshots/dialogues.png) | ![Home, a Grammar Cards question and a dialogue on a phone](docs/screenshots/phone.png) |
+| **Reading** | **Role-play** | **A new pattern** |
+| ![A café notice with its first question: why is the café closed on Wednesday?](docs/screenshots/reading.png) | ![Role-play: the barista's line, then yours, said with the microphone and checked](docs/screenshots/role-play.png) | ![The -(으)세요 card, with its table of forms from 가세요 to 도우세요](docs/screenshots/grammar-new.png) |
 
 ## Quick start
 
@@ -62,8 +64,10 @@ The game follows a few well-established ideas about learning vocabulary:
 | **Train your ear** | Sound Twins plays one of two or three look-alike words (달 / 탈 / 딸, 거울 / 겨울, 반 / 방 / 밤) so you learn to hear the difference. Well-known sentences are sometimes dictated for you to write down. |
 | **Practice counts everywhere** | The fast games (Speed Match, Balloon Pop, Particle Lab, Verb Magic, Number Shop) use the words and sentences you've learned: a slip marks that word or sentence as tricky, so Word Cards and the Sentence Builder bring it back soon. |
 | **A daily goal that means real practice** | Presets from 250 ⭐ (about 6 minutes) to 1200 ⭐ (about 30), or any amount on a slider in Settings. |
-| **Grammar in real sentences** | Grammar Cards teaches the endings that join ideas (-고, -지만, -아서/어서, -(으)면, -(으)니까, -(으)러, -(으)ㄹ 때, -기 전에, -(으)ㄴ 후에) and the helpers for "can", "must" and "may". Each pattern starts with a card (meaning, how to make it with a table of forms, a note, examples), then you fill the blank in real sentences. The wrong options are the same word with another ending (a different meaning: `오면` "if it rains" vs `오니까` "because it's raining") and the slips learners really make (`먹아서`, `듣으면`, `가을 때`), each explained. Every pattern has its own review schedule. |
+| **Grammar in real sentences** | Grammar Cards teaches the endings that join ideas (-고, -지만, -아서/어서, -(으)면, -(으)니까, -(으)러, -(으)ㄹ 때, -기 전에, -(으)ㄴ 후에, -는데), the helpers for "can", "must" and "may", and everyday endings: -고 있어요 ("am …-ing"), -아/어 보다 ("try"), -(으)ㄹ게요 ("I'll…") and the polite -(으)세요 / -(으)셨어요. Each pattern starts with a card (meaning, how to make it with a table of forms, a note, examples), then you fill the blank in real sentences. The wrong options are the same word with another ending (a different meaning: `오면` "if it rains" vs `오니까` "because it's raining") and the slips learners really make (`먹아서`, `듣으면`, `가을 때`), each explained. Every pattern has its own review schedule. |
 | **Listening to real conversations** | Dialogues plays short two-person conversations (ordering, asking the way, making plans…) with two different voices and the script hidden, then asks about them. After each answer you see the line that holds it; at the end, the whole script with translations. Reading the script first is allowed, for fewer points. |
+| **Speaking in a conversation** | In the role-play, you take one part of a dialogue you've just heard and say its lines out loud: the other part answers you, and the game checks how close you were. Then you swap parts. |
+| **Reading real texts** | Reading gives you short texts of the kinds you'd really meet (a diary entry, a text message, a note, a menu, a notice) built from the words you know, with questions that need careful reading: the wrong options are usually in the text too (another price, another day). The text stays on screen, and after each answer the sentence that holds it lights up. |
 
 ### The minigames
 
@@ -76,7 +80,8 @@ The game follows a few well-established ideas about learning vocabulary:
 - **🏪 숫자 가게 · Number Shop**: run a little shop. Hand over "사과 세 개", read a price tag aloud (팔천오백 원), ring up the amount a customer says on the till, and tell the time (세 시 반). Native vs Sino-Korean mix-ups (삼 시, 셋 개) are the wrong answers, each explained.
 - **👂 소리 쌍둥이 · Sound Twins**: hear a word and find it among its look-alike twins, from plain / aspirated / tense consonants to vowels and final consonants. Without a Korean voice it becomes a reading warm-up (romanization → Hangul).
 - **🔗 문법 카드 · Grammar Cards**: one new pattern at a time (two a day at most), each introduced with its card, then practised in fill-the-blank sentences next to the patterns you already know. Sentences whose words you've learned come first, and a missed pattern comes back sooner. The 📖 button in the feedback, the garden and the summary reopen a pattern's card. It opens once you know 15 words.
-- **🎧 대화 듣기 · Dialogues**: two conversations a round. ▶ plays the whole dialogue (🐢 slowly), `R` replays it, and every line in the script has its own 🔊. A dialogue opens once you know its key words, and the ones you found hard come back sooner. Without a Korean voice it becomes reading practice.
+- **🎧 대화 듣기 · Dialogues**: two conversations a round. ▶ plays the whole dialogue (🐢 slowly), `R` replays it, and every line in the script has its own 🔊. A dialogue opens once you know its key words, and the ones you found hard come back sooner. Without a Korean voice it becomes reading practice. In Chrome and Edge, **🎭 Role-play** on the script screen lets you take one speaker's part: the other part's lines are played for you, and you say yours out loud with 🎤 (`M` starts listening). Then swap parts.
+- **📖 읽기 · Reading**: for when the dialogues feel easy. A short text from one of your topics (a diary entry, a text message, a note on the fridge, a menu, a notice…), then 2–3 questions while the text stays on screen. After each answer the sentence that holds it lights up, with its translation; at the end you get the whole text with translations and a 🔊 for every sentence. ▶ reads the text aloud (🐢 slowly). Showing the English first is allowed, for fewer points. A text opens once you know its key words.
 
 **Dictation and speaking.** Sentences you know well are sometimes dictated in the Sentence Builder: listen and write the whole sentence (spaces and punctuation don't matter). In Chrome and Edge, 🎤 buttons next to new words and answers let you say them out loud: the browser's speech recognition checks how close you were. Both can be switched off in Settings.
 
@@ -209,8 +214,9 @@ hand-written wrong options:
 
 The endings are `go` -고 · `jiman` -지만 · `aseo` -아서/어서 · `myeon` -(으)면 · `nikka` -(으)니까 · `reo` -(으)러 ·
 `ttae` -(으)ㄹ 때 · `gijeone` -기 전에 · `hue` -(으)ㄴ 후에 · `aya` -아/어야 해요 · `ado` -아/어도 돼요 · `su` / `suNot`
--(으)ㄹ 수 있어요 / 없어요. The tests check that every answer matches the engine and that every question has
-three explained wrong options.
+-(으)ㄹ 수 있어요 / 없어요 · `goIt` -고 있어요 · `boseyo` / `bwasseoyo` -아/어 보세요 / 봤어요 · `lgeyo` -(으)ㄹ게요 ·
+`neunde` -는데 / -(으)ㄴ데 · `seyo` -(으)세요 · `si` -(으)셨어요. The tests check that every answer matches the engine
+and that every question has three explained wrong options.
 
 **Dialogues** live in `content/dialogues.js`: two speakers (one `voice: 'high'`, one `'low'`), a few lines,
 and questions whose options are `{ ko, en }` and whose `line` points at the line with the answer:
@@ -227,6 +233,22 @@ and questions whose options are `{ ko, en }` and whose `line` points at the line
 ```
 
 Write numbers in the lines in Hangul (세 시 반, 사천오백 원), so every voice reads them right.
+
+**Reading texts** live in `content/reading.js`: the text sentence by sentence, and questions like the
+dialogues' ones, whose `line` points at the sentence (or sentences, `[1, 3]`) with the answer. Numbers can
+be in digits where a real text has them: the 🔊 reads a number with its counter in Hangul (7시 → 일곱 시,
+3,500원 → 삼천오백 원), and a sentence whose number is a label gets `say`, how it's read aloud
+(`{ ko: '2번 출구로 나오세요.', …, say: '이번 출구로 나오세요.' }`):
+
+```js
+{ id: 'cafe-menu', topic: 'cafe', level: 1, emoji: '📋',
+  kind: { ko: '메뉴', en: 'A café menu' }, title: { ko: '말랑 카페 메뉴', en: 'The Mallang Café menu' },
+  sentences: [{ ko: '커피는 삼천 원이에요.', en: 'Coffee is 3,000 won.' }, …],
+  words: ['cafe:coffee', 'cafe:latte'],   // it opens once these are learned
+  questions: [{ q: { ko: '라테는 얼마예요?', en: 'How much is a latte?' },
+                options: [{ ko: '3,500원', en: '3,500 won' }, { ko: '3,000원', en: '3,000 won' }, { ko: '4,000원', en: '4,000 won' }],
+                answer: 0, line: 1, why: 'The menu says 라테는 삼천오백 원이에요: a latte is 3,500 won.' }] },
+```
 
 ## Adding a minigame
 
@@ -273,14 +295,14 @@ index.html            loads everything (plain <script> tags, so it runs from fil
 css/                  base (tokens, light and dark theme, layout), components, screens, games, minigames,
                       phone (small screens, loaded last)
 content/              one file per topic: words, sentences, lesson notes; sounds.js: Sound Twins sets;
-                      grammar.js: grammar patterns; dialogues.js: listening dialogues
+                      grammar.js: grammar patterns; dialogues.js: listening dialogues; reading.js: reading texts
 js/core/              no UI: config, Hangul engine, numbers, verb conjugation, grammar endings, particles,
                       answer checking, storage, spaced repetition, progress & badges, distractor picking,
                       speech, speech recognition, sound effects
 js/ui/                components, mascot (and its outfits), Korean keyboard, feedback sheet, 🎤 buttons
 js/exercises/         intro · choice · tiles · typing · sentence · dictation
 js/games/             word-cards · sentence-builder · speed-match · balloon-pop · particle-lab ·
-                      verb-magic · number-shop · sound-twins · grammar-cards · dialogues
+                      verb-magic · number-shop · sound-twins · grammar-cards · dialogues · reading
 js/screens/           onboarding · home · garden · stats · settings · play · summary
 js/pwa.js             install & offline support (only when opened from a web address)
 js/app.js             start-up and routing (#/home, #/play/word-cards…)
@@ -303,7 +325,7 @@ They cover the Hangul typing engine, Korean numbers, the verb conjugation engine
 endings (both checked against hand-verified tables of regular and irregular verbs, including the
 typical slips), particle questions, answer checking, spaced-repetition scheduling and round building,
 the minigames' round logic, streaks, levels, badges, saving, loading and upgrading old saves, and the
-offline file list. They also check every topic, grammar pattern and dialogue for authoring mistakes
+offline file list. They also check every topic, grammar pattern, dialogue and reading text for authoring mistakes
 (including that every verb form and every grammar answer matches the engines).
 
 ## Why plain JavaScript?
@@ -318,6 +340,6 @@ which browsers only allow from a web address, so that part simply switches itsel
 
 ## Ideas for next steps
 
-- Role-play in Dialogues: take one speaker's part and say their lines with 🎤
-- More grammar patterns: -고 있어요, -아/어 보다, -(으)ㄹ게요, -는데, and the polite -(으)세요 / -(으)시-
-- A short reading passage for each topic, with questions (for when the dialogues feel easy)
+- More topics: travel and transport (tickets, the subway, a taxi), at the doctor's and the pharmacy, school and work
+- Speech levels: the same sentence in 합니다, 해요 and 반말, with when to use each (and a friends' chat to read)
+- Shadowing: hear a sentence, say it straight back with 🎤, and a little faster each time
