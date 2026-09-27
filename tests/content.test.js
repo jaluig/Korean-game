@@ -125,3 +125,13 @@ test('multiple-choice options are distinct and never the answer', () => {
     assert.ok(!forms.some((x) => x.ko === w.ko));
   }
 });
+
+test('a typo that spells another word’s meaning is a mix-up, not a typo', () => {
+  const A = M.answers;
+  const check = (id, typed) => A.matchEnglish(M.content.word(id), typed).ok;
+  assert.equal(check('cafe:weak', 'night'), false, '"night" is 밤, not a typo of "light"');
+  assert.equal(check('cafe:bread', 'read'), false, '"read" is 읽어요');
+  assert.equal(check('shopping:other', 'mother'), false);
+  assert.equal(check('cafe:weak', 'ligt'), true, 'a real typo is still forgiven');
+  assert.equal(check('cafe:weak', 'light'), true);
+});

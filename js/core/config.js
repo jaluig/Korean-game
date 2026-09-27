@@ -49,6 +49,8 @@
       // tell the two apart; the high one keeps the natural pitch, because raising it makes voices (Google's
       // especially) hard to understand. With a male and a female voice, both speak at their natural pitch.
       dialogues: { perRound: 2, slowRate: 0.7, linePause: 350, pitch: { high: 1, low: 0.8 } },
+      // Two short texts a round; the text stays on screen while you answer.
+      reading: { perRound: 2 },
       // A well-known sentence is sometimes written from dictation instead of built from tiles.
       dictation: { fromStage: 4, chance: 0.35 },
       newWordsPerDay: 20, // default cap (adjustable in Settings) so reviews never pile up
@@ -76,6 +78,9 @@
       grammar: 12,
       dialogue: 12,
       dialogueRead: 6, // answered after reading the script
+      reading: 12,
+      readingHelped: 6, // answered after showing the English
+      rolePlay: 6, // a line said well in a role-play (once a day per line)
       dictation: 20,
       spoken: 3,
       comboEvery: 5, // every 5 correct in a row…

@@ -7,7 +7,10 @@ const G = M.grammar;
 const { DAY } = M.config.time;
 const squash = (t) => String(t).replace(/\s+/g, '');
 // Pairs that overlap in meaning: one can't be the "wrong meaning" option of the other.
-const OVERLAP = [['myeon', 'ttae'], ['aseo', 'nikka'], ['aseo', 'go'], ['hue', 'go'], ['su', 'ado'], ['hue', 'aseo']];
+const OVERLAP = [
+  ['myeon', 'ttae'], ['aseo', 'nikka'], ['aseo', 'go'], ['hue', 'go'], ['su', 'ado'], ['hue', 'aseo'],
+  ['neunde', 'jiman'], ['neunde', 'nikka'], ['neunde', 'go'], ['seyo', 'boseyo'],
+];
 
 function learnWords(now = NOON) {
   M.store.reset();

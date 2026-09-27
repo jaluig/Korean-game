@@ -18,8 +18,11 @@
     'language-not-supported': 'This browser can’t recognise Korean speech.',
   };
 
-  /** A 🎤 button for `text`, or null when speaking practice isn't available. */
-  ui.sayButton = (text, { size = 'small' } = {}) => {
+  /**
+   * A 🎤 button for `text`, or null when speaking practice isn't available.
+   * onResult({ heard, score, tone }) after each try; reward: false leaves the points to the caller.
+   */
+  ui.sayButton = (text, { size = 'small', onResult, reward = true } = {}) => {
     if (!M.mic.supported() || !M.store.state.settings.speaking) return null;
     const result = h('span.say-result', { 'aria-live': 'polite' });
     let stopListening = null;
@@ -72,12 +75,13 @@
       const label = { great: '👏 완벽해요!', close: '👍 거의 맞아요!', miss: '🔁 다시 해 봐요' }[tone];
       result.className = `say-result ${tone}`;
       result.textContent = `${label} I heard “${heard}”`;
-      if (tone !== 'miss' && !rewarded) {
+      if (tone !== 'miss' && !rewarded && reward) {
         rewarded = true;
         M.progress.rewardSpeech(text);
         M.store.save();
       }
       M.sfx.play(tone === 'miss' ? 'almost' : 'correct');
+      if (onResult) onResult({ heard, score, tone });
     }
 
     return h('span.say-wrap', btn, result);

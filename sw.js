@@ -11,7 +11,7 @@
  */
 'use strict';
 
-const VERSION = '0.3.0'; // keep in step with Mallang.version (js/core/namespace.js)
+const VERSION = '0.4.0'; // keep in step with Mallang.version (js/core/namespace.js)
 const CACHE = `mallang-${VERSION}`;
 const FONT_CACHE = `mallang-fonts-${VERSION}`; // fetched again with each version, so a bad copy can't stay
 const PAGE = 'index.html'; // what a page load gets from the copy
@@ -59,6 +59,7 @@ const FILES = [
   'content/sounds.js',
   'content/grammar.js',
   'content/dialogues.js',
+  'content/reading.js',
   'js/ui/components.js',
   'js/ui/mascot.js',
   'js/ui/keyboard.js',
@@ -80,6 +81,7 @@ const FILES = [
   'js/games/sound-twins.js',
   'js/games/grammar-cards.js',
   'js/games/dialogues.js',
+  'js/games/reading.js',
   'js/screens/onboarding.js',
   'js/screens/home.js',
   'js/screens/garden.js',

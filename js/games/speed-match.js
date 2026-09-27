@@ -58,14 +58,21 @@
       let frame = 0;
       let endTimer = 0;
 
-      /** The next word to bring onto the board — never one already there, and not the one just matched. */
-      const nextWord = (justMatched) => {
-        const onBoard = new Set(left.filter(Boolean));
-        const fits = (w) => !onBoard.has(w.id) && w.id !== justMatched;
-        let i = queue.findIndex(fits);
+      /**
+       * The next word to bring onto the board — never one already there, and not the one just matched.
+       * Nor one too close in meaning to a word on the board (약속 "plans" / 계획 "plan"), where either match would be right.
+       */
+      const nextWord = (justMatched, picked = []) => {
+        const onBoard = [...left.filter(Boolean).map((id) => M.content.word(id)), ...picked];
+        const fits = (w) => w.id !== justMatched && !onBoard.some((b) => b.id === w.id);
+        const apart = (w) => fits(w) && !onBoard.some((b) => M.distractors.tooClose(w, b));
+        let i = queue.findIndex(apart);
         if (i < 0) {
-          queue = U.shuffle(pool.filter(fits));
-          i = queue.length ? 0 : -1;
+          // Go round the pool again, the words still waiting first.
+          const waiting = queue.filter(fits);
+          queue = [...waiting, ...U.shuffle(pool.filter((w) => fits(w) && !waiting.includes(w)))];
+          i = queue.findIndex(apart);
+          if (i < 0) i = queue.findIndex(fits); // (a tiny pool: rather a close pair than no word)
         }
         return i >= 0 ? queue.splice(i, 1)[0] : M.content.word(justMatched);
       };
@@ -117,7 +124,8 @@
       });
 
       function fillBoard() {
-        const words = Array.from({ length: size }, () => nextWord());
+        const words = [];
+        while (words.length < size) words.push(nextWord(null, words));
         U.shuffle(words).forEach((w, i) => (left[i] = w.id));
         U.shuffle(words).forEach((w, i) => (right[i] = w.id));
         left.forEach((_, i) => drawTile('left', i));

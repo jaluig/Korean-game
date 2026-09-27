@@ -213,3 +213,96 @@ test('question(): the how-to steps follow the sentence, and the past steps read 
   assert.ok(G.form('만나다', 'ttae', { tense: 'past' }).steps[0].includes('then add 을 때 → 만났을 때'));
   assert.ok(G.form('가다', 'nikka', { tense: 'past' }).steps[0].includes('then add 으니까 → 갔으니까'));
 });
+
+// The newer endings, checked by hand in the same way. '' = not tested, null = doesn't apply.
+const ENDS2 = ['goIt', 'boseyo', 'bwasseoyo', 'lgeyo', 'neunde', 'seyo', 'si'];
+const TABLE2 = [
+  ['가다', V, '가고 있어요', '가 보세요', '가 봤어요', '갈게요', '가는데', '가세요', '가셨어요'],
+  ['먹다', V, '먹고 있어요', '먹어 보세요', '먹어 봤어요', '먹을게요', '먹는데', null, null],
+  ['하다', V, '하고 있어요', '해 보세요', '해 봤어요', '할게요', '하는데', '하세요', '하셨어요'],
+  ['공부하다', V, '공부하고 있어요', '공부해 보세요', '공부해 봤어요', '공부할게요', '공부하는데', '공부하세요', '공부하셨어요'],
+  ['마시다', V, '마시고 있어요', '마셔 보세요', '마셔 봤어요', '마실게요', '마시는데', '마시세요', '마시셨어요'],
+  ['보다', V, '보고 있어요', null, null, '볼게요', '보는데', '보세요', '보셨어요'],
+  ['오다', V, '오고 있어요', '와 보세요', '와 봤어요', '올게요', '오는데', '오세요', '오셨어요'],
+  ['살다', V, '살고 있어요', '살아 보세요', '살아 봤어요', '살게요', '사는데', '사세요', '사셨어요'],
+  ['만들다', V, '만들고 있어요', '만들어 보세요', '만들어 봤어요', '만들게요', '만드는데', '만드세요', '만드셨어요'],
+  ['놀다', V, '놀고 있어요', '놀아 보세요', '', '놀게요', '노는데', '노세요', '노셨어요'],
+  ['듣다', V, '듣고 있어요', '들어 보세요', '들어 봤어요', '들을게요', '듣는데', '들으세요', '들으셨어요'],
+  ['걷다', V, '걷고 있어요', '걸어 보세요', '걸어 봤어요', '걸을게요', '걷는데', '걸으세요', '걸으셨어요'],
+  ['돕다', V, '돕고 있어요', '도와 보세요', '', '도울게요', '돕는데', '도우세요', '도우셨어요'],
+  ['앉다', V, '', '앉아 보세요', '', '앉을게요', '앉는데', '앉으세요', '앉으셨어요'],
+  ['읽다', V, '읽고 있어요', '읽어 보세요', '읽어 봤어요', '읽을게요', '읽는데', '읽으세요', '읽으셨어요'],
+  ['입다', V, '입고 있어요', '입어 보세요', '입어 봤어요', '입을게요', '입는데', '입으세요', '입으셨어요'],
+  ['부르다', V, '부르고 있어요', '불러 보세요', '불러 봤어요', '부를게요', '부르는데', '부르세요', '부르셨어요'],
+  ['기다리다', V, '기다리고 있어요', '기다려 보세요', '', '기다릴게요', '기다리는데', '기다리세요', '기다리셨어요'],
+  ['자다', V, '자고 있어요', '', '', '잘게요', '자는데', null, null],
+  ['있다', V, null, '', '', '있을게요', '있는데', null, null],
+  ['춥다', A, null, null, null, null, '추운데', '추우세요', ''],
+  ['비싸다', A, null, null, null, null, '비싼데', '', ''],
+  ['멀다', A, null, null, null, null, '먼데', '', ''],
+  ['좋다', A, null, null, null, null, '좋은데', '', ''],
+  ['맛있다', A, null, null, null, null, '맛있는데', '', ''],
+  ['바쁘다', A, null, null, null, null, '바쁜데', '바쁘세요', '바쁘셨어요'],
+  ['피곤하다', A, null, null, null, null, '피곤한데', '피곤하세요', '피곤하셨어요'],
+];
+
+test('the newer endings: -고 있어요, -아/어 보세요 / 봤어요, -(으)ㄹ게요, -는데, -(으)세요, -(으)셨어요', () => {
+  for (const [dict, pos, ...forms] of TABLE2) {
+    ENDS2.forEach((id, i) => {
+      const want = forms[i];
+      if (want === '') return;
+      const got = G.form(dict, id, { pos });
+      if (want === null) assert.equal(got, null, `${dict} + ${id} should not apply`);
+      else assert.equal(got && got.text, want, `${dict} + ${id}`);
+    });
+  }
+  assert.equal(G.form('가다', 'neunde', { tense: 'past' }).text, '갔는데');
+  assert.equal(G.form('춥다', 'neunde', { pos: A, tense: 'past' }).text, '추웠는데');
+  assert.ok(G.form('가다', 'si').variants.includes('가시었어요'));
+  assert.equal(G.form('가다', 'goIt', { tense: 'past' }), null, 'no past -고 있어요 here');
+});
+
+test('the newer endings: typical slips, never a correct form, always explained', () => {
+  const has = (dict, id, text, opts = {}) => assert.ok(G.slips(dict, id, opts).some((s) => s.text === text), `${dict} + ${id}: ${text} — ${G.slips(dict, id, opts).map((s) => s.text).join(', ')}`);
+  has('먹다', 'goIt', '먹어고 있어요');
+  has('먹다', 'goIt', '먹어 있어요');
+  has('듣다', 'goIt', '들고 있어요');
+  has('먹다', 'boseyo', '먹아 보세요');
+  has('먹다', 'boseyo', '먹 보세요');
+  has('하다', 'boseyo', '하 보세요');
+  has('듣다', 'boseyo', '듣어 보세요');
+  has('마시다', 'bwasseoyo', '마시 봤어요');
+  has('가다', 'lgeyo', '가을게요');
+  has('먹다', 'lgeyo', '먹을께요');
+  has('만들다', 'lgeyo', '만들을게요');
+  has('비싸다', 'neunde', '비싸는데', { pos: A });
+  has('춥다', 'neunde', '춥은데', { pos: A });
+  has('멀다', 'neunde', '멀는데', { pos: A });
+  has('먹다', 'neunde', '먹은데');
+  has('살다', 'neunde', '살는데');
+  has('맛있다', 'neunde', '맛있은데', { pos: A });
+  has('가다', 'neunde', '가는데', { tense: 'past' });
+  has('앉다', 'seyo', '앉세요');
+  has('가다', 'seyo', '가으세요');
+  has('살다', 'seyo', '살세요');
+  has('살다', 'seyo', '살으세요');
+  has('듣다', 'seyo', '듣으세요');
+  has('앉다', 'seyo', '앉아세요');
+  has('공부하다', 'seyo', '공부해세요');
+  has('가다', 'si', '갔으셨어요');
+  has('읽다', 'si', '읽셨어요');
+  for (const [dict, pos] of TABLE2) {
+    for (const id of ENDS2) {
+      for (const tense of ['present', 'past']) {
+        const right = G.form(dict, id, { pos, tense });
+        if (!right) continue;
+        const ok = new Set([right.text, ...right.variants].map((t) => t.replace(/\s+/g, '')));
+        for (const s of G.slips(dict, id, { pos, tense })) {
+          assert.ok(!ok.has(s.text.replace(/\s+/g, '')), `${dict} + ${id}: the slip ${s.text} is a correct form`);
+          assert.ok(s.why && s.why.length > 10, `${dict} + ${id}: ${s.text} has no reason`);
+        }
+      }
+    }
+  }
+  for (const id of ENDS2) assert.ok(G.table(id).length >= 3, `${id} table`);
+});

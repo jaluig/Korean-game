@@ -15,6 +15,7 @@
   const soundSets = [];
   const grammar = [];
   const dialogues = [];
+  const readings = [];
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -128,6 +129,47 @@
     }
   }
 
+  /**
+   * Reading passages (content/reading.js): a short text per topic (a diary, a
+   * message, a notice…), sentence by sentence, with comprehension questions
+   * whose `line` points at the sentence(s) with the answer. Ids become 'reading:<id>'.
+   */
+  function registerReadings(list) {
+    for (const r of list || []) {
+      const id = `reading:${r.id}`;
+      if (!r.id || !Array.isArray(r.sentences) || !Array.isArray(r.questions)) problems.push(`reading "${r.id}": needs id, sentences and questions`);
+      else if (readings.some((x) => x.id === id)) problems.push(`${id}: duplicate reading`);
+      else readings.push(Object.freeze({ ...r, id, localId: r.id, level: r.level || 1, type: 'reading', needs: r.words || [], index: readings.length }));
+    }
+  }
+
+  function checkReadings(found) {
+    for (const r of readings) {
+      if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
+      if (!r.title || !r.title.ko || !r.title.en) found.push(`${r.id}: needs title { ko, en }`);
+      if (!r.kind || !r.kind.ko || !r.kind.en) found.push(`${r.id}: needs kind { ko, en } (a diary, a message…)`);
+      if (r.sentences.length < 3) found.push(`${r.id}: needs 3+ sentences`);
+      r.sentences.forEach((s, i) => {
+        if (!s || !s.ko || !s.en) found.push(`${r.id} sentence ${i}: needs ko and en`);
+        // It's read aloud: numbers in digits need a counter (7시, 3,000원), or a "say" with them in Hangul.
+        else if (/\d/.test(s.say || M.numbers.readAloud(s.ko))) found.push(`${r.id} sentence ${i}: add "say", the sentence as it's read aloud with its numbers in Hangul`);
+      });
+      for (const ref of r.needs) if (!words.has(ref)) found.push(`${r.id}: unknown word "${ref}" (use topic:id)`);
+      if (r.questions.length < 2) found.push(`${r.id}: needs 2+ questions`);
+      r.questions.forEach((q, i) => {
+        const label = `${r.id} question ${i + 1}`;
+        if (!q.q || !q.q.ko || !q.q.en) found.push(`${label}: needs q: { ko, en }`);
+        const options = Array.isArray(q.options) ? q.options : [];
+        if (options.some((o) => !o || !o.ko || !o.en)) found.push(`${label}: each option needs ko and en`);
+        else if (options.length < 3 || new Set(options.map((o) => o.ko)).size !== options.length) found.push(`${label}: needs 3+ different options`);
+        else if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer < options.length)) found.push(`${label}: answer must be an option index`);
+        const lines = [].concat(q.line);
+        if (!lines.length || lines.some((n) => !(n >= 0 && n < r.sentences.length))) found.push(`${label}: "line" must point to the sentence(s) with the answer`);
+        if (!q.why) found.push(`${label}: needs "why"`);
+      });
+    }
+  }
+
   function checkGrammar(found) {
     for (const g of grammar) {
       if (!g.title || !g.meaning || !g.how) found.push(`${g.id}: needs title, meaning and how`);
@@ -201,6 +243,7 @@
     }
     checkGrammar(found);
     checkDialogues(found);
+    checkReadings(found);
     return found;
   }
 
@@ -211,11 +254,14 @@
     registerSoundSets,
     registerGrammar,
     registerDialogues,
+    registerReadings,
     check,
     grammar: () => grammar.slice(),
     grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
     dialogues: (topicId = 'all') => dialogues.filter((d) => !topicId || topicId === 'all' || d.topic === topicId),
     dialogue: (id) => dialogues.find((d) => d.id === id) || null,
+    readings: (topicId = 'all') => readings.filter((r) => !topicId || topicId === 'all' || r.topic === topicId),
+    reading: (id) => readings.find((r) => r.id === id) || null,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,
     topics: () => topics.slice(),

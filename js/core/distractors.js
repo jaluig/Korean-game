@@ -165,5 +165,5 @@
     return { tiles: U.shuffle(tiles), traps };
   }
 
-  M.distractors = { meaningOptions, formOptions, syllableTiles, particleTrap, sentenceTiles };
+  M.distractors = { meaningOptions, formOptions, syllableTiles, particleTrap, sentenceTiles, tooClose };
 })(window.Mallang);

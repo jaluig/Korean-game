@@ -117,13 +117,13 @@
   }
 
   /** Points for saying something well with 🎤: once per word or sentence per day. */
-  function rewardSpeech(text, now = U.now()) {
+  function rewardSpeech(text, now = U.now(), { points = true } = {}) {
     const day = dayRecord(now);
     day.spoken = day.spoken || [];
     if (day.spoken.includes(text)) return false;
     day.spoken.push(text);
     bump('spokenGood');
-    addPoints(M.config.points.spoken, now);
+    if (points) addPoints(M.config.points.spoken, now); // (role-play awards its own points)
     return true;
   }
 
@@ -249,6 +249,10 @@
       earned: (s) => count(s, 'dialoguesCorrect') >= 20 },
     { id: 'chatterbox', emoji: '💬', ko: '수다쟁이', en: 'Chatterbox', desc: 'Listen to 10 dialogues all the way through.',
       earned: (s) => count(s, 'dialoguesHeard') >= 10 },
+    { id: 'bookworm', emoji: '🐛', ko: '책벌레', en: 'Bookworm', desc: 'Read 10 texts in Reading.',
+      earned: (s) => count(s, 'readingsDone') >= 10 },
+    { id: 'role-play', emoji: '🎭', ko: '명배우', en: 'Star of the show', desc: 'Say 20 lines well in a role-play.',
+      earned: (s) => count(s, 'rolePlayGood') >= 20 },
     { id: 'all-games', emoji: '🎮', ko: '게임 탐험가', en: 'Game explorer', desc: 'Play every minigame at least once.',
       earned: everyGamePlayed },
     { id: 'night-owl', emoji: '🦉', ko: '올빼미', en: 'Night owl', desc: 'Finish a round after 10 p.m.',

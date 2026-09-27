@@ -133,6 +133,20 @@
   /** 12500 → '12,500원' (how prices are written). */
   const won = (n) => `${Math.round(n).toLocaleString('en-US')}원`;
 
+  /**
+   * Numbers written in digits, as they're read aloud (for text-to-speech):
+   * '7시 30분' → '일곱 시 삼십 분', '3,500원' → '삼천오백 원', '6월' → '유월'.
+   * Only numbers with a counter are changed; a bare number (or 번, which can
+   * be "times" or "number …") is left as it is.
+   */
+  const SPOKEN = /(\d{1,3}(?:,\d{3})+|\d+) ?(시간|시|분|초|원|명|살|개|잔|병|권|장|마리|켤레|벌|층|년|월|인분|주일|일)?/g;
+  const readAloud = (text) =>
+    text.replace(SPOKEN, (all, digits, counter) => {
+      if (!counter) return all;
+      const n = Number(digits.replace(/,/g, ''));
+      return counter === '월' ? month(n) : count(n, counter);
+    });
+
   /** The pieces of a Sino-Korean number: 12500 → [{ ko: '만', value: 10000 }, { ko: '이천', value: 2000 }, { ko: '오백', value: 500 }]. */
   function breakdown(n) {
     const parts = [];
@@ -271,6 +285,7 @@
     price,
     age,
     won,
+    readAloud,
     breakdown,
     neighbours,
     priceMistakes,

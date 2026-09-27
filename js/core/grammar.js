@@ -6,7 +6,9 @@
  *   slips('듣다', 'myeon') → [{ text: '듣으면', why: '…' }, …]   typical wrong forms, each explained
  *
  * Endings: -고, -지만, -아서/어서, -(으)면, -(으)니까, -(으)러, -(으)ㄹ 때,
- * -기 전에, -(으)ㄴ 후에, -아/어야 해요, -아/어도 돼요, -(으)ㄹ 수 있어요/없어요.
+ * -기 전에, -(으)ㄴ 후에, -아/어야 해요, -아/어도 돼요, -(으)ㄹ 수 있어요/없어요,
+ * -고 있어요, -아/어 보세요, -아/어 봤어요, -(으)ㄹ게요, -는데/-(으)ㄴ데,
+ * and the polite -(으)세요 and -(으)셨어요.
  * The patterns themselves (explanations, example and question sentences)
  * live in content/grammar.js and are practised in Grammar Cards.
  */
@@ -35,6 +37,7 @@
    *         'eu'       onto the stem, with 으 after a consonant (먹으 + 면)
    *         'future'   onto the -(으)ㄹ form (먹을 + 때)
    *         'modifier' onto the -(으)ㄴ form (먹은 + 후에)
+   *         'neunde'   verbs: the -는 form (먹는 + 데); adjectives: the -(으)ㄴ form (추운 + 데)
    */
   const ENDINGS = {
     go: { name: '-고', meaning: '“and” (also “and then”)', base: 'stem', tail: '고', past: true },
@@ -50,10 +53,19 @@
     ado: { name: '-아/어도 돼요 (or 괜찮아요)', meaning: '“may / it’s okay to”', base: 'inf', tail: '도 돼요', alsoOk: ['도 괜찮아요'], verbOnly: true },
     su: { name: '-(으)ㄹ 수 있어요', meaning: '“can”', base: 'future', tail: ' 수 있어요', verbOnly: true },
     suNot: { name: '-(으)ㄹ 수 없어요', meaning: '“can’t”', base: 'future', tail: ' 수 없어요', verbOnly: true },
+    goIt: { name: '-고 있어요', meaning: '“am / is / are …-ing” (going on now, or these days)', base: 'stem', tail: '고 있어요', verbOnly: true },
+    boseyo: { name: '-아/어 보세요', meaning: '“try …-ing” (please try it)', base: 'inf', tail: ' 보세요', verbOnly: true },
+    bwasseoyo: { name: '-아/어 봤어요', meaning: '“have tried / have (ever) …”', base: 'inf', tail: ' 봤어요', verbOnly: true },
+    lgeyo: { name: '-(으)ㄹ게요', meaning: '“I’ll …” (a promise or a decision, told to someone)', base: 'future', tail: '게요', verbOnly: true },
+    neunde: { name: '-는데 / -(으)ㄴ데', meaning: '“…, and / but / so …”: it sets the scene for what comes next', base: 'neunde', tail: '데', past: true },
+    seyo: { name: '-(으)세요', meaning: '“please …” (a polite request), or the polite present about someone you respect', base: 'eu', tail: '세요' },
+    si: { name: '-(으)셨어요', meaning: '“did / was …” (the polite past, about someone you respect)', base: 'eu', tail: '셨어요' },
   };
 
   // 있다/없다 and the words built on them take 는, not (으)ㄴ, as modifiers (있는), so no 후에 form here.
   const IT_EOP = /(있|없)다$/;
+  // These have their own polite words (드세요, 주무세요, 계세요) or are polite already: no -(으)세요 / -(으)셨어요.
+  const OWN_POLITE = /^(먹다|자다|있다|드시다|계시다|주무시다)$/;
 
   /** Can this ending be used on this word (and in this tense)? */
   function applies(dict, id, { pos = 'verb', tense = 'present' } = {}) {
@@ -64,6 +76,9 @@
     if (e.verbOnly && pos !== 'verb') return false;
     if (tense === 'past' && !e.past) return false;
     if (id === 'hue' && IT_EOP.test(dict)) return false;
+    if (id === 'goIt' && IT_EOP.test(dict)) return false; // 있고 있어요 isn't said
+    if ((id === 'boseyo' || id === 'bwasseoyo') && dict === '보다') return false; // 봐 보세요 is awkward
+    if ((id === 'seyo' || id === 'si') && OWN_POLITE.test(dict)) return false;
     return !!C.conjugate(dict, 'present', { pos }); // e.g. rare 러-irregular verbs aren't supported
   }
 
@@ -87,9 +102,12 @@
         return { text: `${bare}으`, rule: 'ㅅ drops', why: `${dict} is ㅅ-irregular: the ㅅ drops before 으 → ${bare}으${tail}.` };
       case 'ㅎ':
         return { text: bare, rule: 'ㅎ drops', why: `${dict} is ㅎ-irregular: the ㅎ drops, and there’s no 으 → ${bare}${tail}.` };
-      case 'ㄹ':
-        if (tail.startsWith('니')) return { text: bare, rule: 'ㄹ drops', why: `${dict} ends in ㄹ, and ㄹ drops before ㄴ → ${bare}${tail}.` };
+      case 'ㄹ': {
+        // ㄹ drops before ㄴ, ㅅ and ㅂ: 사니까, 사세요, 사셨어요 (but 살면, 놀러).
+        const next = parts(tail.trim().charAt(0)).initial;
+        if (['ㄴ', 'ㅅ', 'ㅂ'].includes(next)) return { text: bare, rule: 'ㄹ drops', why: `${dict} ends in ㄹ, and ㄹ drops before ${next} → ${bare}${tail}.` };
         return { text: stem, rule: 'ㄹ stem', why: `${dict} ends in ㄹ, which takes ${tail} directly (no 으) → ${stem}${tail}.` };
+      }
       default:
         break;
     }
@@ -159,7 +177,7 @@
     if (tense === 'past') {
       const ps = pastStem(dict, pos);
       const past = C.conjugate(dict, 'past', { pos }).text;
-      const glue = e.base === 'eu' ? '으' : e.base === 'future' ? '을' : '';
+      const glue = { eu: '으', future: '을', neunde: '는' }[e.base] || '';
       const text = `${ps}${glue}${e.tail}`;
       return {
         text,
@@ -183,15 +201,17 @@
       const text = `${inf.text}${e.tail}`;
       return {
         text,
-        steps: [inf.why, `For ${e.name}, take ${inf.text}요, drop the 요 and add ${e.tail} → ${text}.`],
+        steps: [inf.why, `For ${e.name}, take ${inf.text}요, drop the 요 and add ${e.tail.trim()} → ${text}.`],
         variants: [...inf.variants.flatMap((v) => [`${v}${e.tail}`, ...(e.alsoOk || []).map((alt) => `${v}${alt}`)]), ...also(text)],
         rule: infRule(stem, inf),
       };
     }
     if (e.base === 'eu') {
       const s = euStem(stem, e.tail);
-      return { text: `${s.text}${e.tail}`, steps: [s.why], variants: [], rule: s.rule };
+      const variants = id === 'si' ? [`${s.text}시었어요`] : []; // 가시었어요: the long, rare form of 가셨어요
+      return { text: `${s.text}${e.tail}`, steps: [s.why], variants, rule: s.rule };
     }
+    if (e.base === 'neunde') return neundeForm(dict, stem, pos, e);
     if (e.base === 'future') {
       const f = C.futureStem(stem);
       const text = `${f.text}${e.tail}`;
@@ -200,6 +220,20 @@
     const m = modifierStem(stem);
     const text = `${m.text}${e.tail}`;
     return { text, steps: [m.why, `Then add ${e.tail.trim()} → ${text}.`], variants: [], rule: m.rule };
+  }
+
+  /** -는데 after verbs and 있다/없다 words (먹는데, 사는데, 맛있는데); -(으)ㄴ데 after adjectives (비싼데, 추운데). */
+  function neundeForm(dict, stem, pos, e) {
+    if (pos === 'verb' || IT_EOP.test(dict)) {
+      const text = `${presentModifier(stem)}${e.tail}`;
+      if (C.irregularType(stem) === 'ㄹ') return { text, steps: [`${dict} ends in ㄹ, which drops before ㄴ: ${allButLast(stem)}${withFinal(lastChar(stem), '')} + 는데 → ${text}.`], variants: [], rule: 'verb, ㄹ drops' };
+      const kind = pos === 'verb' ? 'Verbs take 는데 on the stem' : `${dict} ends in ${IT_EOP.exec(dict)[1]}다, so it takes 는데, like a verb`;
+      return { text, steps: [`${kind}: ${stem} + 는데 → ${text}.`], variants: [], rule: pos === 'verb' ? 'verb' : '있다/없다' };
+    }
+    const m = modifierStem(stem);
+    const text = `${m.text}${e.tail}`;
+    const rule = m.rule.startsWith('after') ? 'adjective' : `adjective, ${m.rule}`;
+    return { text, steps: [`${dict} is an adjective, so it takes (으)ㄴ데. ${m.why}`, `Then add 데 → ${text}.`], variants: [], rule };
   }
 
   function futureRule(stem) {
@@ -245,7 +279,7 @@
 
     if (tense === 'past') {
       // The same ending without the past: wrong when the English is about the past.
-      if (id === 'jiman' || id === 'nikka') add(form(dict, id, { pos }).text, `It happened in the past, so ${e.name} takes the past too: ${right.text}.`);
+      if (['jiman', 'nikka', 'neunde'].includes(id)) add(form(dict, id, { pos }).text, `It happened in the past, so ${e.name} takes the past too: ${right.text}.`);
       return out;
     }
 
@@ -256,6 +290,8 @@
         add(`${pastStem(dict, pos)}${e.tail}`, `기 전에 never takes the past. Even for the past, say ${right.text}: the verb at the end shows the tense.`); // 먹었기 전에
         add(`${modifierStem(stem).text} 전에`, `The (으)ㄴ form goes with 후에 (after). “Before” is 기 전에: ${right.text}.`); // 먹은 전에
       }
+      // (not for verbs where -아/어 있어요 is right too: 가 있어요, 앉아 있어요, 살아 있어요…)
+      if (id === 'goIt' && !/(가다|오다|앉다|서다|눕다|살다|남다|붙다)$/.test(dict)) add(`${inf.text} 있어요`, `-아/어 있어요 describes a state after something has happened (앉아 있어요 = is seated). For an action in progress, it’s -고 있어요: ${right.text}.`); // 먹어 있어요
     }
 
     if (e.base === 'inf') {
@@ -287,12 +323,26 @@
       add(`${stem}${e.tail}`, right.steps[0]);
       add(`${stem}으${e.tail}`, right.steps[0]);
       if (id === 'reo' && inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes on the stem, not the 아/어 form: ${right.text}.`); // 먹어러
+      if ((id === 'seyo' || id === 'si') && inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes on the stem (with 으 after a consonant), not the 아/어 form: ${right.text}.`); // 앉아세요, 해세요
+      if (id === 'si') add(`${pastStem(dict, pos)}으${e.tail}`, `In the polite past, 시 comes first and the past after it (시 + 었 → 셨): ${right.text}.`); // 갔으셨어요
     }
 
     if (e.base === 'future') {
-      add(`${stem}을${e.tail}`, C.futureStem(stem).why); // 가을 때, 살을 때, 듣을 수 있어요
+      add(`${stem}을${e.tail}`, C.futureStem(stem).why); // 가을 때, 살을 때, 듣을 수 있어요, 가을게요
       const noun = e.tail.trim().split(' ')[0];
-      if (verb && !IT_EOP.test(dict)) add(`${presentModifier(stem)}${e.tail}`, `${noun} takes the (으)ㄹ form: ${right.text}.`); // 먹는 때, 먹는 수 있어요
+      if (verb && !IT_EOP.test(dict) && id !== 'lgeyo') add(`${presentModifier(stem)}${e.tail}`, `${noun} takes the (으)ㄹ form: ${right.text}.`); // 먹는 때, 먹는 수 있어요
+      if (id === 'lgeyo') add(right.text.replace(/게요$/, '께요'), `It sounds like [께요], but it’s spelled 게요: ${right.text}.`); // 먹을께요
+    }
+
+    if (e.base === 'neunde') {
+      if (verb || IT_EOP.test(dict)) {
+        if (IT_EOP.test(dict)) add(`${stem}은${e.tail}`, `Words ending in 있다/없다 take 는데, like verbs: ${right.text}.`); // 맛있은데
+        else add(`${modifierStem(stem).text}${e.tail}`, `${dict} is a verb, so it takes 는데 (the (으)ㄴ데 form is for adjectives): ${right.text}.`); // 먹은데
+        if (type === 'ㄹ') add(`${stem}는${e.tail}`, `ㄹ drops before ㄴ: ${right.text}.`); // 살는데
+      } else {
+        add(`${stem}는${e.tail}`, `${dict} is an adjective, so it takes (으)ㄴ데, not 는데: ${right.text}.`); // 비싸는데
+        add(`${stem}은${e.tail}`, `${modifierStem(stem).why} So: ${right.text}.`); // 비싸은데, 춥은데, 멀은데
+      }
     }
 
     if (e.base === 'modifier') {
@@ -328,6 +378,13 @@
     ado: [['가다'], ['먹다'], ['하다'], ['앉다']],
     su: [['가다'], ['먹다'], ['만들다'], ['듣다']],
     suNot: [['가다'], ['먹다'], ['만들다'], ['듣다']],
+    goIt: [['가다'], ['먹다'], ['듣다'], ['공부하다']],
+    boseyo: [['가다'], ['먹다'], ['하다'], ['듣다']],
+    bwasseoyo: [['가다'], ['먹다'], ['입다'], ['듣다']],
+    lgeyo: [['가다'], ['먹다'], ['만들다'], ['듣다']],
+    neunde: [['가다'], ['먹다'], ['살다'], ['비싸다', 'adjective'], ['춥다', 'adjective'], ['맛있다', 'adjective']],
+    seyo: [['가다'], ['앉다'], ['만들다'], ['듣다'], ['돕다']],
+    si: [['가다'], ['읽다'], ['만들다'], ['듣다']],
   };
 
   /** Rows for an intro card: [{ dict, text, rule }]. */
@@ -390,7 +447,7 @@
       answer: said,
       options: U.shuffle([answer, ...wrong]),
       // How it's made, ending the way the sentence does (…add 야 돼요 → 일어나야 돼요).
-      steps: altTail ? right.steps.map((s) => follow(s).split(`add ${e.tail}`).join(`add ${altTail}`)) : right.steps,
+      steps: altTail ? right.steps.map((s) => follow(s).split(`add ${e.tail.trim()}`).join(`add ${altTail.trim()}`)) : right.steps,
       ending: e,
       here,
     };

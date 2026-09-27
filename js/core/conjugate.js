@@ -47,7 +47,7 @@
   // Verbs with their own opposite instead of 안 + verb.
   const OWN_NEGATIVE = { 있다: '없다', 맛있다: '맛없다', 재미있다: '재미없다' };
   // Negatives that are fine but not the only natural choice (배 안 고파요 / 안 배고파요): not drilled.
-  const NO_NEGATIVE = new Set(['알다', '배고프다', '목마르다', '화나다', '사랑하다', '모르다', '없다', '맛없다', '재미없다']);
+  const NO_NEGATIVE = new Set(['알다', '배고프다', '배부르다', '목마르다', '화나다', '사랑하다', '모르다', '없다', '맛없다', '재미없다']);
   // 러-irregular verbs (이르러요, 푸르러요) are rare and not handled.
   const UNSUPPORTED = new Set(['이르다', '푸르다']);
   // Things that happen to you rather than things you do: no "want to", "shall we?" or "please".

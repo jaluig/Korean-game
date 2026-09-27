@@ -1767,3 +1767,251 @@ details.dlg-script-box > summary .bi {
   text-decoration: underline dotted var(--ink-faint);
   text-underline-offset: 4px;
 }
+
+/* ---------- Reading ---------- */
+
+.read-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(700px, 100%);
+  padding: 22px 24px 20px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--butter);
+  box-shadow: 0 6px 0 var(--butter-shadow);
+}
+
+.read-card-small {
+  gap: 8px;
+  padding: 14px 18px;
+}
+
+.read-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--butter-soft);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.read-kind > span:first-child {
+  font-family: var(--font-emoji);
+}
+
+.read-title {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.read-card-small .read-title {
+  font-size: 1.1rem;
+}
+
+.read-text {
+  margin: 0;
+  font-family: var(--font-ko);
+  font-size: 1.2rem;
+  line-height: 1.9;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.read-sentence {
+  padding: 1px 2px;
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.read-sentence.playing {
+  background: var(--butter-soft);
+}
+
+.read-sentence.key,
+.read-line.key {
+  background: var(--good-soft);
+  color: var(--good-ink);
+}
+
+.read-scroll {
+  max-height: 26vh;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.read-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.read-line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--card-soft);
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.read-line.playing {
+  border-color: var(--butter-deep);
+}
+
+.read-line-ko {
+  font-family: var(--font-ko);
+  font-size: 1.1rem;
+  font-weight: 700;
+  word-break: keep-all;
+}
+
+.read-line-ko .audio-btn {
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.read-line-en {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.read-lines-fb {
+  margin: 4px 0;
+}
+
+.read-show-en {
+  align-self: center;
+}
+
+.ex-reading:not(.is-playing) .dlg-stop {
+  display: none;
+}
+
+.read-card .dlg-controls {
+  align-self: center;
+}
+
+/* ---------- Dialogues: role-play ---------- */
+
+.rp-hint,
+.rp-intro {
+  margin: 0;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.rp-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+.rp-choice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 12px 14px;
+  border-radius: 20px;
+  border: 2px solid var(--line);
+  background: var(--card);
+  box-shadow: 0 5px 0 var(--shadow);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.1s ease;
+}
+
+.rp-choice:hover {
+  border-color: var(--lilac-deep);
+  transform: translateY(-2px);
+}
+
+.rp-choice-emoji {
+  font-family: var(--font-emoji);
+  font-size: 2.4rem;
+  line-height: 1.1;
+}
+
+.rp-choice-name .ko {
+  font-weight: 800;
+}
+
+.rp-choice-count {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.rp-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(680px, 100%);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rp-line {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 88%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  border: 2px solid var(--line);
+  background: var(--card);
+  animation: pop-in 0.25s ease;
+}
+
+.rp-theirs {
+  align-self: flex-start;
+  border-bottom-left-radius: 6px;
+}
+
+.rp-mine {
+  align-self: flex-end;
+  border-color: var(--lilac);
+  background: var(--lilac-soft);
+  border-bottom-right-radius: 6px;
+}
+
+.rp-line.playing {
+  border-color: var(--lilac-deep);
+}
+
+.rp-say {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.dlg-speaker.rp-me {
+  outline: 3px dashed var(--lilac-deep);
+  outline-offset: 2px;
+}
+
+.rp-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rp-score-num {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  line-height: 1.1;
+  color: var(--lilac-deep);
+}

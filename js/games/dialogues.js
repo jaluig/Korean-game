@@ -78,9 +78,11 @@
    * Plays a dialogue's lines one after another, with a short pause between
    * speakers. onLine(i) is called as line i starts, and onLine(-1) when the
    * playback ends: finished, stopped, or cut off by other audio.
+   * `voices` (speaker → { voice, pitch }) replaces the usual choice (Reading uses one narrator).
    */
-  function player(dialogue, onLine = () => {}) {
-    const voices = voicesFor(dialogue);
+  /** onLine(i) as each line starts; onLine(-1) when playback stops, with a second argument `true` when it simply got to the end. */
+  function player(dialogue, onLine = () => {}, { voices: chosen } = {}) {
+    const voices = chosen || voicesFor(dialogue);
     let token = 0;
     let timer = null;
 
@@ -112,7 +114,7 @@
       const step = (k) => {
         if (mine !== token) return;
         if (k >= lines.length) {
-          onLine(-1);
+          onLine(-1, true);
           return;
         }
         const i = lines[k];
@@ -249,7 +251,6 @@
       });
 
       let di = 0;
-      nextDialogue();
 
       function nextDialogue() {
         if (current) current.stop();
@@ -259,6 +260,7 @@
 
       function screen(...children) {
         release();
+        if (M.mic) M.mic.stop(); // a 🎤 still listening on the screen before
         U.clear(host.stage);
         host.setProgress(round.answers, total);
         host.stage.append(...children);
@@ -285,7 +287,7 @@
         return (i) => {
           const who = i >= 0 ? dialogue.lines[i].who : null;
           root.querySelectorAll('.dlg-speaker').forEach((el) => el.classList.toggle('speaking', el.dataset.who === who));
-          root.querySelectorAll('.dlg-line').forEach((el) => el.classList.toggle('playing', Number(el.dataset.line) === i));
+          root.querySelectorAll('.dlg-line, .rp-line').forEach((el) => el.classList.toggle('playing', Number(el.dataset.line) === i));
           root.classList.toggle('is-playing', i >= 0);
         };
       }
@@ -472,12 +474,29 @@
         M.srs.review(dialogue.id, grade);
         M.progress.bump('dialoguesHeard');
         M.store.save();
+        showScript(dialogue, state);
+      }
 
+      /** On to the next dialogue (once). */
+      function proceed(state) {
+        if (state.done) return;
+        state.done = true;
+        di++;
+        nextDialogue();
+      }
+
+      const nextButton = (state) => {
+        const last = di + 1 >= list.length;
+        return ui.button({ ko: last ? '끝내기' : '다음 대화', en: last ? 'Finish' : 'Next dialogue', variant: 'primary', size: 'big', onClick: () => proceed(state) });
+      };
+
+      /** The whole script with translations; from here, a role-play or the next dialogue. */
+      function showScript(dialogue, state) {
         const { listening } = state;
         const root = h('div.ex.ex-dialogue.ex-dialogue-review');
         const play = takeOver(player(dialogue, follow(root, dialogue)));
-        const last = di + 1 >= list.length;
-        const button = ui.button({ ko: last ? '끝내기' : '다음 대화', en: last ? 'Finish' : 'Next dialogue', variant: 'primary', size: 'big', onClick: done });
+        const button = nextButton(state);
+        const rolePlayButton = listening && canRolePlay() ? ui.button({ icon: '🎭', ko: '역할극', en: 'Role-play', variant: 'soft', size: 'big', onClick: () => chooseRole(dialogue, state) }) : null;
         root.append(
           ui.exTag('대본', 'The whole conversation', '📜'),
           h(
@@ -486,22 +505,209 @@
             listening ? playControls(play) : null,
             scriptList(dialogue, play, { english: true, audio: listening })
           ),
-          h('div.ex-actions', h('span.key-hint', ui.bi('엔터', 'Enter ↵')), button)
+          rolePlayButton ? h('p.rp-hint', ui.bi('🎭 역할극: 한 사람의 대사를 소리 내어 말해 봐요', '🎭 Role-play: take one part and say its lines out loud')) : null,
+          h('div.ex-actions', h('span.key-hint', ui.bi('엔터', 'Enter ↵')), rolePlayButton, button)
         );
         screen(root);
         button.focus({ preventScroll: true });
         stopKeys = M.keys.push((event) => {
           if (event.key === 'Enter' && !M.keys.isControl(event)) {
             event.preventDefault();
-            done();
+            proceed(state);
           } else if (listening && M.keys.isReplay(event)) play.play();
         });
-        let finished = false;
-        function done() {
-          if (finished) return;
-          finished = true;
-          di++;
-          nextDialogue();
+      }
+
+      /* ---------- 🎭 Role-play: take one part; the other is played, you say yours with 🎤 ---------- */
+
+      const canRolePlay = () => M.mic.supported() && M.store.state.settings.speaking;
+      const title = (dialogue) => h('div.dlg-title', h('span.dlg-scene', { 'aria-hidden': 'true' }, dialogue.scene || '💬'), ui.bi(dialogue.title.ko, dialogue.title.en));
+
+      function chooseRole(dialogue, state) {
+        if (current) current.stop();
+        current = null;
+        const root = h('div.ex.ex-dialogue.ex-roleplay');
+        const parts = Object.entries(dialogue.speakers);
+        const pick = parts.map(([key, s], i) => {
+          const lines = dialogue.lines.filter((l) => l.who === key).length;
+          return h(
+            'button.rp-choice',
+            { type: 'button', on: { click: () => rolePlay(dialogue, state, key) } },
+            h('span.option-num', { 'aria-hidden': 'true' }, i + 1),
+            h('span.rp-choice-emoji', { 'aria-hidden': 'true' }, s.emoji),
+            h('span.rp-choice-name', ui.bi(s.name, s.en)),
+            h('span.rp-choice-count', ui.bi(`${lines}줄`, U.plural(lines, 'line')))
+          );
+        });
+        const back = ui.button({ icon: '📜', ko: '대본으로', en: 'Back to the script', variant: 'soft', onClick: () => showScript(dialogue, state) });
+        root.append(
+          ui.exTag('역할극', 'Role-play', '🎭'),
+          h(
+            'div.dlg-card',
+            title(dialogue),
+            h('p.rp-intro', ui.bi('누구의 역할을 할까요?', 'Whose part will you take? You say those lines out loud with 🎤; the other part is played for you.')),
+            h('div.rp-choices', pick)
+          ),
+          h('div.ex-actions', back)
+        );
+        screen(root);
+        window.scrollTo(0, 0); // (coming from the long script)
+        pick[0].focus({ preventScroll: true });
+        stopKeys = M.keys.push((event) => {
+          const n = Number(event.key);
+          if (n >= 1 && n <= parts.length && !event.repeat) {
+            event.preventDefault();
+            rolePlay(dialogue, state, parts[n - 1][0]);
+          }
+        });
+      }
+
+      function rolePlay(dialogue, state, me) {
+        const root = h('div.ex.ex-dialogue.ex-roleplay');
+        const lit = follow(root, dialogue);
+        let waitFor = null; // the other part's line being played; the next line comes when it ends
+        let playing = null;
+        const play = takeOver(
+          player(dialogue, (n, ended) => {
+            lit(n);
+            if (n >= 0) playing = n;
+            else if (ended && waitFor !== null && playing === waitFor) {
+              const at = waitFor;
+              waitFor = null;
+              later(() => current === play && i === at && waitFor === null && advance(), 300);
+            }
+          })
+        );
+        /** 🔊 and R: hearing a line again only moves on when it's the other part's current line. */
+        const replay = {
+          line: (n, slow) => {
+            M.mic.stop(); // (it would hear the voice)
+            waitFor = n === i && dialogue.lines[n].who !== me ? n : null;
+            playing = null;
+            play.line(n, slow);
+          },
+        };
+        const chat = h('ol.rp-chat', { 'aria-live': 'polite' });
+        const skip = ui.button({ ko: '건너뛰기', en: 'Skip', variant: 'soft', size: 'big', onClick: () => advance() });
+        const go = ui.button({ ko: '다음', en: 'Next', variant: 'primary', size: 'big', onClick: () => advance() });
+        [skip, go].forEach((b) => b.addEventListener('mousedown', M.keys.noMouseFocus.mousedown));
+        go.hidden = true;
+        const you = dialogue.speakers[me];
+        root.append(
+          ui.exTag('역할극', `Role-play: you are ${you.en}`, '🎭'),
+          h('div.dlg-card.dlg-card-small', title(dialogue), cast(dialogue)),
+          chat,
+          h('div.ex-actions', h('span.key-hint', ui.bi('M 말하기 · 엔터', 'M to speak · Enter ↵')), skip, go)
+        );
+        screen(root);
+        window.scrollTo(0, 0);
+        root.querySelector(`.dlg-speaker.who-${me}`).classList.add('rp-me');
+
+        let i = -1;
+        let mine = 0;
+        let good = 0;
+        let mic = null; // the 🎤 of your current line
+        const scored = new Set();
+        stopKeys = M.keys.push((event) => {
+          if (event.key === 'Enter' && !M.keys.isControl(event)) {
+            event.preventDefault();
+            advance();
+          } else if (event.code === 'KeyM' && mic && !event.repeat) {
+            event.preventDefault();
+            mic.click();
+          } else if (M.keys.isReplay(event) && i >= 0) replay.line(i);
+        });
+        advance();
+
+        function advance() {
+          M.mic.stop(); // a 🎤 still listening would hear the next line
+          if (waitFor !== null) {
+            waitFor = null;
+            play.stop();
+          }
+          i++;
+          if (i >= dialogue.lines.length) return result();
+          const line = dialogue.lines[i];
+          const yours = line.who === me;
+          const bubble = h(
+            'li',
+            { class: `rp-line who-${line.who} ${yours ? 'rp-mine' : 'rp-theirs'}`, dataset: { line: i } },
+            speakerTag(dialogue.speakers[line.who]),
+            h('div.dlg-line-text', h('span.dlg-line-ko', { lang: 'ko' }, line.ko, lineButton(replay, i)), h('span.dlg-line-en', line.en))
+          );
+          chat.append(bubble);
+          mic = null;
+          skip.hidden = false;
+          go.hidden = true;
+          if (yours) {
+            mine++;
+            const n = i;
+            const say = ui.sayButton(line.ko, { size: 'big', reward: false, onResult: (r) => said(n, line, r) });
+            if (say) {
+              bubble.append(h('div.rp-say', say));
+              mic = say.querySelector('.say-btn');
+            }
+          } else {
+            waitFor = i;
+            playing = null;
+            play.line(i);
+          }
+          keepInView();
+        }
+
+        /** The new line, its 🎤 and the buttons under it stay in view (on phones they'd drop below the screen). */
+        function keepInView() {
+          const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          root.querySelector('.ex-actions').scrollIntoView({ block: 'nearest', behavior: still ? 'auto' : 'smooth' });
+        }
+
+        /** A line said well earns points (once a day per line), like the other 🎤 buttons. */
+        function said(n, line, { tone }) {
+          if (tone !== 'miss' && !scored.has(n)) {
+            scored.add(n);
+            good++;
+            if (M.progress.rewardSpeech(line.ko, U.now(), { points: false })) {
+              M.progress.bump('rolePlayGood');
+              host.award(points().rolePlay);
+            }
+            M.store.save();
+          }
+          if (n === i) {
+            skip.hidden = true;
+            go.hidden = false;
+            keepInView();
+          }
+        }
+
+        function result() {
+          if (current) current.stop();
+          current = null;
+          const tone = mine && good === mine ? 'great' : good * 2 >= mine ? 'close' : 'miss';
+          const [ko, en] = { great: ['완벽해요!', 'You said all your lines well!'], close: ['잘했어요!', 'Nicely done!'], miss: ['다시 해 봐요!', 'Give it another go?'] }[tone];
+          const other = Object.keys(dialogue.speakers).find((k) => k !== me);
+          const again = ui.button({ icon: '🔁', ko: '다른 역할', en: 'Swap parts', variant: 'soft', onClick: () => rolePlay(dialogue, state, other) });
+          const button = nextButton(state);
+          const end = h(
+            'div.ex.ex-dialogue.ex-roleplay',
+            ui.exTag('역할극', 'Role-play', '🎭'),
+            h(
+              'div.dlg-card',
+              title(dialogue),
+              h('div.rp-score', h('span.rp-score-num', `${good} / ${mine}`), ui.bi('잘 말한 대사', 'lines said well')),
+              h('p.rp-intro', ui.bi(ko, en))
+            ),
+            h('div.ex-actions', again, button)
+          );
+          screen(end);
+          window.scrollTo(0, 0);
+          button.focus({ preventScroll: true });
+          host.mascot.say(ko, en, { duration: 3000 });
+          stopKeys = M.keys.push((event) => {
+            if (event.key === 'Enter' && !M.keys.isControl(event)) {
+              event.preventDefault();
+              proceed(state);
+            }
+          });
         }
       }
 
@@ -517,6 +723,8 @@
           perfect: false,
         });
       }
+
+      nextDialogue(); // (last, once every helper above exists)
     },
   });
 

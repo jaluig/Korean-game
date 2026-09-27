@@ -142,6 +142,23 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.4.0',
+      body: () => {
+        const patterns = M.content.grammar();
+        const readings = M.content.readings();
+        return [
+          h('h3', ui.bi('새 게임과 새 연습', 'A new game, and more to practise')),
+          gameList(['reading']),
+          featureList([
+            ['📚', `${M.content.words().length} words in all: every topic has new ones.`],
+            ['🔗', `${patterns.length} grammar patterns: new are -(으)세요, -고 있어요, -아/어 보다, -(으)ㄹ게요, -는데 and -(으)셨어요.`],
+            M.mic.supported() ? ['🎭', 'Role-play in Dialogues: after a conversation, take one part and say its lines out loud with 🎤.'] : null,
+            ['📖', `${readings.length} short texts to read (diaries, messages, menus, notices…) with questions.`],
+          ]),
+        ];
+      },
+    },
+    {
       version: '0.3.0',
       body: () => {
         const patterns = M.content.grammar();

@@ -152,3 +152,22 @@ test('the player stops when other audio cuts it off, and after stop()', async ()
   assert.equal(said.length, 2);
   r.stop();
 });
+
+test('the player tells a line that played to its end from one that was stopped or cut off', async () => {
+  M.config.session.dialogues.linePause = 1;
+  const d = M.content.dialogues()[0];
+  let said = fakeSpeech();
+  const seen = [];
+  const p = M.dialogues.player(d, (i, ended) => seen.push([i, ended === true]));
+  p.play({ lines: [0] });
+  said[0].onEnd();
+  await tick();
+  assert.deepEqual(seen[seen.length - 1], [-1, true], 'got to the end');
+  p.play({ lines: [0] });
+  p.stop();
+  assert.deepEqual(seen[seen.length - 1], [-1, false], 'stopped');
+  said = fakeSpeech();
+  p.play({ lines: [0] });
+  said[0].onError('interrupted');
+  assert.deepEqual(seen[seen.length - 1], [-1, false], 'cut off by other audio');
+});

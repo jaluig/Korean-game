@@ -4,7 +4,8 @@
  * English: "home / house" accepts either word, hints in brackets are optional
  * ("this (thing)" → "this"), little words like "to", "a", "it's" or "I'm" can
  * be left out, British and American spellings both count, and one typo in a
- * longer word is forgiven. Words can list more answers in `enAlt`.
+ * longer word is forgiven (unless the "typo" is another word's answer: "night"
+ * for "light"). Words can list more answers in `enAlt`.
  * Korean: the word or any of its `accept` forms, ignoring spaces and ?/!.
  */
 (function (M) {
@@ -57,6 +58,18 @@
   /** How many typos to forgive: none in short words, one from 5 letters, two from 10. */
   const forgiven = (answer) => (answer.length >= 10 ? 2 : answer.length >= 5 ? 1 : 0);
 
+  /** Is this another word's answer? Then it's a mix-up, not a typo: "night" (밤) for "light", "read" for "bread". */
+  let taken = null;
+  let takenFrom = -1;
+  function anotherWordsAnswer(given) {
+    const words = M.content ? M.content.words() : [];
+    if (!taken || takenFrom !== words.length) {
+      taken = new Set(words.flatMap(englishAnswers));
+      takenFrom = words.length;
+    }
+    return taken.has(given);
+  }
+
   /**
    * Does a typed English answer match the word? → { ok, exact, answer }.
    * `answer` is the accepted answer it matched (or came closest to).
@@ -71,6 +84,7 @@
       const distance = U.levenshtein(given, answer);
       if (distance < best.distance) best = { ok: distance <= forgiven(answer), exact: false, answer, distance };
     }
+    if (best.ok && anotherWordsAnswer(given)) return { ok: false, exact: false, answer: best.answer };
     return { ok: best.ok, exact: false, answer: best.answer };
   }
 
