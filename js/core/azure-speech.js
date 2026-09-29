@@ -22,6 +22,10 @@
   const ON_DISK = 3000; // clips kept in cache storage
   const TEST_TEXT = '안녕하세요! 반가워요.';
   const REGION = /^[a-z0-9]+$/;
+  // A moment of silence, played on the first tap so the <audio> may play later without one (iPhones ask for that).
+  const SILENCE = 'data:audio/wav;base64,UklGRsQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+
+  const emitStatus = () => M.events.emit('speech:status', M.speech ? M.speech.status() : 'ready');
 
   /* ---------- Settings: { key, region, voice }, in this browser only ---------- */
 
@@ -35,9 +39,13 @@
   }
 
   let saved = read();
+  let rejected = false; // Azure refused this key (401/403): it doesn't count as a voice until that changes
 
   const cleanRegion = (region) => String(region || '').trim().toLowerCase().replace(/\s+/g, ''); // "Korea Central" → koreacentral
   const configured = () => !!saved.key && REGION.test(saved.region);
+  const online = () => typeof navigator === 'undefined' || navigator.onLine !== false;
+  /** Can Azure speak now? (With a key it wasn't refused, and a connection.) */
+  const usable = () => configured() && !rejected && online();
   const voiceInfo = (name) => cfg().voices.find((v) => v.name === name) || null;
   const mainVoice = () => (voiceInfo(saved.voice) ? saved.voice : cfg().female);
 
@@ -50,8 +58,15 @@
     } catch {
       // storage blocked: the settings last until the tab closes
     }
+    changed();
+  }
+
+  /** The settings changed (here, or in another tab): start afresh. */
+  function changed() {
+    rejected = false;
     backoffUntil = 0;
-    M.events.emit('speech:status', M.speech ? M.speech.status() : 'ready');
+    lastError = null;
+    emitStatus();
   }
 
   /** Forget the key and every stored clip. */
@@ -61,6 +76,22 @@
     save({});
     memory.clear();
     if (hasDisk()) caches.delete(AUDIO_CACHE).catch(() => {});
+  }
+
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    // Another tab (or the installed app) saved or removed the key: follow it, so a removed key stays removed.
+    window.addEventListener('storage', (event) => {
+      if (event.key !== STORAGE_KEY && event.key !== null) return;
+      cut();
+      saved = read();
+      if (!saved.key) {
+        generation++;
+        memory.clear();
+      }
+      changed();
+    });
+    window.addEventListener('online', emitStatus);
+    window.addEventListener('offline', emitStatus);
   }
 
   /** The voice for a woman or a man in a dialogue: the chosen voice when it fits, else the default of that kind. */
@@ -84,7 +115,7 @@
     http: 'Azure answered with an error.',
     empty: 'Azure sent no audio.',
     audio: 'The browser couldn’t play Azure’s audio.',
-    'not-allowed': 'The browser blocks sound until you click or tap on the page.',
+    'not-allowed': 'The browser only plays Azure’s audio after you tap or click on the page.',
   };
   // After a failure the browser's voice speaks for a while, instead of asking Azure again for every word.
   const BACKOFF = { key: 600000, forbidden: 600000, request: 60000, limit: 60000, server: 30000, network: 30000, timeout: 30000, http: 30000, empty: 30000 };
@@ -111,9 +142,8 @@
     if (!key || !REGION.test(region)) throw failure('key');
     const controller = typeof AbortController === 'function' ? new AbortController() : null;
     const timer = setTimeout(() => controller && controller.abort(), cfg().timeout);
-    let response;
     try {
-      response = await fetch(endpoint(region), {
+      const response = await fetch(endpoint(region), {
         method: 'POST',
         headers: { 'Ocp-Apim-Subscription-Key': key, 'Content-Type': 'application/ssml+xml', 'X-Microsoft-OutputFormat': cfg().format },
         body: ssml(text, voice),
@@ -122,8 +152,15 @@
         signal: controller ? controller.signal : undefined,
       });
       if (!response.ok) throw failure(codeFor(response.status), response.status);
+      // (anything but audio, e.g. a network's login page, is not kept)
+      const type = (response.headers && response.headers.get && response.headers.get('content-type')) || '';
+      if (!/^audio\//i.test(type)) throw failure('http', response.status);
       const blob = await response.blob();
       if (!blob.size) throw failure('empty');
+      if (rejected) {
+        rejected = false; // the key works after all (e.g. the resource was turned back on)
+        emitStatus();
+      }
       return blob;
     } catch (err) {
       if (err && err.code) throw err;
@@ -181,7 +218,6 @@
   let backoffUntil = 0;
   let lastError = null;
   let generation = 0;
-  const online = () => typeof navigator === 'undefined' || navigator.onLine !== false;
 
   /** The clip for `text` in `voice`: from memory, from cache storage, or from Azure. */
   function audioFor(text, voice) {
@@ -216,10 +252,40 @@
     if (!code || code === 'offline' || code === 'waiting') return;
     lastError = { code, message: err.message, status: err.status || 0, at: Date.now() };
     if (BACKOFF[code]) backoffUntil = Date.now() + BACKOFF[code];
+    if ((code === 'key' || code === 'forbidden') && !rejected) {
+      rejected = true;
+      emitStatus();
+    }
     M.events.emit('speech:azure-error', lastError);
   }
 
   /* ---------- Playing ---------- */
+
+  // One <audio> for every clip: once a tap has let it play, it may keep playing (Safari on iPhones asks for that).
+  let player = null;
+  let unlocked = false;
+  function audioElement() {
+    if (!player) {
+      player = new Audio();
+      player.preservesPitch = true; // slower or faster, never lower or higher
+    }
+    return player;
+  }
+  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+    const unlock = () => {
+      if (unlocked || !configured()) return;
+      unlocked = true;
+      document.removeEventListener('pointerdown', unlock, true);
+      document.removeEventListener('keydown', unlock, true);
+      const audio = audioElement();
+      if (job && job.audio) return; // (a clip is already playing)
+      audio.src = SILENCE;
+      const started = audio.play();
+      if (started && typeof started.catch === 'function') started.catch(() => {});
+    };
+    document.addEventListener('pointerdown', unlock, true);
+    document.addEventListener('keydown', unlock, true);
+  }
 
   let job = null; // what Azure is fetching or playing for the last speak(): { audio, url, onError }
 
@@ -250,9 +316,10 @@
   const speed = (rate) => Math.min(2, Math.max(0.5, rate || M.store.state.settings.speechRate || 0.9));
 
   function play(mine, blob, rate, onEnd, fail) {
+    const audio = audioElement();
     const url = URL.createObjectURL(blob);
-    const audio = new Audio();
-    audio.preservesPitch = true; // slower or faster, never lower or higher
+    audio.onended = null;
+    audio.onerror = null;
     audio.src = url;
     audio.defaultPlaybackRate = speed(rate);
     audio.playbackRate = speed(rate);
@@ -290,10 +357,6 @@
     job = mine;
     const fail = (err) => {
       note(err);
-      if (err && err.code === 'not-allowed') {
-        if (onError) onError('not-allowed');
-        return;
-      }
       if (!fallback() && onError) onError('synthesis-failed');
     };
     audioFor(text, voice).then(
@@ -301,7 +364,10 @@
         if (job === mine) play(mine, blob, rate, onEnd, fail);
       },
       (err) => {
-        if (job !== mine) return;
+        if (job !== mine) {
+          note(err); // (cut off meanwhile: still wait before asking Azure again)
+          return;
+        }
         job = null;
         fail(err);
       }
@@ -311,7 +377,13 @@
 
   /** "Save and test": say a sample with these settings, straight from Azure. Resolves once it plays; rejects with the reason. */
   async function test({ key = saved.key, region = saved.region, voice = mainVoice() } = {}) {
-    const blob = await synthesize(TEST_TEXT, voiceInfo(voice) ? voice : cfg().female, { key: String(key).trim(), region: cleanRegion(region) });
+    let blob;
+    try {
+      blob = await synthesize(TEST_TEXT, voiceInfo(voice) ? voice : cfg().female, { key: String(key).trim(), region: cleanRegion(region) });
+    } catch (err) {
+      note(err);
+      throw err;
+    }
     backoffUntil = 0;
     lastError = null;
     if (M.speech) M.speech.stop();
@@ -325,6 +397,8 @@
 
   M.azureSpeech = {
     configured,
+    usable,
+    rejected: () => rejected,
     settings: () => ({ ...saved }),
     save,
     forget,

@@ -36,8 +36,8 @@
   }
 
   const azure = () => (M.azureSpeech && M.azureSpeech.configured() ? M.azureSpeech : null);
-  /** The game's view: Azure voices count as a Korean voice. */
-  const overall = () => (azure() ? 'ready' : status);
+  /** The game's view: Azure voices count as a Korean voice (when they can speak: online, with a key that works). */
+  const overall = () => (M.azureSpeech && M.azureSpeech.usable() ? 'ready' : status);
 
   function setStatus(next) {
     if (status === next) return;
@@ -92,8 +92,18 @@
     const service = azure();
     if (!service || !text) return speakWithBrowser(text, options);
     clearPending();
-    if (synth && (synth.speaking || synth.pending)) synth.cancel();
-    return service.speak(text, options, () => speakWithBrowser(text, { ...options, quiet: true }));
+    if (synth && (synth.speaking || synth.pending)) {
+      current = null; // (so a browser line cut off here hears 'interrupted', not 'ended')
+      synth.cancel();
+    }
+    return service.speak(text, options, () => {
+      // Azure couldn't: the browser's voice says it, unless a newer line is already waiting (speakLater).
+      if (pending) {
+        if (options.onError) setTimeout(() => options.onError('interrupted'), 0);
+        return true;
+      }
+      return speakWithBrowser(text, { ...options, quiet: true });
+    });
   }
 
   /** The browser's own voice. */

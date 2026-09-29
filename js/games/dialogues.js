@@ -74,7 +74,8 @@
   const slowRate = () => Math.min(cfg().slowRate, (M.store.state.settings.speechRate || 0.9) * 0.75);
 
   /** Generous: a line that never reports its end still moves on, without cutting a slow voice short. */
-  const safetyMs = (text, rate) => [...text].length * 350 * (0.9 / (rate || 0.9)) + 4000;
+  const safetyMs = (text, rate) =>
+    [...text].length * 350 * (0.9 / (rate || 0.9)) + 4000 + (M.azureSpeech && M.azureSpeech.configured() ? M.config.azureSpeech.timeout : 0); // (Azure's audio may take that long to come)
 
   /**
    * Plays a dialogue's lines one after another, with a short pause between

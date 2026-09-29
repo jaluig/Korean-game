@@ -884,6 +884,10 @@
   font-weight: 700;
 }
 
+.secret-input {
+  -webkit-text-security: disc; /* typed like a password, without being one */
+}
+
 .azure-status.good {
   color: var(--good-ink);
 }

@@ -192,6 +192,7 @@
 
   let azureDraft = null; // what's typed but not saved yet (a redraw mustn't lose it)
   let azureNote = null; // { tone, text }: the last test's result
+  let azureAttempt = 0; // (a test that ends after "Remove" doesn't report)
 
   function azureSetting() {
     const A = M.azureSpeech;
@@ -217,6 +218,7 @@
     const field = (ko, en, control) => h('label.azure-field', h('span.azure-field-name', ui.bi(ko, en, 'inline')), control);
 
     async function saveAndTest() {
+      const attempt = ++azureAttempt;
       const key = draft.key.trim() || saved.key;
       if (!key) return note('bad', 'Paste your key first: KEY 1 on your Speech resource’s “Keys and Endpoint” page.');
       if (!/^[a-z0-9]+$/.test(draft.region.trim().toLowerCase().replace(/\s+/g, ''))) return note('bad', 'Add the region too: the “Location/Region” on the same page, e.g. koreacentral.');
@@ -226,9 +228,9 @@
       note('', '⏳ Asking Azure…');
       try {
         await A.test();
-        note('good', `✅ It works: ${labelOf(A.mainVoice())} from Azure is speaking now.`);
+        if (attempt === azureAttempt) note('good', `✅ It works: ${labelOf(A.mainVoice())} from Azure is speaking now.`);
       } catch (err) {
-        note('bad', `❌ ${err.message} Until it works, the browser’s voice speaks.`);
+        if (attempt === azureAttempt) note('bad', `❌ ${err.message} Until it works, the browser’s voice speaks.`);
       }
     }
 
@@ -240,6 +242,7 @@
         cancel: { ko: '취소', en: 'Cancel' },
       });
       if (!ok) return;
+      azureAttempt++;
       A.forget();
       azureDraft = null;
       note('', 'Removed from this browser. The browser’s voice speaks again.');
@@ -261,12 +264,14 @@
       },
       c.voices.map((v) => h('option', { value: v.name, selected: v.name === draft.voice }, `${v.label} · ${v.female ? '여성 woman' : '남성 man'}`))
     );
-    const status = azureNote
-      ? h(`p.setting-desc.azure-status${azureNote.tone ? `.${azureNote.tone}` : ''}`, azureNote.text)
-      : h(
-          'p.setting-desc.azure-status',
-          on ? `✅ On: ${labelOf(A.mainVoice())} (${saved.region}). When Azure can’t answer, the browser’s voice speaks.` : 'Off: the browser’s voice speaks.'
-        );
+    let shown = azureNote;
+    if (!shown && on && A.rejected()) shown = { tone: 'bad', text: `❌ ${(A.lastError() || {}).message || 'Azure didn’t accept the key.'} Until it works, the browser’s voice speaks.` };
+    if (!shown) shown = { tone: '', text: on ? `✅ On: ${labelOf(A.mainVoice())} (${saved.region}). When Azure can’t answer, the browser’s voice speaks.` : 'Off: the browser’s voice speaks.' };
+    const status = h(`p.setting-desc.azure-status${shown.tone ? `.${shown.tone}` : ''}`, { role: 'status' }, shown.text);
+    const saveButton = ui.button({ icon: '💾', ko: '저장하고 들어 보기', en: 'Save and test', variant: 'mint', size: 'small', onClick: saveAndTest });
+    saveButton.dataset.focus = 'azure-save';
+    const removeButton = on ? ui.button({ icon: '🗑️', ko: '키 지우기', en: 'Remove the key', variant: 'soft', size: 'small', onClick: remove }) : null;
+    if (removeButton) removeButton.dataset.focus = 'azure-remove';
 
     return h(
       'div.azure-setting',
@@ -277,16 +282,25 @@
       ),
       h(
         'div.azure-fields',
-        field('키', 'Key', input('key', { type: 'password', placeholder: on ? 'Saved (paste a new key to change it)' : 'Paste KEY 1 here', 'aria-label': 'Azure Speech key' })),
+        // (a masked text box, not a password box: browsers would offer to save the key as this site's password)
+        field(
+          '키',
+          'Key',
+          input('key', {
+            type: 'text',
+            class: 'secret-input',
+            placeholder: on ? 'Saved (paste a new key to change it)' : 'Paste KEY 1 here',
+            'aria-label': 'Azure Speech key',
+            'data-lpignore': 'true',
+            'data-1p-ignore': 'true',
+            'data-form-type': 'other',
+          })
+        ),
         field('지역', 'Region', input('region', { type: 'text', list: 'azure-regions', placeholder: 'e.g. koreacentral', 'aria-label': 'Azure region' })),
         field('목소리', 'Voice', voice)
       ),
       h('datalist', { id: 'azure-regions' }, c.regions.map((r) => h('option', { value: r }))),
-      h(
-        'div.voice-row',
-        ui.button({ icon: '💾', ko: '저장하고 들어 보기', en: 'Save and test', variant: 'mint', size: 'small', onClick: saveAndTest }),
-        on ? ui.button({ icon: '🗑️', ko: '키 지우기', en: 'Remove the key', variant: 'soft', size: 'small', onClick: remove }) : null
-      ),
+      h('div.voice-row', saveButton, removeButton),
       status,
       h(
         'p.setting-desc.azure-privacy',

@@ -115,7 +115,7 @@
         'brazilsouth', 'westeurope', 'northeurope', 'uksouth', 'francecentral', 'germanywestcentral',
         'swedencentral', 'switzerlandnorth', 'norwayeast', 'italynorth',
       ],
-      timeout: 10000, // ms to wait for Azure before the browser's voice speaks instead
+      timeout: 5000, // ms to wait for Azure before the browser's voice speaks instead
     },
 
     // Daily goal presets. A focused minute of practice earns roughly 40 ⭐.

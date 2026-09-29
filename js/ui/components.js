@@ -402,9 +402,10 @@
   M.events.on('speech:azure-error', ({ code, message }) => {
     if (azureExplained.has(code)) return;
     azureExplained.add(code);
-    const blocked = code === 'not-allowed';
-    const ko = blocked ? '소리를 들으려면 화면을 한 번 눌러 주세요' : 'Azure 대신 브라우저 목소리로 말해요';
-    ui.toast({ icon: '🔈', ko, en: blocked ? message : `${message} The browser’s voice speaks instead.`, tone: 'warn', duration: 7000 });
+    const browser = M.speech.browserStatus() === 'ready';
+    const ko = browser ? 'Azure 대신 브라우저 목소리로 말해요' : 'Azure 목소리를 쓸 수 없어요';
+    const then = browser ? 'The browser’s voice speaks instead.' : 'This browser has no Korean voice of its own, so it stays quiet for now.';
+    ui.toast({ icon: '🔈', ko, en: `${message} ${then}`, tone: 'warn', duration: 7000 });
   });
 
   // Grey out 🔊 buttons when there is no Korean voice, and explain once.

@@ -47,9 +47,10 @@ let calls = [];
 let answer = () => ({ status: 200, body: 'mp3' });
 global.fetch = async (url, options) => {
   calls.push({ url, options });
-  const { status, body, throws } = answer(url, options);
+  const { status, body, throws, type = 'audio/mpeg', delay = 0 } = answer(url, options);
+  if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
   if (throws) throw new TypeError('Failed to fetch');
-  return { ok: status >= 200 && status < 300, status, blob: async () => new Blob([body || ''], { type: 'audio/mpeg' }) };
+  return { ok: status >= 200 && status < 300, status, headers: { get: () => type }, blob: async () => new Blob([body || ''], { type }) };
 };
 
 const M = loadMallang({ content: false });
@@ -119,11 +120,12 @@ test('with a key, Azure is asked once per clip, with the key only in its header'
   audio.end();
   assert.equal(ended, 1);
   assert.equal(spoken.length, 0, 'the browser voice stayed quiet');
-  // The same clip again: no new request, and a slower speed reuses it.
+  // The same clip again: no new request, and a slower speed reuses it (on the same <audio>).
   M.speech.speak('커피 & 차 <주세요>', { rate: 0.7 });
   await tick();
   assert.equal(calls.length, 1);
-  assert.equal(FakeAudio.all[1].playbackRate, 0.7);
+  assert.equal(FakeAudio.all.length, 1, 'one <audio> for every clip');
+  assert.equal(audio.playbackRate, 0.7);
   // Another voice is another clip.
   M.speech.speak('커피 & 차 <주세요>', { azure: 'ko-KR-InJoonNeural' });
   await tick();
@@ -140,7 +142,6 @@ test('a newer line or stop() cuts the one playing, as with the browser voice', a
   M.speech.speak('둘', { onError: (code) => errors.push(`two:${code}`) });
   await tick();
   assert.deepEqual(errors, ['one:interrupted']);
-  assert.equal(FakeAudio.all[0].playing, false);
   M.speech.stop();
   await tick();
   assert.deepEqual(errors, ['one:interrupted', 'two:interrupted']);
@@ -176,6 +177,49 @@ test('when Azure refuses, the browser voice speaks, and Azure rests for a while'
   off();
   assert.deepEqual(problems, ['key', 'limit', 'network']);
   assert.deepEqual(spoken, ['딸기', '포도']);
+});
+
+test('a refused key stops counting as a voice; a line cut off while Azure fails still makes it wait', async () => {
+  reset();
+  A.save({ key: 'wrong', region: 'koreacentral' });
+  assert.equal(A.usable(), true);
+  answer = () => ({ status: 401, delay: 20 });
+  M.speech.speak('하나');
+  M.speech.speak('둘'); // (cuts off 하나 while Azure is still answering)
+  await tick(60);
+  assert.equal(A.rejected(), true);
+  assert.equal(A.usable(), false, 'games no longer count on Azure');
+  const asked = calls.length;
+  M.speech.speak('셋');
+  await tick(30);
+  assert.equal(calls.length, asked, 'no request while it waits');
+  A.save({ key: KEY, region: 'koreacentral' });
+  assert.equal(A.rejected(), false, 'new settings: a fresh start');
+});
+
+test('the fallback never cancels a newer line, and only audio is kept', async () => {
+  reset();
+  A.save({ key: KEY, region: 'koreacentral' });
+  answer = () => ({ status: 500, delay: 20 });
+  const errors = [];
+  M.speech.speak('사과', { onError: (code) => errors.push(code) });
+  M.speech.speakLater('배', 40); // a newer line, waiting
+  await tick(120);
+  assert.ok(!spoken.includes('사과'), 'the older line gave way');
+  assert.ok(spoken.includes('배'), 'the newer one was said');
+  assert.deepEqual(errors, ['interrupted']);
+  // A page that isn't audio (e.g. a network's login page) is not played or kept.
+  reset();
+  A.save({ key: KEY, region: 'koreacentral' });
+  answer = () => ({ status: 200, body: '<html>', type: 'text/html' });
+  M.speech.speak('포도');
+  await tick(20);
+  assert.deepEqual(spoken, ['포도'], 'the browser voice said it');
+  answer = () => ({ status: 200, body: 'mp3' });
+  A.save({ key: KEY, region: 'koreacentral' });
+  M.speech.speak('포도');
+  await tick(20);
+  assert.equal(calls.length, 2, 'asked again: the page was not kept');
 });
 
 test('dialogues get a woman’s and a man’s Azure voice', () => {
