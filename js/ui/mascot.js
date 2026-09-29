@@ -10,6 +10,15 @@
 
   const INK = '#5a4545';
 
+  /** A little five-petal flower (for the flower crown). */
+  const blossom = (x, y, petal, heart = '#ffb347') =>
+    [0, 72, 144, 216, 288]
+      .map((a) => {
+        const r = (a - 90) * (Math.PI / 180);
+        return `<circle cx="${(x + 2.9 * Math.cos(r)).toFixed(2)}" cy="${(y + 2.9 * Math.sin(r)).toFixed(2)}" r="2.6" fill="${petal}"/>`;
+      })
+      .join('') + `<circle cx="${x}" cy="${y}" r="1.9" fill="${heart}"/>`;
+
   // Elements tagged data-show="…" are only visible in those moods (see mascot CSS).
   const SVG = `
 <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
@@ -97,6 +106,53 @@
     <path d="M49 50 L50 41.5 L55 46.5 L60 40.5 L65 46.5 L70 41.5 L71 50 Z" fill="#ffd66b"/>
     <circle cx="60" cy="46.8" r="2" fill="#ff7aa2" stroke="none"/><circle cx="53.6" cy="47.8" r="1.5" fill="#8fd89c" stroke="none"/><circle cx="66.4" cy="47.8" r="1.5" fill="#8fc7ff" stroke="none"/>
   </g>
+  <g class="m-outfit m-outfit-sunglasses" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">
+    <rect x="35" y="69.5" width="21" height="13.5" rx="6" fill="#3d3140"/><rect x="64" y="69.5" width="21" height="13.5" rx="6" fill="#3d3140"/>
+    <path d="M56 74 Q60 71 64 74" fill="none"/><path d="M35.5 73 L27 69 M84.5 73 L93 69" fill="none" stroke-linecap="round"/>
+    <path d="M39.5 73.8 Q42.5 72.2 45.5 73 M68.5 73.8 Q71.5 72.2 74.5 73" stroke="#ffffff" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".85"/>
+  </g>
+  <g class="m-outfit m-outfit-partyhat" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M47 47.5 L60 15.5 L73 47.5 Q60 43.5 47 47.5 Z" fill="#8fd89c"/>
+    <circle cx="56.5" cy="39.5" r="1.9" fill="#ffd66b" stroke="none"/><circle cx="64.5" cy="36" r="1.9" fill="#ff8fb0" stroke="none"/>
+    <circle cx="58.5" cy="28.5" r="1.7" fill="#8fc7ff" stroke="none"/><circle cx="62" cy="21.5" r="1.4" fill="#ffd66b" stroke="none"/>
+    <circle cx="60" cy="14" r="4" fill="#ff8fb0"/>
+  </g>
+  <g class="m-outfit m-outfit-bowtie" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M60 101 L47.5 94.5 Q45.5 101 47.5 107.5 Z" fill="#7fd6c2"/><path d="M60 101 L72.5 94.5 Q74.5 101 72.5 107.5 Z" fill="#7fd6c2"/>
+    <rect x="56.5" y="97.5" width="7" height="7" rx="2.5" fill="#4fbfa7"/>
+  </g>
+  <g class="m-outfit m-outfit-heartglasses" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round">
+    <path d="M46 84.5 C40 80 35.5 75.5 37 71.5 C38.3 68 43 67.5 46 71 C49 67.5 53.7 68 55 71.5 C56.5 75.5 52 80 46 84.5 Z" fill="#ff8fb0" fill-opacity=".78"/>
+    <path d="M74 84.5 C68 80 63.5 75.5 65 71.5 C66.3 68 71 67.5 74 71 C77 67.5 81.7 68 83 71.5 C84.5 75.5 80 80 74 84.5 Z" fill="#ff8fb0" fill-opacity=".78"/>
+    <path d="M55 72.5 Q60 69.5 65 72.5 M37.2 72.5 L28 69 M82.8 72.5 L92 69" fill="none" stroke-linecap="round"/>
+    <path d="M40 72.6 Q41.4 70.6 43.4 71.2 M68 72.6 Q69.4 70.6 71.4 71.2" stroke="#ffffff" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  </g>
+  <g class="m-outfit m-outfit-headphones" stroke-linecap="round">
+    <path d="M15 74 Q14 39 60 37.5 Q106 39 105 74" fill="none" stroke="${INK}" stroke-width="7.5"/>
+    <path d="M15 74 Q14 39 60 37.5 Q106 39 105 74" fill="none" stroke="#b89cf0" stroke-width="3.2"/>
+    <rect x="6" y="66.5" width="14" height="24" rx="6" fill="#b89cf0" stroke="${INK}" stroke-width="2.4"/>
+    <rect x="100" y="66.5" width="14" height="24" rx="6" fill="#b89cf0" stroke="${INK}" stroke-width="2.4"/>
+    <path d="M10.5 72 V84 M104.5 72 V84" stroke="#ffffff" stroke-width="2" opacity=".7"/>
+  </g>
+  <g class="m-outfit m-outfit-medal" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round">
+    <path d="M46.5 91 L56 103.5 L60.5 100 L51 88.5 Z" fill="#8fc7ff"/><path d="M73.5 91 L64 103.5 L59.5 100 L69 88.5 Z" fill="#ff8fb0"/>
+    <circle cx="60" cy="106.5" r="7.6" fill="#ffd66b"/>
+    <path d="M60 101.9 l1.45 2.95 3.25 .47 -2.35 2.3 .55 3.24 -2.9 -1.53 -2.9 1.53 .55 -3.24 -2.35 -2.3 3.25 -.47 z" fill="#ffb347" stroke-width="1"/>
+  </g>
+  <g class="m-outfit m-outfit-flowercrown">
+    <g fill="#8fd89c" stroke="#5fae6e" stroke-width="1">
+      <ellipse cx="34" cy="51.5" rx="3.6" ry="1.8" transform="rotate(-38 34 51.5)"/><ellipse cx="50.5" cy="46" rx="3.6" ry="1.8" transform="rotate(-12 50.5 46)"/>
+      <ellipse cx="69.5" cy="46" rx="3.6" ry="1.8" transform="rotate(12 69.5 46)"/><ellipse cx="86" cy="51.5" rx="3.6" ry="1.8" transform="rotate(38 86 51.5)"/>
+    </g>
+    <g stroke="${INK}" stroke-width="1.2">${blossom(27, 57.5, '#ffc2d1')}${blossom(41.5, 48.5, '#fff3a8')}${blossom(60, 45.5, '#ffc2d1')}${blossom(78.5, 48.5, '#fff3a8')}${blossom(93, 57.5, '#ffc2d1')}</g>
+  </g>
+  <g class="m-outfit m-outfit-gradcap" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M47 40.5 V48 Q60 52.5 73 48 V40.5 Z" fill="#4a3d52"/>
+    <path d="M38 38.5 L60 30.5 L82 38.5 L60 46.5 Z" fill="#5d4d68"/>
+    <path d="M60 38.5 Q70 39 78 41 L79.5 52" fill="none" stroke="#ffd66b" stroke-width="2"/>
+    <path d="M77.2 51 L81.8 51 L82.8 57 L76.2 57 Z" fill="#ffd66b" stroke-width="1.6"/>
+    <circle cx="60" cy="38.5" r="2" fill="#ffd66b" stroke="none"/>
+  </g>
 </svg>`;
 
   /** Outfits unlock as you level up (level 1 = none). Choose one in the wardrobe (Stats). */
@@ -104,10 +160,18 @@
     { id: '', level: 1, emoji: '🐰', ko: '기본', en: 'Just me' },
     { id: 'bow', level: 2, emoji: '🎀', ko: '리본', en: 'Ribbon' },
     { id: 'glasses', level: 3, emoji: '👓', ko: '안경', en: 'Glasses' },
+    { id: 'sunglasses', level: 4, emoji: '🕶️', ko: '선글라스', en: 'Sunglasses' },
     { id: 'flower', level: 5, emoji: '🌼', ko: '꽃', en: 'Flower' },
+    { id: 'partyhat', level: 6, emoji: '🥳', ko: '고깔모자', en: 'Party hat' },
     { id: 'scarf', level: 7, emoji: '🧣', ko: '목도리', en: 'Scarf' },
+    { id: 'bowtie', level: 8, emoji: '🤵', ko: '나비넥타이', en: 'Bow tie' },
     { id: 'beret', level: 9, emoji: '🎨', ko: '베레모', en: 'Beret' },
+    { id: 'heartglasses', level: 10, emoji: '💕', ko: '하트 안경', en: 'Heart glasses' },
+    { id: 'headphones', level: 11, emoji: '🎧', ko: '헤드폰', en: 'Headphones' },
     { id: 'crown', level: 12, emoji: '👑', ko: '왕관', en: 'Crown' },
+    { id: 'medal', level: 14, emoji: '🏅', ko: '금메달', en: 'Gold medal' },
+    { id: 'flowercrown', level: 16, emoji: '🌸', ko: '화관', en: 'Flower crown' },
+    { id: 'gradcap', level: 20, emoji: '🎓', ko: '학사모', en: 'Graduation cap' },
   ];
   const outfit = () => M.store.state.profile.outfit || '';
 

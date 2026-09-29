@@ -455,7 +455,15 @@ body.no-voice .audio-btn {
 [data-outfit='flower'] .m-outfit-flower,
 [data-outfit='scarf'] .m-outfit-scarf,
 [data-outfit='beret'] .m-outfit-beret,
-[data-outfit='crown'] .m-outfit-crown {
+[data-outfit='crown'] .m-outfit-crown,
+[data-outfit='sunglasses'] .m-outfit-sunglasses,
+[data-outfit='partyhat'] .m-outfit-partyhat,
+[data-outfit='bowtie'] .m-outfit-bowtie,
+[data-outfit='heartglasses'] .m-outfit-heartglasses,
+[data-outfit='headphones'] .m-outfit-headphones,
+[data-outfit='medal'] .m-outfit-medal,
+[data-outfit='flowercrown'] .m-outfit-flowercrown,
+[data-outfit='gradcap'] .m-outfit-gradcap {
   display: inline;
 }
 

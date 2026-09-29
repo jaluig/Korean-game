@@ -99,6 +99,42 @@ test('new badges: goal days, combos, games and topics', () => {
   assert.ok(P.BADGES.length >= 30);
 });
 
+test('the milestone badges: long streaks, big gardens, reading, speaking', () => {
+  M.store.reset();
+  const s = M.store.state;
+  const badge = (id) => P.BADGES.find((b) => b.id === id);
+  const ids = ['rounds-100', 'words-200', 'words-400', 'streak-60', 'streak-100', 'goal-50', 'combo-50', 'speaker-50', 'grammar-100', 'readings-30', 'all-readings', 'roleplay-50', 'level-20'];
+  for (const id of ids) assert.equal(badge(id).earned(s), false, `${id}: not at the start`);
+  s.totals.rounds = 100;
+  s.streak.best = 100;
+  s.totals.bestCombo = 50;
+  Object.assign(s.totals, { spokenGood: 50, grammarCorrect: 100, readingsDone: 30, rolePlayGood: 50, points: P.levelInfo().points + 19000 });
+  for (let d = 0; d < 50; d++) s.days[M.utils.dayKey(NOON - d * DAY)] = { points: 600, goal: 500 };
+  for (const w of M.content.words().slice(0, 400)) Object.assign(M.srs.record(w.id), { stage: 2, assumed: false });
+  for (const r of M.content.readings()) Object.assign(M.srs.record(r.id), { stage: 1 });
+  for (const id of ids) assert.equal(badge(id).earned(s), true, `${id}: earned`);
+  // Every badge has its own emoji.
+  assert.equal(new Set(P.BADGES.map((b) => b.emoji)).size, P.BADGES.length);
+});
+
+test('every outfit is drawn, shown by the CSS, and has its own level', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const { ROOT } = require('./helpers/load');
+  require(path.join(ROOT, 'js/ui/mascot.js'));
+  const { OUTFITS } = M.mascot;
+  const svg = M.mascot.svg();
+  const css = fs.readFileSync(path.join(ROOT, 'css/components.css'), 'utf8');
+  assert.ok(OUTFITS.length >= 15);
+  assert.equal(new Set(OUTFITS.map((o) => o.id)).size, OUTFITS.length);
+  assert.equal(new Set(OUTFITS.map((o) => o.emoji)).size, OUTFITS.length, 'each outfit has its own emoji');
+  OUTFITS.forEach((o, i) => i && assert.ok(o.level > OUTFITS[i - 1].level, `${o.id}: one per level, in order (a level-up announces it)`));
+  for (const o of OUTFITS.filter((x) => x.id)) {
+    assert.ok(svg.includes(`m-outfit-${o.id}"`), `${o.id}: drawn`);
+    assert.ok(css.includes(`[data-outfit='${o.id}'] .m-outfit-${o.id}`), `${o.id}: shown by the CSS`);
+  }
+});
+
 test('badges are awarded once', () => {
   M.store.reset();
   assert.deepEqual(P.finishRound({}, NOON).map((b) => b.id), ['first-round']);

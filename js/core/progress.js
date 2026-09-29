@@ -185,10 +185,16 @@
     const games = M.games.list();
     return games.length > 0 && games.every((g) => (s.totals.gamesPlayed || {})[g.id]);
   };
+  const everyTextRead = (s) => {
+    const texts = M.content.readings();
+    return texts.length > 0 && texts.every((r) => s.items[r.id] && s.items[r.id].stage >= 1);
+  };
 
   const BADGES = [
     { id: 'first-round', emoji: '👣', ko: '첫걸음', en: 'First steps', desc: 'Finish your first round.',
       earned: (s) => s.totals.rounds >= 1 },
+    { id: 'rounds-100', emoji: '🎡', ko: '100판', en: 'A hundred rounds', desc: 'Finish 100 rounds of any game.',
+      earned: (s) => s.totals.rounds >= 100 },
     { id: 'words-10', emoji: '🌿', ko: '작은 정원', en: 'Little garden', desc: 'Grow 10 words to 🌿 or beyond.',
       earned: (s) => grownWords(s) >= 10 },
     { id: 'words-30', emoji: '🏡', ko: '푸른 정원', en: 'Green thumb', desc: 'Grow 30 words to 🌿 or beyond.',
@@ -213,18 +219,30 @@
       earned: (s) => grownWords(s) >= 60 },
     { id: 'words-120', emoji: '🏞️', ko: '큰 숲', en: 'Big forest', desc: 'Grow 120 words to 🌿 or beyond.',
       earned: (s) => grownWords(s) >= 120 },
+    { id: 'words-200', emoji: '🌴', ko: '정글', en: 'Jungle', desc: 'Grow 200 words to 🌿 or beyond.',
+      earned: (s) => grownWords(s) >= 200 },
+    { id: 'words-400', emoji: '🌏', ko: '초록 행성', en: 'Green planet', desc: 'Grow 400 words to 🌿 or beyond.',
+      earned: (s) => grownWords(s) >= 400 },
     { id: 'explorer', emoji: '🗺️', ko: '탐험가', en: 'Explorer', desc: 'Learn at least one word in every topic.',
       earned: everyTopicStarted },
     { id: 'streak-14', emoji: '🌟', ko: '2주 연속', en: 'Two weeks strong', desc: 'Practise 14 days in a row.',
       earned: (s) => s.streak.best >= 14 },
     { id: 'streak-30', emoji: '🏆', ko: '한 달 연속', en: 'A month of Korean', desc: 'Practise 30 days in a row.',
       earned: (s) => s.streak.best >= 30 },
+    { id: 'streak-60', emoji: '💎', ko: '두 달 연속', en: 'Diamond streak', desc: 'Practise 60 days in a row.',
+      earned: (s) => s.streak.best >= 60 },
+    { id: 'streak-100', emoji: '🎂', ko: '100일 연속', en: 'A hundred days', desc: 'Practise 100 days in a row.',
+      earned: (s) => s.streak.best >= 100 },
     { id: 'goal-5', emoji: '🎯', ko: '목표 달성', en: 'Goal getter', desc: 'Reach your daily goal on 5 days.',
       earned: (s) => goalDays(s) >= 5 },
     { id: 'goal-20', emoji: '🥇', ko: '목표 장인', en: 'Goal master', desc: 'Reach your daily goal on 20 days.',
       earned: (s) => goalDays(s) >= 20 },
+    { id: 'goal-50', emoji: '🎖️', ko: '목표 전설', en: 'Goal legend', desc: 'Reach your daily goal on 50 days.',
+      earned: (s) => goalDays(s) >= 50 },
     { id: 'combo-20', emoji: '☄️', ko: '불꽃 콤보', en: 'On fire', desc: 'Get 20 answers right in a row.',
       earned: (s) => count(s, 'bestCombo') >= 20 },
+    { id: 'combo-50', emoji: '🌋', ko: '화산 콤보', en: 'Volcano', desc: 'Get 50 answers right in a row.',
+      earned: (s) => count(s, 'bestCombo') >= 50 },
     { id: 'balloons-30', emoji: '🎈', ko: '풍선 사냥꾼', en: 'Balloon hunter', desc: 'Pop 30 balloons in one round of Balloon Pop.',
       earned: (s) => count(s, 'bestBalloon') >= 30 },
     { id: 'sky-cleared', emoji: '🌈', ko: '맑은 하늘', en: 'Clear skies', desc: 'Clear all the waves in Balloon Pop.',
@@ -241,8 +259,12 @@
       earned: (s) => count(s, 'dictationsCorrect') >= 5 },
     { id: 'brave-voice', emoji: '🎤', ko: '용감한 목소리', en: 'Brave voice', desc: 'Say 10 words or sentences well with 🎤.',
       earned: (s) => count(s, 'spokenGood') >= 10 },
+    { id: 'speaker-50', emoji: '🗣️', ko: '말하기 왕', en: 'Speaking star', desc: 'Say 50 words or sentences well with 🎤.',
+      earned: (s) => count(s, 'spokenGood') >= 50 },
     { id: 'grammar-30', emoji: '🔗', ko: '문법 달인', en: 'Grammar master', desc: 'Fill 30 blanks correctly in Grammar Cards.',
       earned: (s) => count(s, 'grammarCorrect') >= 30 },
+    { id: 'grammar-100', emoji: '🧠', ko: '문법 천재', en: 'Grammar genius', desc: 'Fill 100 blanks correctly in Grammar Cards.',
+      earned: (s) => count(s, 'grammarCorrect') >= 100 },
     { id: 'all-patterns', emoji: '📚', ko: '문법 수집가', en: 'Pattern collector', desc: 'Meet every grammar pattern in Grammar Cards.',
       earned: everyPatternMet },
     { id: 'listener-20', emoji: '🎧', ko: '듣기 왕', en: 'Listening star', desc: 'Answer 20 dialogue questions correctly.',
@@ -251,8 +273,14 @@
       earned: (s) => count(s, 'dialoguesHeard') >= 10 },
     { id: 'bookworm', emoji: '🐛', ko: '책벌레', en: 'Bookworm', desc: 'Read 10 texts in Reading.',
       earned: (s) => count(s, 'readingsDone') >= 10 },
+    { id: 'readings-30', emoji: '📖', ko: '독서왕', en: 'Reading champion', desc: 'Read 30 texts in Reading.',
+      earned: (s) => count(s, 'readingsDone') >= 30 },
+    { id: 'all-readings', emoji: '📜', ko: '다 읽었어요', en: 'Every page', desc: 'Read every text in Reading at least once.',
+      earned: everyTextRead },
     { id: 'role-play', emoji: '🎭', ko: '명배우', en: 'Star of the show', desc: 'Say 20 lines well in a role-play.',
       earned: (s) => count(s, 'rolePlayGood') >= 20 },
+    { id: 'roleplay-50', emoji: '🎬', ko: '영화배우', en: 'Film star', desc: 'Say 50 lines well in a role-play.',
+      earned: (s) => count(s, 'rolePlayGood') >= 50 },
     { id: 'all-games', emoji: '🎮', ko: '게임 탐험가', en: 'Game explorer', desc: 'Play every minigame at least once.',
       earned: everyGamePlayed },
     { id: 'night-owl', emoji: '🦉', ko: '올빼미', en: 'Night owl', desc: 'Finish a round after 10 p.m.',
@@ -263,6 +291,8 @@
       earned: (s) => levelInfo(s.totals.points).level >= 5 },
     { id: 'level-10', emoji: '💫', ko: '레벨 10', en: 'Superstar', desc: 'Reach level 10.',
       earned: (s) => levelInfo(s.totals.points).level >= 10 },
+    { id: 'level-20', emoji: '🌠', ko: '레벨 20', en: 'Shooting star', desc: 'Reach level 20.',
+      earned: (s) => levelInfo(s.totals.points).level >= 20 },
   ];
 
   function checkBadges(now = U.now()) {

@@ -10,7 +10,7 @@ practice rounds keep it growing.
 - **18 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -는데, -고 있어요, -(으)세요…) with 146 practice sentences, **16 listening dialogues** with two voices and a 🎭 role-play where you speak one part, and **16 short texts to read** (a diary, a text message, a menu, a notice…)
 - **Built-in Korean keyboard**, so you never need a Korean input method
 - **Pronunciation audio** through your browser's own Korean voice (or, optionally, Azure's neural voices with your own key), **dictation** of whole sentences, and **🎤 speaking practice** in Chrome and Edge
-- **Streaks, points, levels, an adjustable daily goal, 38 badges** and outfits for the mascot, saved on your computer
+- **Streaks, points, levels, an adjustable daily goal, 51 badges** and 14 outfits for the mascot, saved on your computer
 - Korean interface with small English subtitles, which you can turn off once you're ready, and a **dark theme**
 - Works on **phones** too, and can be **installed as an app** that plays offline
 
@@ -178,7 +178,7 @@ another. Older saves are upgraded automatically: when new topics are
 added, words below your starting level become quick checks, a few a day.
 
 Settings also has the theme (light, dark, or like your computer), the daily goal, how many new words a day
-Word Cards may introduce, speaking practice, and installing the game as an app. 말랑이 gets a new outfit every few levels: pick one in the
+Word Cards may introduce, speaking practice, and installing the game as an app. 말랑이 gets a new outfit at most levels, up to level 20: pick one in the
 wardrobe on the Stats screen.
 
 ## Adding content
