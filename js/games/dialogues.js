@@ -64,6 +64,8 @@
     for (const [key, s] of Object.entries(dialogue.speakers)) {
       const voice = s.voice === 'low' ? low : high;
       out[key] = { voice, pitch: shared ? cfg().pitch[s.voice] || 1 : 1 };
+      // With Azure voices (Settings): a woman's voice and a man's voice, at their natural pitch (the above is the fallback).
+      if (M.azureSpeech && M.azureSpeech.configured()) out[key].azure = M.azureSpeech.voiceFor(s.voice === 'low' ? 'male' : 'female');
     }
     return out;
   }
@@ -94,6 +96,7 @@
         rate,
         pitch: v.pitch,
         voice: v.voice,
+        azure: v.azure,
         onEnd,
         onError: (code) => (code === 'interrupted' || code === 'canceled' ? onCut() : onEnd()),
       });

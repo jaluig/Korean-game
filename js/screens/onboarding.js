@@ -128,8 +128,7 @@
           const status = M.speech.status();
           let message;
           if (status === 'ready') {
-            const v = M.speech.voice();
-            message = h('div.notice.notice-good', '✅ ', ui.bi('한국어 음성을 찾았어요!', `Korean voice found: ${v ? v.name : ''}`, 'inline'));
+            message = h('div.notice.notice-good', '✅ ', ui.bi('한국어 음성을 찾았어요!', `Korean voice found: ${M.speech.voiceName()}`, 'inline'));
           } else if (status === 'loading') {
             message = h('div.notice', '⏳ ', ui.bi('음성을 찾는 중…', 'Looking for a Korean voice…', 'inline'));
           } else {

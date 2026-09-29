@@ -397,6 +397,16 @@
     return dialog;
   };
 
+  // Azure voices (Settings): say once per kind of problem why the browser's voice speaks instead.
+  const azureExplained = new Set();
+  M.events.on('speech:azure-error', ({ code, message }) => {
+    if (azureExplained.has(code)) return;
+    azureExplained.add(code);
+    const blocked = code === 'not-allowed';
+    const ko = blocked ? '소리를 들으려면 화면을 한 번 눌러 주세요' : 'Azure 대신 브라우저 목소리로 말해요';
+    ui.toast({ icon: '🔈', ko, en: blocked ? message : `${message} The browser’s voice speaks instead.`, tone: 'warn', duration: 7000 });
+  });
+
   // Grey out 🔊 buttons when there is no Korean voice, and explain once.
   M.events.on('speech:status', (status) => {
     document.body.classList.toggle('no-voice', status === 'unavailable' || status === 'unsupported');

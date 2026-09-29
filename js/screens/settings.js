@@ -112,16 +112,22 @@
   }
 
   function voiceSection() {
-    const status = M.speech.status();
+    const status = M.speech.browserStatus();
     const voices = M.speech.voices();
     const rows = [];
+    const azureOn = M.azureSpeech.configured();
+    const sayBrowser = (text) => M.speech.speakWithBrowser(text); // (with Azure on, M.speech.speak would use Azure)
 
     if (status === 'ready') {
       const current = M.speech.voice();
       rows.push(
         h(
           'div.setting',
-          h('span.setting-text', h('span.setting-name', ui.bi('목소리', 'Voice')), h('span.setting-desc', `${voices.length} Korean voice${voices.length === 1 ? '' : 's'} found.`)),
+          h(
+            'span.setting-text',
+            h('span.setting-name', azureOn ? ui.bi('브라우저 목소리', 'Browser voice') : ui.bi('목소리', 'Voice')),
+            h('span.setting-desc', `${voices.length} Korean voice${voices.length === 1 ? '' : 's'} found.${azureOn ? ' It speaks when Azure can’t.' : ''}`)
+          ),
           h(
             'div.voice-row',
             h(
@@ -132,21 +138,24 @@
                   change: (event) => {
                     settings().voiceURI = event.target.value;
                     save();
-                    M.speech.speak('안녕하세요! 반가워요.');
+                    sayBrowser('안녕하세요! 반가워요.');
                   },
                 },
               },
               voices.map((v) => h('option', { value: v.voiceURI, selected: current && v.voiceURI === current.voiceURI }, `${v.name}${v.localService ? '' : ' (online)'}`))
             ),
-            ui.button({ icon: '🔊', ko: '들어 보기', en: 'Test', variant: 'soft', size: 'small', onClick: () => M.speech.speak('안녕하세요! 반가워요.') })
+            ui.button({ icon: '🔊', ko: '들어 보기', en: 'Test', variant: 'soft', size: 'small', onClick: () => sayBrowser('안녕하세요! 반가워요.') })
           )
         )
       );
     } else if (status === 'loading') {
       rows.push(h('p.muted', '⏳ ', ui.bi('목소리를 찾는 중…', 'Looking for Korean voices…', 'inline')));
+    } else if (azureOn) {
+      rows.push(h('p.setting-desc', '🔇 This browser has no Korean voice of its own, so there’s no sound when Azure can’t answer.'));
     } else {
       rows.push(h('div.notice.notice-warn', h('b', '🔇 No Korean voice found. '), ui.voiceHelp()));
     }
+    rows.push(azureSetting());
 
     rows.push(
       h(
@@ -177,6 +186,113 @@
       rows.push(h('p.setting-desc', '🎤 Speaking practice needs a browser with speech recognition, like Chrome or Edge.'));
     }
     return section('🔊', '소리', 'Sound', rows);
+  }
+
+  /* ---------- Azure voices (optional): your own key, kept only in this browser ---------- */
+
+  let azureDraft = null; // what's typed but not saved yet (a redraw mustn't lose it)
+  let azureNote = null; // { tone, text }: the last test's result
+
+  function azureSetting() {
+    const A = M.azureSpeech;
+    const c = M.config.azureSpeech;
+    const saved = A.settings();
+    const on = A.configured();
+    const draft = azureDraft || (azureDraft = { key: '', region: saved.region, voice: A.mainVoice() });
+    const labelOf = (name) => (c.voices.find((v) => v.name === name) || { label: name }).label;
+    const note = (tone, text) => {
+      azureNote = { tone, text };
+      redraw();
+    };
+    const input = (name, attrs) =>
+      h('input.text-input', {
+        ...attrs,
+        value: draft[name],
+        autocomplete: 'off',
+        spellcheck: 'false',
+        autocapitalize: 'off',
+        dataset: { focus: `azure-${name}` },
+        on: { input: (event) => (draft[name] = event.target.value) },
+      });
+    const field = (ko, en, control) => h('label.azure-field', h('span.azure-field-name', ui.bi(ko, en, 'inline')), control);
+
+    async function saveAndTest() {
+      const key = draft.key.trim() || saved.key;
+      if (!key) return note('bad', 'Paste your key first: KEY 1 on your Speech resource’s “Keys and Endpoint” page.');
+      if (!/^[a-z0-9]+$/.test(draft.region.trim().toLowerCase().replace(/\s+/g, ''))) return note('bad', 'Add the region too: the “Location/Region” on the same page, e.g. koreacentral.');
+      A.save({ key, region: draft.region, voice: draft.voice });
+      draft.key = ''; // (once saved, the key isn't put back into the page)
+      draft.region = A.settings().region;
+      note('', '⏳ Asking Azure…');
+      try {
+        await A.test();
+        note('good', `✅ It works: ${labelOf(A.mainVoice())} from Azure is speaking now.`);
+      } catch (err) {
+        note('bad', `❌ ${err.message} Until it works, the browser’s voice speaks.`);
+      }
+    }
+
+    async function remove() {
+      const ok = await ui.confirm({
+        title: { ko: 'Azure 키를 지울까요?', en: 'Remove the Azure key?' },
+        text: 'The key and the stored Azure audio are removed from this browser, and the browser’s voice speaks again.',
+        ok: { ko: '지우기', en: 'Remove' },
+        cancel: { ko: '취소', en: 'Cancel' },
+      });
+      if (!ok) return;
+      A.forget();
+      azureDraft = null;
+      note('', 'Removed from this browser. The browser’s voice speaks again.');
+    }
+
+    const voice = h(
+      'select.select',
+      {
+        'aria-label': 'Azure voice',
+        dataset: { focus: 'azure-voice' },
+        on: {
+          change: (event) => {
+            draft.voice = event.target.value;
+            if (!on) return;
+            A.save({ ...A.settings(), voice: draft.voice });
+            M.speech.speak('안녕하세요! 반가워요.');
+          },
+        },
+      },
+      c.voices.map((v) => h('option', { value: v.name, selected: v.name === draft.voice }, `${v.label} · ${v.female ? '여성 woman' : '남성 man'}`))
+    );
+    const status = azureNote
+      ? h(`p.setting-desc.azure-status${azureNote.tone ? `.${azureNote.tone}` : ''}`, azureNote.text)
+      : h(
+          'p.setting-desc.azure-status',
+          on ? `✅ On: ${labelOf(A.mainVoice())} (${saved.region}). When Azure can’t answer, the browser’s voice speaks.` : 'Off: the browser’s voice speaks.'
+        );
+
+    return h(
+      'div.azure-setting',
+      h(
+        'span.setting-text',
+        h('span.setting-name', ui.bi('Azure 목소리', 'Azure voices (optional)')),
+        h('span.setting-desc', 'Microsoft Azure’s Korean voices sound more natural. They need a key from your own Azure Speech resource; its free tier is enough. How to get one: “Azure voices” in the README.')
+      ),
+      h(
+        'div.azure-fields',
+        field('키', 'Key', input('key', { type: 'password', placeholder: on ? 'Saved (paste a new key to change it)' : 'Paste KEY 1 here', 'aria-label': 'Azure Speech key' })),
+        field('지역', 'Region', input('region', { type: 'text', list: 'azure-regions', placeholder: 'e.g. koreacentral', 'aria-label': 'Azure region' })),
+        field('목소리', 'Voice', voice)
+      ),
+      h('datalist', { id: 'azure-regions' }, c.regions.map((r) => h('option', { value: r }))),
+      h(
+        'div.voice-row',
+        ui.button({ icon: '💾', ko: '저장하고 들어 보기', en: 'Save and test', variant: 'mint', size: 'small', onClick: saveAndTest }),
+        on ? ui.button({ icon: '🗑️', ko: '키 지우기', en: 'Remove the key', variant: 'soft', size: 'small', onClick: remove }) : null
+      ),
+      status,
+      h(
+        'p.setting-desc.azure-privacy',
+        '🔒 The key is kept only in this browser: it’s not in the game’s files or in your backups, and it’s sent only to Azure. Anyone using this browser could still see it in the developer tools, so use a free (F0) resource, and if the key ever leaks, regenerate it in the Azure portal.'
+      )
+    );
   }
 
   let redraw = () => {};
@@ -371,6 +487,8 @@
         off();
         offApp();
         redraw = () => {};
+        azureDraft = null;
+        azureNote = null;
       };
     },
   });

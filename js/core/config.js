@@ -88,6 +88,36 @@
       perfectRound: 20,
     },
 
+    /**
+     * Optional Azure Speech voices (Settings → Sound). Only your key is secret, and it's never here: you
+     * paste it into Settings and it stays in your browser. Voice names and regions are the same for everyone.
+     */
+    azureSpeech: {
+      // Azure's Korean neural voices. The chosen one reads everything; in dialogues, a female and a male voice.
+      voices: [
+        { name: 'ko-KR-SunHiNeural', label: '선히 SunHi', female: true },
+        { name: 'ko-KR-InJoonNeural', label: '인준 InJoon', female: false },
+        { name: 'ko-KR-HyunsuNeural', label: '현수 Hyunsu', female: false },
+        { name: 'ko-KR-JiMinNeural', label: '지민 JiMin', female: true },
+        { name: 'ko-KR-YuJinNeural', label: '유진 YuJin', female: true },
+        { name: 'ko-KR-SeoHyeonNeural', label: '서현 SeoHyeon', female: true },
+        { name: 'ko-KR-SoonBokNeural', label: '순복 SoonBok', female: true },
+        { name: 'ko-KR-BongJinNeural', label: '봉진 BongJin', female: false },
+        { name: 'ko-KR-GookMinNeural', label: '국민 GookMin', female: false },
+      ],
+      female: 'ko-KR-SunHiNeural', // the default voice, and the women's voice in dialogues when a man's voice is chosen
+      male: 'ko-KR-InJoonNeural', // the men's voice in dialogues when a woman's voice is chosen
+      format: 'audio-24khz-48kbitrate-mono-mp3',
+      // Suggestions for the region field (the "Location/Region" on the resource's Keys and Endpoint page).
+      regions: [
+        'koreacentral', 'japaneast', 'japanwest', 'eastasia', 'southeastasia', 'australiaeast', 'centralindia',
+        'eastus', 'eastus2', 'westus', 'westus2', 'westus3', 'centralus', 'southcentralus', 'canadacentral',
+        'brazilsouth', 'westeurope', 'northeurope', 'uksouth', 'francecentral', 'germanywestcentral',
+        'swedencentral', 'switzerlandnorth', 'norwayeast', 'italynorth',
+      ],
+      timeout: 10000, // ms to wait for Azure before the browser's voice speaks instead
+    },
+
     // Daily goal presets. A focused minute of practice earns roughly 40 ⭐.
     dailyGoals: [
       { points: 250, ko: '가볍게', en: 'Casual', minutes: 6 },

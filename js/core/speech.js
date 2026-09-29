@@ -4,6 +4,8 @@
  * It looks for a Korean voice (Chrome/Edge ship online ones; Windows and macOS
  * can install offline ones). If none exists, speak() does nothing and reports
  * "unavailable", and the UI explains how to add a voice — the game never breaks.
+ * With an Azure key in Settings, Azure's voices speak instead (azure-speech.js),
+ * and the browser's voice only when Azure can't.
  */
 (function (M) {
   'use strict';
@@ -33,10 +35,14 @@
     return score;
   }
 
+  const azure = () => (M.azureSpeech && M.azureSpeech.configured() ? M.azureSpeech : null);
+  /** The game's view: Azure voices count as a Korean voice. */
+  const overall = () => (azure() ? 'ready' : status);
+
   function setStatus(next) {
     if (status === next) return;
     status = next;
-    M.events.emit('speech:status', status);
+    M.events.emit('speech:status', overall());
   }
 
   function refresh() {
@@ -79,9 +85,19 @@
    * `quiet` (used for automatic playback), emits 'speech:unavailable' so the UI
    * can explain how to add one. Options: { rate, onEnd, quiet }, and for the
    * two speakers of a dialogue: pitch (1 = normal), voice (a voice or its
-   * voiceURI, instead of the chosen one) and onError(code).
+   * voiceURI, instead of the chosen one) and onError(code). With Azure voices,
+   * `azure` names the Azure voice (pitch and voice are then for the fallback).
    */
-  function speak(text, { rate, onEnd, quiet = false, pitch, voice: wanted, onError } = {}) {
+  function speak(text, options = {}) {
+    const service = azure();
+    if (!service || !text) return speakWithBrowser(text, options);
+    clearPending();
+    if (synth && (synth.speaking || synth.pending)) synth.cancel();
+    return service.speak(text, options, () => speakWithBrowser(text, { ...options, quiet: true }));
+  }
+
+  /** The browser's own voice. */
+  function speakWithBrowser(text, { rate, onEnd, quiet = false, pitch, voice: wanted, onError } = {}) {
     if (status !== 'ready' || !text) {
       if (status !== 'ready' && !quiet) M.events.emit('speech:unavailable', status);
       return false;
@@ -138,6 +154,7 @@
 
   function stop() {
     clearPending();
+    if (M.azureSpeech) M.azureSpeech.stop();
     if (synth && (synth.speaking || synth.pending)) synth.cancel();
   }
 
@@ -148,7 +165,11 @@
     stop,
     voice,
     voices: () => voices.slice(),
-    status: () => status,
-    isReady: () => status === 'ready',
+    status: overall,
+    isReady: () => overall() === 'ready',
+    browserStatus: () => status, // the browser's own voices, whatever Azure does
+    speakWithBrowser,
+    /** The name of the voice speaking, for the UI. */
+    voiceName: () => (azure() ? `Azure ${azure().mainVoice()}` : voice() ? voice().name : ''),
   };
 })(window.Mallang);

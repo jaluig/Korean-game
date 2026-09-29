@@ -2,3 +2,8 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
+
+# Secrets never belong in the repo. (The Azure Speech key lives only in the browser: Settings → Sound.)
+.env
+.env.*
+*.key

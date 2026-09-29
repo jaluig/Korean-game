@@ -142,6 +142,15 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.4.1',
+      body: () => [
+        h('h3', ui.bi('더 자연스러운 목소리', 'More natural voices, if you like')),
+        featureList([
+          ['🔊', 'Azure voices: with a key from your own Azure Speech resource (its free tier is enough), Microsoft’s Korean voices read everything. Settings → Sound. Without a key, nothing changes.'],
+        ]),
+      ],
+    },
+    {
       version: '0.4.0',
       body: () => {
         const patterns = M.content.grammar();

@@ -846,6 +846,52 @@
   align-items: center;
 }
 
+.azure-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 2px dashed var(--line);
+}
+
+.azure-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px 14px;
+}
+
+.azure-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.azure-field-name {
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.text-input {
+  width: 100%;
+  min-height: 42px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 2px solid var(--line);
+  background: var(--card);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+}
+
+.azure-status.good {
+  color: var(--good-ink);
+}
+
+.azure-status.bad {
+  color: var(--bad-ink);
+}
+
 .data-actions {
   display: flex;
   flex-wrap: wrap;

@@ -11,7 +11,7 @@
  */
 'use strict';
 
-const VERSION = '0.4.0'; // keep in step with Mallang.version (js/core/namespace.js)
+const VERSION = '0.4.1'; // keep in step with Mallang.version (js/core/namespace.js)
 const CACHE = `mallang-${VERSION}`;
 const FONT_CACHE = `mallang-fonts-${VERSION}`; // fetched again with each version, so a bad copy can't stay
 const PAGE = 'index.html'; // what a page load gets from the copy
@@ -44,6 +44,7 @@ const FILES = [
   'js/core/particles.js',
   'js/core/answers.js',
   'js/core/speech.js',
+  'js/core/azure-speech.js',
   'js/core/mic.js',
   'js/core/sfx.js',
   'content/cafe.js',

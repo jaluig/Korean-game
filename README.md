@@ -9,7 +9,7 @@ practice rounds keep it growing.
 - **10 topics** with 424 words and 220 sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans
 - **18 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -는데, -고 있어요, -(으)세요…) with 146 practice sentences, **16 listening dialogues** with two voices and a 🎭 role-play where you speak one part, and **16 short texts to read** (a diary, a text message, a menu, a notice…)
 - **Built-in Korean keyboard**, so you never need a Korean input method
-- **Pronunciation audio** through your browser's own Korean voice, **dictation** of whole sentences, and **🎤 speaking practice** in Chrome and Edge
+- **Pronunciation audio** through your browser's own Korean voice (or, optionally, Azure's neural voices with your own key), **dictation** of whole sentences, and **🎤 speaking practice** in Chrome and Edge
 - **Streaks, points, levels, an adjustable daily goal, 38 badges** and outfits for the mascot, saved on your computer
 - Korean interface with small English subtitles, which you can turn off once you're ready, and a **dark theme**
 - Works on **phones** too, and can be **installed as an app** that plays offline
@@ -96,7 +96,8 @@ The small Latin letters on the keys can be hidden in Settings.
 ## Audio
 
 Pronunciation uses the browser's built-in speech synthesis (`speechSynthesis`) with a Korean voice,
-picking the most natural one it can find. You can choose a voice and the speed in **Settings**.
+picking the most natural one it can find. You can choose a voice and the speed in **Settings**, or use
+[Azure's voices](#azure-voices-optional) instead.
 
 If no Korean voice is installed, the game keeps working without sound: 🔊 buttons turn grey,
 and the game explains how to add a voice:
@@ -108,6 +109,42 @@ and the game explains how to add a voice:
 Speaking practice uses the browser's speech recognition (`SpeechRecognition`), which Chrome and Edge provide. It
 needs a microphone, and Chrome sends the audio to its online speech service to recognise it. In browsers without
 it, the 🎤 buttons simply don't appear.
+
+### Azure voices (optional)
+
+Microsoft Azure's Korean neural voices (SunHi, InJoon, Hyunsu…) sound more natural than most browsers' own. The
+game can use them with a key from your own Azure Speech resource. Without a key, nothing changes.
+
+**About the key.** This is a static site with no server of its own, and a web page can't keep a secret: whatever key
+the page uses can be seen by anyone who opens the developer tools in *that* browser. So the key is never in the code
+or in this repository. You paste it into **Settings → Sound → Azure voices**, where it's saved only in that
+browser's local storage, apart from your progress (so it isn't in backups either), and sent only to
+`https://<region>.tts.speech.microsoft.com`. People who open the game elsewhere don't get it. To keep the risk small,
+use the free F0 tier, a Speech resource just for this game, and if the key ever leaks, **Regenerate Key 1** in the
+Azure portal: the old key stops working at once. (Hiding the key from the browser completely would take a small
+server of your own that calls Azure on the page's behalf.)
+
+**Setting it up:**
+
+1. An Azure account at [portal.azure.com](https://portal.azure.com). Signing up is free, but asks for a phone number
+   and a card to verify who you are.
+2. **Create a resource → Speech** (Azure AI Speech): any resource group (e.g. `mallang`), a region near you (e.g.
+   Korea Central, East US, West Europe), a unique name, and the **Free F0** pricing tier.
+3. Open the resource → **Keys and Endpoint**, and copy **KEY 1** and the **Location/Region** (e.g. `koreacentral`).
+4. In the game: **Settings → Sound → Azure voices**: paste the key, type the region, pick a voice, and press
+   **Save and test**.
+
+**The free tier** includes 0.5 million characters of neural text to speech a month. Every character of the text
+counts, spaces too, and a Hangul syllable counts as one. A word is 2–4 characters and a sentence 10–20, so even a
+few hundred a day stay far below it. F0 also allows 20 requests a minute: in a very fast game, words over that
+limit are said by the browser's voice. The game keeps every clip it fetches (in the browser's cache storage), so each
+word is fetched only once, and clips you've already heard play offline too.
+
+**How it sounds in the game.** The voice you choose reads everything; in dialogues, women speak with a woman's voice
+and men with a man's (SunHi and InJoon, unless you choose another). Slower and faster speeds (Settings, 🐢) replay
+the same clip. If Azure can't answer (offline, a wrong key, the limit), the browser's voice speaks instead and a
+small note says why. **Remove the key** deletes the key and the stored clips from the browser. Voice names and
+regions are in `js/core/config.js` (`azureSpeech`); they aren't secret, only the key is.
 
 ## Install as an app (and play offline)
 
@@ -298,7 +335,7 @@ content/              one file per topic: words, sentences, lesson notes; sounds
                       grammar.js: grammar patterns; dialogues.js: listening dialogues; reading.js: reading texts
 js/core/              no UI: config, Hangul engine, numbers, verb conjugation, grammar endings, particles,
                       answer checking, storage, spaced repetition, progress & badges, distractor picking,
-                      speech, speech recognition, sound effects
+                      speech (and the optional Azure voices), speech recognition, sound effects
 js/ui/                components, mascot (and its outfits), Korean keyboard, feedback sheet, 🎤 buttons
 js/exercises/         intro · choice · tiles · typing · sentence · dictation
 js/games/             word-cards · sentence-builder · speed-match · balloon-pop · particle-lab ·
@@ -325,7 +362,9 @@ They cover the Hangul typing engine, Korean numbers, the verb conjugation engine
 endings (both checked against hand-verified tables of regular and irregular verbs, including the
 typical slips), particle questions, answer checking, spaced-repetition scheduling and round building,
 the minigames' round logic, streaks, levels, badges, saving, loading and upgrading old saves, and the
-offline file list. They also check every topic, grammar pattern, dialogue and reading text for authoring mistakes
+offline file list, and the optional Azure voices (against a simulated Azure: the key stays out of the progress and
+backups, one request per clip, the browser's voice when Azure refuses). They also check every topic, grammar
+pattern, dialogue and reading text for authoring mistakes
 (including that every verb form and every grammar answer matches the engines).
 
 ## Why plain JavaScript?
