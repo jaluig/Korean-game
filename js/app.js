@@ -142,6 +142,17 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.5.0',
+      body: () => [
+        h('h3', ui.bi('더 읽고, 더 꾸미고', 'More to read, more to wear')),
+        featureList([
+          ['📖', `16 new texts in Reading (${M.content.readings().length} in all): a receipt, a group chat, a weather forecast, a film review, a second-hand listing and more.`],
+          ['👗', '8 new outfits for 말랑이, from sunglasses to a graduation cap at level 20.'],
+          ['🎖️', '13 new badges, for long streaks, big gardens, reading, speaking and role-play.'],
+        ]),
+      ],
+    },
+    {
       version: '0.4.1',
       body: () => [
         h('h3', ui.bi('더 자연스러운 목소리', 'More natural voices, if you like')),
