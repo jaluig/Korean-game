@@ -104,6 +104,9 @@
         { name: 'ko-KR-SoonBokNeural', label: '순복 SoonBok', female: true },
         { name: 'ko-KR-BongJinNeural', label: '봉진 BongJin', female: false },
         { name: 'ko-KR-GookMinNeural', label: '국민 GookMin', female: false },
+        // Azure's HD voice: it needs the paid (S0) tier and a region with HD voices (westeurope, francecentral,
+        // swedencentral, eastus, eastus2, westus2, canadacentral, centralindia, southeastasia).
+        { name: 'ko-KR-SunHi:DragonHDLatestNeural', label: '선히 SunHi Dragon HD (paid)', female: true },
       ],
       female: 'ko-KR-SunHiNeural', // the default voice, and the women's voice in dialogues when a man's voice is chosen
       male: 'ko-KR-InJoonNeural', // the men's voice in dialogues when a woman's voice is chosen

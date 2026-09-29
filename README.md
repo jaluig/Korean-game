@@ -146,6 +146,10 @@ the same clip. If Azure can't answer (offline, a wrong key, the limit), the brow
 small note says why. **Remove the key** deletes the key and the stored clips from the browser. Voice names and
 regions are in `js/core/config.js` (`azureSpeech`); they aren't secret, only the key is.
 
+The list also has **선히 SunHi Dragon HD**, Azure's high-definition version of SunHi
+(`ko-KR-SunHi:DragonHDLatestNeural`). It isn't part of the free tier: it needs a Speech resource on the paid
+Standard (S0) tier, in a region with HD voices (e.g. `westeurope`, `francecentral`, `swedencentral`, `eastus`).
+
 ## Install as an app (and play offline)
 
 When the game is opened from a web address rather than as a file, it can be installed like an app,

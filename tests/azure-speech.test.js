@@ -231,7 +231,14 @@ test('dialogues get a woman’s and a man’s Azure voice', () => {
   A.save({ key: KEY, region: 'koreacentral', voice: 'ko-KR-HyunsuNeural' });
   assert.equal(A.voiceFor('male'), 'ko-KR-HyunsuNeural');
   assert.equal(A.voiceFor('female'), female);
-  for (const v of M.config.azureSpeech.voices) assert.match(v.name, /^ko-KR-[A-Za-z]+Neural$/);
+  for (const v of M.config.azureSpeech.voices) assert.match(v.name, /^ko-KR-[A-Za-z]+(Neural|:DragonHDLatestNeural)$/);
+  // The HD voice: its own name format, and a woman's voice in dialogues.
+  const hd = 'ko-KR-SunHi:DragonHDLatestNeural';
+  A.save({ key: KEY, region: 'westeurope', voice: hd });
+  assert.equal(A.mainVoice(), hd);
+  assert.equal(A.voiceFor('female'), hd);
+  assert.equal(A.voiceFor('male'), male);
+  assert.equal(A.ssml('안녕', hd), "<speak version='1.0' xml:lang='ko-KR'><voice name='ko-KR-SunHi:DragonHDLatestNeural'>안녕</voice></speak>");
 });
 
 test('"Save and test" asks Azure with the settings given, and says why it failed', async () => {
