@@ -182,7 +182,9 @@
     return patterns.length > 0 && patterns.every((g) => s.items[g.id] && s.items[g.id].stage >= 1);
   };
   const everyGamePlayed = (s) => {
-    const games = M.games.list();
+    // A game that needs a Korean voice (Shadowing) can't be played without one: it isn't asked for then.
+    const voiceless = M.speech && ['unavailable', 'unsupported'].includes(M.speech.status());
+    const games = M.games.list().filter((g) => !(g.needsVoice && voiceless));
     return games.length > 0 && games.every((g) => (s.totals.gamesPlayed || {})[g.id]);
   };
   const everyTextRead = (s) => {
@@ -281,6 +283,10 @@
       earned: (s) => count(s, 'rolePlayGood') >= 20 },
     { id: 'roleplay-50', emoji: '🎬', ko: '영화배우', en: 'Film star', desc: 'Say 50 lines well in a role-play.',
       earned: (s) => count(s, 'rolePlayGood') >= 50 },
+    { id: 'speech-50', emoji: '🙇', ko: '말투 박사', en: 'Speech-level expert', desc: 'Answer 50 Speech Levels questions right.',
+      earned: (s) => count(s, 'speechCorrect') >= 50 },
+    { id: 'shadow-30', emoji: '🦜', ko: '앵무새', en: 'Parrot', desc: 'Say a sentence straight back 30 times in Shadowing.',
+      earned: (s) => count(s, 'shadowGood') >= 30 },
     { id: 'all-games', emoji: '🎮', ko: '게임 탐험가', en: 'Game explorer', desc: 'Play every minigame at least once.',
       earned: everyGamePlayed },
     { id: 'night-owl', emoji: '🦉', ko: '올빼미', en: 'Night owl', desc: 'Finish a round after 10 p.m.',

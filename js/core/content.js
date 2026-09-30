@@ -16,6 +16,7 @@
   const grammar = [];
   const dialogues = [];
   const readings = [];
+  const speech = { card: null, scenes: [], items: [] };
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -143,6 +144,75 @@
     }
   }
 
+  /** The three speech levels, most formal first. */
+  const LEVELS = ['formal', 'polite', 'casual'];
+
+  /**
+   * Speech levels (content/speech-levels.js), practised in Speech Levels: a card
+   * (the three levels and when to use each), scenes (who you're talking to, and
+   * the level that fits) and items: one sentence in all three levels, with the
+   * wrong versions learners really make. Item ids become 'speech:<id>'.
+   */
+  function registerSpeechLevels({ card, scenes, items } = {}) {
+    if (card) speech.card = Object.freeze(card);
+    for (const s of scenes || []) {
+      if (!s.id || !LEVELS.includes(s.to)) problems.push(`speech scene "${s.id}": needs an id and to: formal | polite | casual`);
+      else if (speech.scenes.some((x) => x.id === s.id)) problems.push(`speech scene "${s.id}": duplicate`);
+      else speech.scenes.push(Object.freeze({ ...s }));
+    }
+    for (const it of items || []) {
+      const id = `speech:${it.id}`;
+      if (!it.id || !it.formal || !it.polite || !it.casual) problems.push(`speech item "${it.id}": needs id, formal, polite and casual`);
+      else if (speech.items.some((x) => x.id === id)) problems.push(`${id}: duplicate speech item`);
+      else {
+        speech.items.push(
+          Object.freeze({ ...it, id, localId: it.id, level: it.level || 1, type: 'speech', needs: it.words || [], scenes: it.scenes || [], traps: it.traps || [], index: speech.items.length })
+        );
+      }
+    }
+  }
+
+  // What each level's sentences end with (a check for typos): 합니다체 in -니다 / -니까 (or -시오 / -시다),
+  // 해요체 in 요, 반말 in neither.
+  const ENDS = {
+    formal: /(니다|니까|시오|시다)[.?!~]*$/,
+    polite: /요[.?!~]*$/,
+    casual: /^(?![\s\S]*(요|니다|니까)[.?!~]*$)/,
+  };
+
+  function checkSpeech(found) {
+    if (!speech.items.length && !speech.scenes.length && !speech.card) return;
+    const { card } = speech;
+    if (!card || !card.title || !card.text || !Array.isArray(card.levels) || !Array.isArray(card.table)) found.push('speech levels: the card needs title, text, levels and table');
+    else {
+      if (card.levels.map((l) => l.to).join() !== LEVELS.join()) found.push('speech levels: the card lists the levels formal, polite, casual, in that order');
+      for (const l of card.levels) if (!l.ko || !l.en || !l.emoji || !l.when || !l.ending || !l.example || !l.example.ko || !l.example.en) found.push(`speech levels card, ${l.to}: needs ko, en, emoji, ending, when and example { ko, en }`);
+      for (const row of card.table) if (!row.en || LEVELS.some((to) => !row[to])) found.push('speech levels card: each table row needs en, formal, polite and casual');
+      for (const picked of LEVELS) for (const wanted of LEVELS) if (picked !== wanted && !(card.wrong && card.wrong[picked] && card.wrong[picked][wanted])) found.push(`speech levels card: needs wrong.${picked}.${wanted} (why ${picked} doesn't fit where ${wanted} does)`);
+    }
+    for (const to of LEVELS) if (!speech.scenes.some((s) => s.to === to)) found.push(`speech levels: needs a scene for ${to}`);
+    for (const s of speech.scenes) if (!s.emoji || !s.ko || !s.en) found.push(`speech scene "${s.id}": needs emoji, ko and en`);
+    for (const it of speech.items) {
+      if (!it.en) found.push(`${it.id}: needs en`);
+      if (![1, 2, 3].includes(it.level)) found.push(`${it.id}: level 1, 2 or 3`);
+      const forms = LEVELS.map((to) => it[to]);
+      if (new Set(forms.map(U.normalize)).size < 3) found.push(`${it.id}: the three levels must differ`);
+      for (const to of LEVELS) if (!ENDS[to].test(it[to])) found.push(`${it.id}: "${it[to]}" doesn't end like ${to} speech`);
+      if (!it.needs.length) found.push(`${it.id}: list its key words in "words" (it opens once they're learned)`);
+      for (const ref of it.needs) if (!words.has(ref)) found.push(`${it.id}: unknown word "${ref}" (use topic:id)`);
+      for (const ref of it.scenes) if (!speech.scenes.some((s) => s.id === ref)) found.push(`${it.id}: unknown scene "${ref}"`);
+      for (const to of ['formal', 'casual']) if (!it.traps.some((t) => t.to === to)) found.push(`${it.id}: needs a trap for ${to}`);
+      for (const t of it.traps) {
+        if (!['formal', 'casual'].includes(t.to) || !t.text || !t.why) found.push(`${it.id}: each trap needs to (formal | casual), text and why`);
+        else if (forms.some((f) => U.normalize(f) === U.normalize(t.text))) found.push(`${it.id}: the trap "${t.text}" is one of the right sentences`);
+      }
+      for (const to of ['formal', 'casual']) {
+        const texts = it.traps.filter((t) => t.to === to && t.text).map((t) => U.normalize(t.text));
+        if (new Set(texts).size < texts.length) found.push(`${it.id}: two ${to} traps are the same`);
+      }
+    }
+  }
+
   function checkReadings(found) {
     for (const r of readings) {
       if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
@@ -244,6 +314,7 @@
     checkGrammar(found);
     checkDialogues(found);
     checkReadings(found);
+    checkSpeech(found);
     return found;
   }
 
@@ -255,6 +326,7 @@
     registerGrammar,
     registerDialogues,
     registerReadings,
+    registerSpeechLevels,
     check,
     grammar: () => grammar.slice(),
     grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
@@ -262,6 +334,11 @@
     dialogue: (id) => dialogues.find((d) => d.id === id) || null,
     readings: (topicId = 'all') => readings.filter((r) => !topicId || topicId === 'all' || r.topic === topicId),
     reading: (id) => readings.find((r) => r.id === id) || null,
+    speechLevels: () => speech.items.slice(),
+    speechItem: (id) => speech.items.find((x) => x.id === id) || null,
+    speechScenes: () => speech.scenes.slice(),
+    speechCard: () => speech.card,
+    LEVELS,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,
     topics: () => topics.slice(),

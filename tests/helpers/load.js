@@ -33,10 +33,14 @@ const CONTENT = [
   'content/hobbies.js',
   'content/feelings.js',
   'content/weather.js',
+  'content/travel.js',
+  'content/health.js',
+  'content/work.js',
   'content/sounds.js',
   'content/grammar.js',
   'content/dialogues.js',
   'content/reading.js',
+  'content/speech-levels.js',
 ];
 // Minigames only touch the DOM when a round starts, so their round-building logic can be tested.
 const GAMES = [
@@ -48,6 +52,8 @@ const GAMES = [
   'js/games/grammar-cards.js',
   'js/games/dialogues.js',
   'js/games/reading.js',
+  'js/games/speech-levels.js',
+  'js/games/shadowing.js',
 ];
 
 function fakeStorage() {

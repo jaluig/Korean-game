@@ -181,7 +181,7 @@
     rows.push(toggle('autoPlayAudio', '자동 재생', 'Play pronunciation automatically', 'Hear each word when it appears and after you answer.'));
     rows.push(toggle('sfx', '효과음', 'Sound effects', 'Little dings and pops.'));
     if (M.mic.supported()) {
-      rows.push(toggle('speaking', '말하기 연습', 'Speaking practice 🎤', 'Show 🎤 buttons next to words and sentences: say them out loud and the browser checks you. Needs a microphone; Chrome uses its online speech service for this.'));
+      rows.push(toggle('speaking', '말하기 연습', 'Speaking practice 🎤', 'Show 🎤 buttons next to words and sentences: say them out loud and the browser checks you (in role-plays and Shadowing too). Needs a microphone; Chrome uses its online speech service for this.'));
     } else {
       rows.push(h('p.setting-desc', '🎤 Speaking practice needs a browser with speech recognition, like Chrome or Edge.'));
     }

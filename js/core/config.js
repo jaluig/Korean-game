@@ -51,6 +51,11 @@
       dialogues: { perRound: 2, slowRate: 0.7, linePause: 350, pitch: { high: 1, low: 0.8 } },
       // Two short texts a round; the text stays on screen while you answer.
       reading: { perRound: 2 },
+      // Eight questions a round, at most four new sentences; the card comes first on the very first round.
+      speechLevels: { size: 8, newPerRound: 4 },
+      // Five sentences a round, each heard and said three times, a little faster each time. `listenGap`: a
+      // short pause after the voice before the 🎤 opens (so it doesn't hear the end of it).
+      shadowing: { size: 5, rates: [0.75, 0.9, 1.05], minSentences: 3, listenGap: 200, great: 0.9, close: 0.7 },
       // A well-known sentence is sometimes written from dictation instead of built from tiles.
       dictation: { fromStage: 4, chance: 0.35 },
       newWordsPerDay: 20, // default cap (adjustable in Settings) so reviews never pile up
@@ -81,6 +86,9 @@
       reading: 12,
       readingHelped: 6, // answered after showing the English
       rolePlay: 6, // a line said well in a role-play (once a day per line)
+      speech: 12, // a Speech Levels question
+      shadow: 4, // a sentence said back well, each time (checked by the 🎤)
+      shadowSelf: 2, // …or said back and ticked off yourself (no speech recognition)
       dictation: 20,
       spoken: 3,
       comboEvery: 5, // every 5 correct in a row…

@@ -270,6 +270,48 @@ body {
   }
 }
 
+/* Speech Levels and Shadowing on phones */
+@media (max-width: 600px) {
+  .speech-card,
+  .speech-q-card,
+  .shadow-card {
+    padding: 18px 16px;
+  }
+
+  .speech-card-title {
+    font-size: 1.6rem;
+  }
+
+  .speech-levels {
+    grid-template-columns: 1fr;
+  }
+
+  .speech-sentence {
+    font-size: 1.35rem;
+  }
+
+  .speech-scene .ko {
+    font-size: 1.25rem;
+  }
+
+  .ex-speech .speech-options-which {
+    grid-template-columns: 1fr;
+  }
+
+  .speech-table th,
+  .speech-table td {
+    padding: 5px 6px;
+  }
+
+  .shadow-ko {
+    font-size: 1.5rem;
+  }
+
+  .shadow-status {
+    font-size: 1.05rem;
+  }
+}
+
 /* Very narrow phones: the name and the stat chips still fit on one line. */
 @media (max-width: 400px) {
   .brand {

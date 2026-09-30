@@ -12,7 +12,7 @@ function learnEverything() {
 }
 
 test('every new minigame is registered with a home card', () => {
-  for (const id of ['balloon-pop', 'particle-lab', 'verb-magic', 'number-shop', 'sound-twins']) {
+  for (const id of ['balloon-pop', 'particle-lab', 'verb-magic', 'number-shop', 'sound-twins', 'speech-levels', 'shadowing']) {
     const game = M.games.get(id);
     assert.ok(game, id);
     assert.ok(game.emoji && game.title.ko && game.title.en && game.blurb.en, id);

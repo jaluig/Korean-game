@@ -2015,3 +2015,424 @@ details.dlg-script-box > summary .bi {
   line-height: 1.1;
   color: var(--lilac-deep);
 }
+
+/* ---------- Speech Levels ---------- */
+
+.speech-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(760px, 100%);
+  padding: 22px 24px 20px;
+  text-align: left;
+  background: var(--card);
+  border: 3px solid var(--lilac);
+  border-radius: 26px;
+  box-shadow: 0 6px 0 var(--lilac-shadow);
+}
+
+.modal-speech .speech-card {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.speech-card-title {
+  margin: 0;
+  font-family: var(--font-ko);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--lilac-deep);
+}
+
+.speech-card-text {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.speech-levels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.speech-level {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 12px 10px;
+  border-radius: 18px;
+  border: 2px solid var(--line);
+  background: var(--card-soft);
+}
+
+.speech-level.speech-formal {
+  border-color: var(--sky);
+  background: var(--sky-soft);
+}
+
+.speech-level.speech-polite {
+  border-color: var(--mint);
+  background: var(--mint-soft);
+}
+
+.speech-level.speech-casual {
+  border-color: var(--pink);
+  background: var(--pink-soft);
+}
+
+.speech-level-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.speech-level-emoji {
+  font-family: var(--font-emoji);
+  font-size: 1.3rem;
+}
+
+.speech-level-name .ko {
+  font-family: var(--font-ko);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.speech-level-ending {
+  font-family: var(--font-ko);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.speech-level-when {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.speech-level .example {
+  padding: 8px 10px;
+  background: var(--card);
+}
+
+.speech-table-wrap {
+  overflow-x: auto;
+}
+
+.speech-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--lilac-soft);
+}
+
+.speech-table th,
+.speech-table td {
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.speech-table tr + tr > * {
+  border-top: 1px solid var(--line);
+}
+
+.speech-table thead th {
+  font-family: var(--font-ko);
+  font-size: 0.95rem;
+}
+
+.speech-table tbody th {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.speech-table td {
+  font-family: var(--font-ko);
+  font-weight: 800;
+}
+
+.speech-q-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(680px, 100%);
+  padding: 24px 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--lilac);
+  box-shadow: 0 6px 0 var(--lilac-shadow);
+  text-align: center;
+}
+
+.speech-sentence {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-ko);
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.speech-scene {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-align: left;
+}
+
+.speech-scene .ko {
+  font-family: var(--font-ko);
+  font-size: 1.5rem;
+}
+
+.speech-scene-emoji {
+  font-family: var(--font-emoji);
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.speech-from {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.speech-from-level {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.speech-arrow {
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--ink-faint);
+}
+
+.speech-want {
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  background: var(--lilac-soft);
+  color: var(--lilac-deep);
+}
+
+.speech-want.speech-formal {
+  background: var(--sky-soft);
+  color: var(--sky-deep);
+}
+
+.speech-want.speech-casual {
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+}
+
+.ex-speech .speech-options {
+  width: min(680px, 100%);
+  grid-template-columns: 1fr;
+}
+
+.ex-speech .speech-options-which {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.option-level {
+  justify-content: center;
+  text-align: center;
+}
+
+.option-level .option-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.option-level .speech-level-emoji {
+  font-size: 1.6rem;
+}
+
+.speech-card-link {
+  display: flex;
+  justify-content: center;
+}
+
+.speech-forms {
+  display: grid;
+  gap: 6px;
+}
+
+.speech-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: var(--card-soft);
+}
+
+.speech-form.lit {
+  outline: 2px solid var(--good);
+  background: var(--good-soft);
+}
+
+.speech-form-level {
+  min-width: 5.5em;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.speech-form-text {
+  font-family: var(--font-ko);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+/* ---------- Shadowing ---------- */
+
+.shadow-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(680px, 100%);
+  padding: 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--mint);
+  box-shadow: 0 6px 0 var(--mint-shadow);
+  text-align: center;
+}
+
+.shadow-count {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--ink-faint);
+}
+
+.shadow-ko {
+  font-family: var(--font-ko);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.shadow-en {
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.shadow-speeds {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shadow-speed {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 2px solid var(--line);
+  background: var(--card-soft);
+  font-weight: 800;
+  opacity: 0.6;
+  transition: transform 0.15s ease;
+}
+
+.shadow-speed.now {
+  opacity: 1;
+  border-color: var(--mint-deep);
+  background: var(--mint-soft);
+  transform: scale(1.06);
+}
+
+.shadow-speed.ok {
+  opacity: 1;
+  border-color: var(--good);
+}
+
+.shadow-speed.miss {
+  opacity: 1;
+  border-color: var(--bad);
+}
+
+.shadow-speed-emoji {
+  font-family: var(--font-emoji);
+  font-size: 1.2rem;
+}
+
+.shadow-speed-mark:empty {
+  display: none;
+}
+
+.shadow-speed.ok .shadow-speed-mark {
+  color: var(--good);
+}
+
+.shadow-speed.miss .shadow-speed-mark {
+  color: var(--bad);
+}
+
+.shadow-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.4em;
+  width: min(680px, 100%);
+  padding: 8px 16px;
+  border-radius: 18px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.shadow-status.playing {
+  color: var(--sky-deep);
+}
+
+.shadow-status.listening,
+.shadow-status.turn {
+  color: var(--pink-deep);
+  background: var(--pink-soft);
+  animation: listening 1s ease-in-out infinite;
+}
+
+.shadow-status.great {
+  color: var(--good);
+}
+
+.shadow-status.close {
+  color: var(--almost);
+}
+
+.shadow-status.miss {
+  color: var(--bad);
+}
+
+.ex-shadow .ex-actions {
+  flex-wrap: wrap;
+}
+
+.ex-shadow .ex-actions .btn {
+  white-space: nowrap;
+}

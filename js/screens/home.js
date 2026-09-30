@@ -32,7 +32,7 @@
       return { game: 'grammar-cards', ko: `문법 복습 ${patterns}개`, en: `${plural(patterns, 'grammar pattern')} to review` };
     }
     // All caught up: suggest a different practice game each day.
-    const extras = ['balloon-pop', 'particle-lab', 'verb-magic', 'speed-match', 'number-shop', 'sound-twins', 'grammar-cards', 'dialogues', 'reading']
+    const extras = ['balloon-pop', 'particle-lab', 'verb-magic', 'speed-match', 'number-shop', 'sound-twins', 'grammar-cards', 'dialogues', 'reading', 'speech-levels', 'shadowing']
       .map((id) => M.games.get(id))
       .filter((g) => g && g.status(topicId).ready);
     if (extras.length) {

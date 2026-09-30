@@ -142,6 +142,26 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.6.0',
+      body: () => {
+        const fresh = ['travel', 'health', 'work'].map((id) => M.content.topic(id)).filter(Boolean);
+        const words = fresh.reduce((n, t) => n + t.wordIds.length, 0);
+        const sentences = fresh.reduce((n, t) => n + t.sentenceIds.length, 0);
+        return [
+          h('h3', ui.bi('새 게임 2개', '2 new games')),
+          featureList([
+            ['🙇', `말투 · Speech Levels: the same sentence in 합니다체, 해요체 and 반말, and who each one is for (${M.content.speechLevels().length} sentences).`],
+            ['🦜', '따라 말하기 · Shadowing: hear a sentence you know and say it straight back, a little faster each time. In Chrome and Edge the 🎤 checks you.'],
+          ]),
+          h('h3', ui.bi(`새 주제 ${fresh.length}개`, `${fresh.length} new topics`)),
+          featureList([
+            ...fresh.map((t) => [t.emoji, `${t.title.ko} · ${t.title.en}: ${t.description.en.toLowerCase()}.`]),
+            ['📚', `${words} words and ${sentences} sentences, with a dialogue and two texts to read for each topic, and two chats in 반말.`],
+          ]),
+        ];
+      },
+    },
+    {
       version: '0.5.0',
       body: () => [
         h('h3', ui.bi('더 읽고, 더 꾸미고', 'More to read, more to wear')),

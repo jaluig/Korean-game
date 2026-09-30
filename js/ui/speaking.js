@@ -17,6 +17,8 @@
     network: 'Speech recognition needs an internet connection.',
     'language-not-supported': 'This browser can’t recognise Korean speech.',
   };
+  /** What went wrong while listening, in plain words (Shadowing uses it too). */
+  ui.sayError = (code) => ERRORS[code] || 'I couldn’t listen just now. Try again.';
 
   /**
    * A 🎤 button for `text`, or null when speaking practice isn't available.
