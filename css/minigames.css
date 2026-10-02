@@ -2436,3 +2436,269 @@ details.dlg-script-box > summary .bi {
 .ex-shadow .ex-actions .btn {
   white-space: nowrap;
 }
+
+/* ---------- Weekly Review ---------- */
+
+.weekly-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(720px, 100%);
+  padding: 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--butter);
+  box-shadow: 0 6px 0 var(--butter-shadow);
+}
+
+.weekly-intro {
+  margin: 0;
+  font-weight: 800;
+  text-align: center;
+}
+
+.weekly-list {
+  justify-content: center;
+}
+
+.weekly-chip .word-chip-en {
+  font-size: 0.85rem;
+}
+
+.weekly-count {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bad-soft);
+  color: var(--bad-ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+/* ---------- Honorifics ---------- */
+
+.honor-card {
+  border-color: var(--pink);
+  box-shadow: 0 6px 0 var(--pink-shadow);
+}
+
+.honor-card .speech-card-title {
+  color: var(--pink-deep);
+}
+
+.honor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.honor-section h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.honor-section h3 .ko {
+  font-family: var(--font-ko);
+}
+
+.honor-section p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.honor-table {
+  background: var(--pink-soft);
+}
+
+.honor-table td.honor-cell {
+  color: var(--pink-deep);
+}
+
+.honor-q-card {
+  border-color: var(--pink);
+  box-shadow: 0 6px 0 var(--pink-shadow);
+}
+
+.honor-hl {
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+}
+
+.honor-ask {
+  margin: 0;
+  font-weight: 800;
+  text-align: center;
+}
+
+.honor-ask .ko {
+  font-family: var(--font-ko);
+  font-size: 1.15rem;
+}
+
+.honor-form-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.honor-form-en {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Stories ---------- */
+
+.story-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(720px, 100%);
+  padding: 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--sky);
+  box-shadow: 0 6px 0 var(--sky-shadow);
+  text-align: center;
+}
+
+.story-card-small {
+  padding: 14px 18px;
+}
+
+.story-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.story-emoji {
+  font-family: var(--font-emoji);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.story-title .ko {
+  font-family: var(--font-ko);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.story-kind {
+  display: inline-flex;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--sky-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.story-parts {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story-part-dot {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 2px solid var(--line);
+  background: var(--card-soft);
+  font-size: 0.85rem;
+  font-weight: 800;
+  opacity: 0.6;
+}
+
+.story-part-dot.now {
+  opacity: 1;
+  border-color: var(--sky-deep);
+  background: var(--sky-soft);
+}
+
+.story-part-dot.done {
+  opacity: 1;
+  border-color: var(--good);
+}
+
+.story-narrator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+.story-narrator-emoji {
+  font-family: var(--font-emoji);
+  font-size: 2rem;
+  transition: transform 0.2s ease;
+}
+
+.is-playing .story-narrator-emoji {
+  animation: hop 0.9s ease-in-out infinite;
+}
+
+.story-script {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.story-line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--card-soft);
+  border: 2px solid transparent;
+}
+
+.story-line.playing {
+  border-color: var(--sky-deep);
+}
+
+.story-line.lit {
+  border-color: var(--good);
+  background: var(--good-soft);
+}
+
+.story-line-ko {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-ko);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.story-line-en {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.story-part-title {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  text-align: left;
+  width: 100%;
+}
+
+.weekly-count.tricky {
+  background: var(--butter-soft);
+}

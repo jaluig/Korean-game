@@ -184,7 +184,8 @@
   const everyGamePlayed = (s) => {
     // A game that needs a Korean voice (Shadowing) can't be played without one: it isn't asked for then.
     const voiceless = M.speech && ['unavailable', 'unsupported'].includes(M.speech.status());
-    const games = M.games.list().filter((g) => !(g.needsVoice && voiceless));
+    // The Weekly Review is optional: it needs something missed first.
+    const games = M.games.list().filter((g) => !(g.needsVoice && voiceless) && !g.optional);
     return games.length > 0 && games.every((g) => (s.totals.gamesPlayed || {})[g.id]);
   };
   const everyTextRead = (s) => {
@@ -287,6 +288,12 @@
       earned: (s) => count(s, 'speechCorrect') >= 50 },
     { id: 'shadow-30', emoji: '🦜', ko: '앵무새', en: 'Parrot', desc: 'Say a sentence straight back 30 times in Shadowing.',
       earned: (s) => count(s, 'shadowGood') >= 30 },
+    { id: 'honor-50', emoji: '💐', ko: '예의 바른 사람', en: 'Well-mannered', desc: 'Answer 50 Honorifics questions right.',
+      earned: (s) => count(s, 'honorCorrect') >= 50 },
+    { id: 'stories-10', emoji: '🌙', ko: '이야기 친구', en: 'Story lover', desc: 'Listen to 10 stories to the end.',
+      earned: (s) => count(s, 'storiesHeard') >= 10 },
+    { id: 'weekly-4', emoji: '📅', ko: '주간 복습왕', en: 'Weekly reviewer', desc: 'Do the Weekly Review in 4 different weeks.',
+      earned: (s) => count(s, 'weeklyReviews') >= 4 },
     { id: 'all-games', emoji: '🎮', ko: '게임 탐험가', en: 'Game explorer', desc: 'Play every minigame at least once.',
       earned: everyGamePlayed },
     { id: 'night-owl', emoji: '🦉', ko: '올빼미', en: 'Night owl', desc: 'Finish a round after 10 p.m.',

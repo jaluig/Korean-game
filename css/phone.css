@@ -312,6 +312,31 @@ body {
   }
 }
 
+/* Honorifics, Stories and the Weekly Review on phones */
+@media (max-width: 600px) {
+  .story-card,
+  .weekly-card {
+    padding: 16px 14px;
+  }
+
+  .story-title .ko {
+    font-size: 1.25rem;
+  }
+
+  .story-line-ko {
+    font-size: 1rem;
+  }
+
+  .honor-form-text .speech-form-text {
+    font-size: 1rem;
+  }
+
+  /* The pair: who it's about on its own row, so the sentence gets the width. */
+  .honor-form .speech-form-level {
+    width: 100%;
+  }
+}
+
 /* Very narrow phones: the name and the stat chips still fit on one line. */
 @media (max-width: 400px) {
   .brand {

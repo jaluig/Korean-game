@@ -31,8 +31,14 @@
     if (patterns && M.games.get('grammar-cards').status(topicId).ready) {
       return { game: 'grammar-cards', ko: `문법 복습 ${patterns}개`, en: `${plural(patterns, 'grammar pattern')} to review` };
     }
+    // Once a week, when a few things were missed: go over them together.
+    const weekly = M.weeklyReview ? M.weeklyReview.pickRound().length : 0;
+    const lastWeekly = M.store.state.profile.lastWeeklyReview || 0;
+    if (weekly >= 5 && U.now() - lastWeekly >= 6 * M.config.time.DAY) {
+      return { game: 'weekly-review', ko: `이번 주 복습 ${weekly}개`, en: `This week’s review: ${plural(weekly, 'thing')} you missed` };
+    }
     // All caught up: suggest a different practice game each day.
-    const extras = ['balloon-pop', 'particle-lab', 'verb-magic', 'speed-match', 'number-shop', 'sound-twins', 'grammar-cards', 'dialogues', 'reading', 'speech-levels', 'shadowing']
+    const extras = ['balloon-pop', 'particle-lab', 'verb-magic', 'speed-match', 'number-shop', 'sound-twins', 'grammar-cards', 'dialogues', 'reading', 'speech-levels', 'shadowing', 'honorifics', 'stories']
       .map((id) => M.games.get(id))
       .filter((g) => g && g.status(topicId).ready);
     if (extras.length) {

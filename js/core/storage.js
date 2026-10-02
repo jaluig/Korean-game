@@ -19,6 +19,9 @@
         startLevel: 1,
         seenVersion: '', // the version whose "what's new" was shown
         outfit: '', // 말랑이's outfit (see mascot.js)
+        lastWeeklyReview: 0, // when the last Weekly Review round ended
+        weeklyCounted: 0, // when a Weekly Review last counted for its badge (once a week)
+        missLogSince: Date.now(), // when this save started remembering misses (older saves: their first load of 0.7)
       },
       settings: {
         showEnglish: true, // small English subtitles under Korean UI text
@@ -66,6 +69,7 @@
       streak: { current: 0, best: 0, lastDay: null },
       days: {}, // 'YYYY-MM-DD' → { points, answers, correct, rounds }
       items: {}, // word/sentence id → spaced-repetition record (see srs.js)
+      misses: {}, // 'YYYY-MM-DD' → { id: times missed that day }, the last two weeks (for the weekly review)
       badges: {}, // badge id → time earned
     };
   }

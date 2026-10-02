@@ -17,6 +17,8 @@
   const dialogues = [];
   const readings = [];
   const speech = { card: null, scenes: [], items: [] };
+  const honor = { card: null, items: [] };
+  const stories = [];
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -213,6 +215,121 @@
     }
   }
 
+  /** Who a plain sentence is about: what makes an honorific wrong there (the card explains each). */
+  const PLAIN_WHO = ['self', 'younger', 'friend', 'child', 'thing'];
+
+  /**
+   * Honorifics (content/honorifics.js), practised in the Honorifics game: a card
+   * (how -(으)시- is made, the verbs and nouns with an honorific word of their
+   * own, 께서 and 께, the humble words, and why a wrong choice is wrong) and
+   * items: the same idea about someone you respect (`honor`) and about someone
+   * else (`plain`), each a sentence whose `answer` is the word asked for, with
+   * the wrong forms learners really make (`traps`). Item ids become 'honor:<id>'.
+   */
+  function registerHonorifics({ card, items } = {}) {
+    if (card) honor.card = Object.freeze(card);
+    for (const it of items || []) {
+      const id = `honor:${it.id}`;
+      if (!it.id || !it.honor || !it.plain) problems.push(`honorifics item "${it.id}": needs id, honor and plain`);
+      else if (honor.items.some((x) => x.id === id)) problems.push(`${id}: duplicate honorifics item`);
+      else honor.items.push(Object.freeze({ ...it, id, localId: it.id, level: it.level || 1, type: 'honor', needs: it.words || [], traps: it.traps || [], index: honor.items.length }));
+    }
+  }
+
+  function checkHonorifics(found) {
+    if (!honor.items.length && !honor.card) return;
+    const { card } = honor;
+    if (!card || !card.title || !card.text || !Array.isArray(card.sections) || !Array.isArray(card.table) || !card.wrong) found.push('honorifics: the card needs title, text, sections, table and wrong');
+    else {
+      if (card.sections.length < 2) found.push('honorifics card: needs 2+ sections');
+      for (const sec of card.sections) if (!sec.title || !sec.title.ko || !sec.title.en || !sec.text || !Array.isArray(sec.examples) || !sec.examples.length || sec.examples.some((e) => !e.ko || !e.en)) found.push(`honorifics card section "${sec.title && sec.title.en}": needs title { ko, en }, text and examples [{ ko, en }]`);
+      for (const row of card.table) if (!row.en || !row.plain || !row.honor) found.push('honorifics card: each table row needs en, plain and honor');
+      if (!card.wrong.respect) found.push('honorifics card: needs wrong.respect (a plain form about someone you respect)');
+    }
+    for (const it of honor.items) {
+      if (![1, 2, 3].includes(it.level)) found.push(`${it.id}: level 1, 2 or 3`);
+      for (const side of ['honor', 'plain']) {
+        const x = it[side];
+        if (!x.ko || !x.en || !x.answer || !x.dict) {
+          found.push(`${it.id} ${side}: needs ko, en, answer and dict`);
+          continue;
+        }
+        const at = x.ko.indexOf(x.answer);
+        if (at < 0 || x.ko.indexOf(x.answer, at + 1) >= 0) found.push(`${it.id} ${side}: the answer "${x.answer}" must appear exactly once in "${x.ko}"`);
+      }
+      if (it.honor.answer && it.honor.answer === it.plain.answer) found.push(`${it.id}: the honorific and the plain answer must differ`);
+      if (!PLAIN_WHO.includes(it.plain.who)) found.push(`${it.id} plain: "who" must be one of ${PLAIN_WHO.join(', ')}`);
+      else if (card && card.wrong && !card.wrong[it.plain.who]) found.push(`honorifics card: needs wrong.${it.plain.who} (used by ${it.id})`);
+      if (!it.needs.length) found.push(`${it.id}: list its key words in "words" (it opens once they're learned)`);
+      for (const ref of it.needs) if (!words.has(ref)) found.push(`${it.id}: unknown word "${ref}" (use topic:id)`);
+      if (!it.traps.length) found.push(`${it.id}: needs a trap (a wrong form learners make)`);
+      const texts = it.traps.map((t) => t.text);
+      if (new Set(texts).size < texts.length) found.push(`${it.id}: two traps are the same`);
+      for (const t of it.traps) {
+        if (!t.text || !t.why) found.push(`${it.id}: each trap needs text and why`);
+        else if (t.text === it.honor.answer || t.text === it.plain.answer) found.push(`${it.id}: the trap "${t.text}" is one of the right answers`);
+      }
+    }
+    // "Which plain word?" offers two other items' plain words: two must exist that can't also be right.
+    if (honor.items.length >= 3) {
+      for (const it of honor.items) {
+        const others = new Set(honor.items.filter((x) => x !== it && x.plain.dict !== it.plain.dict && x.honor.dict !== it.honor.dict && x.plain.answer !== it.plain.answer).map((x) => x.plain.answer));
+        if (others.size < 2) found.push(`${it.id}: fewer than two other items' plain words to offer as wrong options`);
+      }
+    }
+  }
+
+  /**
+   * Stories (content/stories.js), heard in the Stories game: a short story or a
+   * podcast-style talk in a few parts, read by one narrator, with questions
+   * after each part (`line`: the sentence of that part with the answer).
+   * Ids become 'story:<id>'.
+   */
+  function registerStories(list) {
+    for (const st of list || []) {
+      const id = `story:${st.id}`;
+      if (!st.id || !Array.isArray(st.parts)) problems.push(`story "${st.id}": needs id and parts`);
+      else if (stories.some((x) => x.id === id)) problems.push(`${id}: duplicate story`);
+      else stories.push(Object.freeze({ ...st, id, localId: st.id, level: st.level || 1, type: 'story', needs: st.words || [], index: stories.length }));
+    }
+  }
+
+  function checkStories(found) {
+    for (const st of stories) {
+      if (!topics.some((t) => t.id === st.topic)) found.push(`${st.id}: unknown topic "${st.topic}"`);
+      if (!st.title || !st.title.ko || !st.title.en) found.push(`${st.id}: needs title { ko, en }`);
+      if (!st.kind || !st.kind.ko || !st.kind.en) found.push(`${st.id}: needs kind { ko, en } (a story, a podcast…)`);
+      if (!['high', 'low'].includes(st.voice)) found.push(`${st.id}: the narrator's voice is 'high' or 'low'`);
+      if (![1, 2, 3].includes(st.level)) found.push(`${st.id}: level 1, 2 or 3`);
+      if (st.parts.length < 2 || st.parts.length > 4) found.push(`${st.id}: needs 2–4 parts`);
+      for (const ref of st.needs) if (!words.has(ref)) found.push(`${st.id}: unknown word "${ref}" (use topic:id)`);
+      if (!st.needs.length) found.push(`${st.id}: list its key words in "words" (it opens once they're learned)`);
+      st.parts.forEach((part, p) => {
+        const label = `${st.id} part ${p + 1}`;
+        const lines = Array.isArray(part.lines) ? part.lines : [];
+        if (lines.length < 2) found.push(`${label}: needs 2+ lines`);
+        lines.forEach((l, i) => {
+          if (!l || !l.ko || !l.en) found.push(`${label} line ${i}: needs ko and en`);
+          // It's read aloud: numbers in digits need a counter (7시), or a "say" with them in Hangul.
+          else if (/\d/.test(l.say || M.numbers.readAloud(l.ko))) found.push(`${label} line ${i}: write the number in Hangul, or add "say"`);
+        });
+        const questions = Array.isArray(part.questions) ? part.questions : [];
+        if (!questions.length) found.push(`${label}: needs a question`);
+        questions.forEach((q, k) => {
+          const qlabel = `${label} question ${k + 1}`;
+          if (!q.q || !q.q.ko || !q.q.en) found.push(`${qlabel}: needs q: { ko, en }`);
+          const options = Array.isArray(q.options) ? q.options : [];
+          if (options.some((o) => !o || !o.ko || !o.en)) found.push(`${qlabel}: each option needs ko and en`);
+          else if (options.length !== 3 || new Set(options.map((o) => o.ko)).size !== 3) found.push(`${qlabel}: needs 3 different options`);
+          else if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer < options.length)) found.push(`${qlabel}: answer must be an option index`);
+          const at = [].concat(q.line);
+          if (!at.length || at.some((n) => !(Number.isInteger(n) && n >= 0 && n < lines.length))) found.push(`${qlabel}: "line" must point to the line(s) of this part with the answer`);
+          if (!q.why) found.push(`${qlabel}: needs "why"`);
+        });
+      });
+    }
+  }
+
   function checkReadings(found) {
     for (const r of readings) {
       if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
@@ -234,7 +351,7 @@
         else if (options.length < 3 || new Set(options.map((o) => o.ko)).size !== options.length) found.push(`${label}: needs 3+ different options`);
         else if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer < options.length)) found.push(`${label}: answer must be an option index`);
         const lines = [].concat(q.line);
-        if (!lines.length || lines.some((n) => !(n >= 0 && n < r.sentences.length))) found.push(`${label}: "line" must point to the sentence(s) with the answer`);
+        if (!lines.length || lines.some((n) => !(Number.isInteger(n) && n >= 0 && n < r.sentences.length))) found.push(`${label}: "line" must point to the sentence(s) with the answer`);
         if (!q.why) found.push(`${label}: needs "why"`);
       });
     }
@@ -277,7 +394,7 @@
         else if (options.length < 3 || new Set(options.map((o) => o.ko)).size !== options.length) found.push(`${label}: needs 3+ different options`);
         else if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer < options.length)) found.push(`${label}: answer must be an option index`);
         const lines = [].concat(q.line);
-        if (!lines.length || lines.some((n) => !(n >= 0 && n < d.lines.length))) found.push(`${label}: "line" must point to the line(s) with the answer`);
+        if (!lines.length || lines.some((n) => !(Number.isInteger(n) && n >= 0 && n < d.lines.length))) found.push(`${label}: "line" must point to the line(s) with the answer`);
       });
     }
   }
@@ -315,6 +432,8 @@
     checkDialogues(found);
     checkReadings(found);
     checkSpeech(found);
+    checkHonorifics(found);
+    checkStories(found);
     return found;
   }
 
@@ -327,6 +446,8 @@
     registerDialogues,
     registerReadings,
     registerSpeechLevels,
+    registerHonorifics,
+    registerStories,
     check,
     grammar: () => grammar.slice(),
     grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
@@ -338,6 +459,12 @@
     speechItem: (id) => speech.items.find((x) => x.id === id) || null,
     speechScenes: () => speech.scenes.slice(),
     speechCard: () => speech.card,
+    honorifics: () => honor.items.slice(),
+    honorItem: (id) => honor.items.find((x) => x.id === id) || null,
+    honorCard: () => honor.card,
+    PLAIN_WHO,
+    stories: (topicId = 'all') => stories.filter((st) => !topicId || topicId === 'all' || st.topic === topicId),
+    story: (id) => stories.find((st) => st.id === id) || null,
     LEVELS,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,

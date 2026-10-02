@@ -33,6 +33,35 @@
     };
   }
 
+  /* ---------- What was missed, day by day (the weekly review) ---------- */
+
+  /** Days of misses kept: the weekly review looks back a week, so two are plenty. */
+  const MISS_DAYS = 14;
+
+  /** Remember a miss (a wrong answer, or a slip in a quick game) for the weekly review. */
+  function logMiss(id, now = U.now()) {
+    const log = M.store.state.misses || (M.store.state.misses = {});
+    const key = U.dayKey(now);
+    const day = log[key] || (log[key] = {});
+    day[id] = (day[id] || 0) + 1;
+    const oldest = U.addDays(key, 1 - MISS_DAYS);
+    for (const k of Object.keys(log)) if (k < oldest) delete log[k];
+  }
+
+  /** Forget the misses of these items (they've been gone over in the weekly review). */
+  function clearMisses(ids) {
+    const log = M.store.state.misses || {};
+    for (const day of Object.values(log)) for (const id of ids) delete day[id];
+  }
+
+  /** How often each item was missed in the last `days` days (today included): id → count. */
+  function misses(days = 7, now = U.now()) {
+    const log = M.store.state.misses || {};
+    const out = new Map();
+    for (const key of U.recentDays(days, now)) for (const [id, n] of Object.entries(log[key] || {})) out.set(id, (out.get(id) || 0) + n);
+    return out;
+  }
+
   /** The saved record for an item, created on first use. */
   const record = (id) => items()[id] || (items()[id] = blank());
   /** Read-only: the record, or null if the item was never seen. */
@@ -87,6 +116,7 @@
     r.last = now;
 
     if (grade === 'again') {
+      logMiss(id, now);
       r.wrong++;
       r.lapses++;
       r.streak = 0;
@@ -139,6 +169,7 @@
       r.correct++;
       return r;
     }
+    logMiss(id, now);
     r.wrong++;
     r.streak = 0;
     r.flag = true;
@@ -414,6 +445,9 @@
     introduce,
     review,
     practice,
+    logMiss,
+    clearMisses,
+    misses,
     applyStartLevel,
     syncStartLevel,
     newToday,

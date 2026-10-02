@@ -56,6 +56,12 @@
       // Five sentences a round, each heard and said three times, a little faster each time. `listenGap`: a
       // short pause after the voice before the 🎤 opens (so it doesn't hear the end of it).
       shadowing: { size: 5, rates: [0.75, 0.9, 1.05], minSentences: 3, listenGap: 200, great: 0.9, close: 0.7 },
+      // Eight questions a round, at most four new items; the card comes first on the very first round.
+      honorifics: { size: 8, newPerRound: 4 },
+      // One story a round (it's long): 2–3 parts, with questions after each.
+      stories: { perRound: 1 },
+      // The words and sentences missed most in the last seven days, at most `size` of them.
+      weeklyReview: { size: 12 },
       // A well-known sentence is sometimes written from dictation instead of built from tiles.
       dictation: { fromStage: 4, chance: 0.35 },
       newWordsPerDay: 20, // default cap (adjustable in Settings) so reviews never pile up
@@ -89,6 +95,9 @@
       speech: 12, // a Speech Levels question
       shadow: 4, // a sentence said back well, each time (checked by the 🎤)
       shadowSelf: 2, // …or said back and ticked off yourself (no speech recognition)
+      honor: 12, // an Honorifics question
+      story: 12, // a Stories question
+      storyRead: 6, // answered after showing the script
       dictation: 20,
       spoken: 3,
       comboEvery: 5, // every 5 correct in a row…

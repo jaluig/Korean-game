@@ -5,14 +5,15 @@ Meet 말랑이 (Mallang-i), a squishy rice-cake bunny with a sprout on its head:
 every Korean word you learn becomes a plant in your **word garden**, and short
 practice rounds keep it growing.
 
-- **13 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins · 🔗 Grammar Cards · 🎧 Dialogues · 📖 Reading · 🙇 Speech Levels · 🦜 Shadowing
+- **16 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins · 🔗 Grammar Cards · 🎧 Dialogues · 📖 Reading · 🙇 Speech Levels · 🦜 Shadowing · 👵 Honorifics · 📻 Stories · 🗓️ Weekly Review
 - **13 topics** with 532 words and 290 sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans · 🚄 travel & transport · 💊 at the doctor's · 💼 school & work
-- **18 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -는데, -고 있어요, -(으)세요…) with 146 practice sentences, **19 listening dialogues** with two voices and a 🎭 role-play where you speak one part, and **40 short texts to read** (a diary, a text message, a menu, a receipt, a group chat, a weather forecast, a chat between friends in 반말…)
-- **Speech levels:** 45 sentences in 합니다체, 해요체 and 반말, with who each one is for
+- **18 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -는데, -고 있어요, -(으)세요…) with 146 practice sentences, **19 listening dialogues** with two voices and a 🎭 role-play where you speak one part, **40 short texts to read** (a diary, a text message, a menu, a receipt, a group chat, a weather forecast, a chat between friends in 반말…), and **10 stories and podcasts** in a few parts for longer listening
+- **Speech levels and honorifics:** 45 sentences in 합니다체, 해요체 and 반말, with who each one is for, and 42 on showing respect for the person you talk about (가세요, 주무세요, 드세요, 연세, 드려요…)
 - **Built-in Korean keyboard**, so you never need a Korean input method
 - **Pronunciation audio** through your browser's own Korean voice (or, optionally, Azure's neural voices with your own key), **dictation** of whole sentences, and **🎤 speaking practice** and **shadowing** in Chrome and Edge
-- **Streaks, points, levels, an adjustable daily goal, 53 badges** and 14 outfits for the mascot, saved on your computer
+- **Streaks, points, levels, an adjustable daily goal, 56 badges** and 14 outfits for the mascot, saved on your computer
 - Korean interface with small English subtitles, which you can turn off once you're ready, and a **dark theme**
+- A **weekly review** of the words and sentences you missed most
 - Works on **phones** too, and can be **installed as an app** that plays offline
 
 <p align="center"><img src="docs/screenshots/home.png" alt="Home screen: the mascot, today's practice, the daily goal and the minigames" width="760"></p>
@@ -71,6 +72,9 @@ The game follows a few well-established ideas about learning vocabulary:
 | **Reading real texts** | Reading gives you short texts of the kinds you'd really meet (a diary entry, a text message, a note, a menu, a notice, a receipt, a review) built from the words you know, with questions that need careful reading: the wrong options are usually in the text too (another price, another day). The text stays on screen, and after each answer the sentence that holds it lights up. |
 | **Polite, casual or formal?** | Speech Levels shows the same sentence in 합니다체 (formal), 해요체 (polite) and 반말 (casual), with who each one is for and what else changes (저 → 나, 네 → 응, 이에요 → 이야). Then: which level is this sentence, which one fits the person you're talking to, and say it in 반말 or 합니다체, next to the slips learners really make (`저는 학생이야`, `학생야`, `갑습니다`), each explained. |
 | **Shadowing** | Hear a sentence you know and say it straight back, three times, a little faster each time (🐢 0.75× → 🚶 0.9× → 🐇 1.05×). In Chrome and Edge the 🎤 listens as soon as the voice stops and tells you how close you were. |
+| **Showing respect** | Honorifics is the next step after the speech levels: they're about who you talk *to*, honorifics about who you talk *about*. Each sentence comes twice: about someone you respect (할머니께서 지금 **주무세요**) and about someone else (동생이 지금 **자요**). First: which plain word is this the respectful form of; then fill the blank in each, next to the slips learners really make (`자세요`, `있으세요` for being somewhere, `저는 가세요`), each explained. |
+| **Longer listening** | Stories are short stories and podcast-style talks in two or three parts, read by one narrator, with questions after each part, so you follow something longer than a dialogue without losing the thread. |
+| **Going over your mistakes** | Every wrong answer is remembered (for two weeks). The Weekly Review gathers the words and sentences you missed most in the last seven days, in any game, and goes over them in one round; the home screen suggests it once a week. |
 
 ### The minigames
 
@@ -87,6 +91,9 @@ The game follows a few well-established ideas about learning vocabulary:
 - **📖 읽기 · Reading**: for when the dialogues feel easy. A short text from one of your topics (a diary entry, a text message, a note on the fridge, a menu, a notice…), then 2–3 questions while the text stays on screen. After each answer the sentence that holds it lights up, with its translation; at the end you get the whole text with translations and a 🔊 for every sentence. ▶ reads the text aloud (🐢 slowly). Showing the English first is allowed, for fewer points. A text opens once you know its key words.
 - **🙇 말투 · Speech Levels**: 합니다체, 해요체 or 반말? The very first round opens with the card: the three levels, who each one is for, their endings and a table of what else changes (📖 reopens it any time). Each sentence opens once you know its key words and has its own review schedule, and its questions get harder as it grows: which level is this sentence → who are you talking to (👫 a close friend, 🛍️ a shop assistant, 📺 the news…), pick the sentence that fits → say it in 반말 or in 합니다체. Every wrong option is explained, and the feedback shows the sentence in all three levels with a 🔊 for each.
 - **🦜 따라 말하기 · Shadowing**: five sentences you know a round (the ones you've built in the Sentence Builder and your focus topic's first). Each one is played three times, a little faster each time, and you say it straight back. In Chrome and Edge, with speaking practice on, the 🎤 opens as soon as the voice stops and checks you (`M` listens again, `R` replays); elsewhere, say it out loud and press 😊 *I said it*. It needs a Korean voice.
+- **👵 높임말 · Honorifics**: -(으)시- (가세요, 가셨어요), the verbs and nouns with a word of their own (주무세요, 드세요, 계세요, 연세, 성함), and the humble words for what you do for someone you respect (드려요, 여쭤봐요). The very first round opens with the card (📖 reopens it); each sentence has its own review schedule and opens once you know its key words. The feedback shows both sentences of a pair, with a 🔊 each.
+- **📻 이야기 듣기 · Stories**: one story a round, part by part. ▶ plays the part (🐢 slowly, `R` replays it); its script can be shown for fewer points. After each answer you see the line that holds it; at the end, the whole story with translations and a 🔊 for every line. Without a Korean voice it becomes reading practice.
+- **🗓️ 이번 주 복습 · Weekly Review**: the words and sentences you got wrong in the last seven days, most missed first (up to 12), listed before the round starts. Each one is asked the way Word Cards and the Sentence Builder ask it, and one you miss again comes back once more at the end. Once gone over, a word leaves the list (unless you missed it again just then).
 
 **Dictation and speaking.** Sentences you know well are sometimes dictated in the Sentence Builder: listen and write the whole sentence (spaces and punctuation don't matter). In Chrome and Edge, 🎤 buttons next to new words and answers let you say them out loud: the browser's speech recognition checks how close you were. Both can be switched off in Settings.
 
@@ -308,6 +315,30 @@ levels, with the scenes it fits and the slips learners make as wrong options (`t
   traps: [{ to: 'casual', text: '저는 학생이야.', why: 'In 반말, “I” is 나: 나는 학생이야.' }, …] },
 ```
 
+**Honorifics** live in `content/honorifics.js`: the card (sections, a table of plain → honorific words, a note, and
+why each wrong choice is wrong) and the items, each the same idea about someone you respect and about someone else
+(`who`: yourself, a younger brother or sister, a friend, a child, or a thing or an animal), with the slips learners make:
+
+```js
+{ id: 'sleep', level: 1, words: ['day:sleep'],   // it opens once these are learned
+  honor: { ko: '할머니께서 지금 주무세요.', en: 'Grandma is sleeping now.', answer: '주무세요', dict: '주무시다' },
+  plain: { ko: '동생이 지금 자요.', en: 'My little brother is sleeping now.', answer: '자요', dict: '자다', who: 'younger' },
+  traps: [{ text: '자세요', why: '자다 has its own honorific verb, 주무시다: 주무세요.' }],
+  note: '자다 → 주무시다: a verb with an honorific word of its own.' },
+```
+
+**Stories** live in `content/stories.js`: one narrator (`voice: 'high'` or `'low'`), two to four parts, each with its
+lines (numbers in Hangul) and questions whose `line` points at a line of that part:
+
+```js
+{ id: 'cafe-first-day', topic: 'cafe', level: 2, emoji: '☕', voice: 'high',
+  kind: { ko: '이야기', en: 'A story' }, title: { ko: '카페에서 일한 첫날', en: 'My first day at the café' },
+  words: ['cafe:cafe', 'cafe:latte'],
+  parts: [{ lines: [{ ko: '첫날 아침 일곱 시에 카페에 갔어요.', en: 'On the first day I went to the café at seven.' }, …],
+            questions: [{ q: { ko: '몇 시에 갔어요?', en: 'What time did they go?' },
+                          options: [{ ko: '7시', en: '7:00' }, …], answer: 0, line: 0, why: '…' }] }, …] },
+```
+
 ## Adding a minigame
 
 A minigame is one file in `js/games/` that registers itself; add its `<script>` tag in `index.html`
@@ -354,7 +385,7 @@ css/                  base (tokens, light and dark theme, layout), components, s
                       phone (small screens, loaded last)
 content/              one file per topic: words, sentences, lesson notes; sounds.js: Sound Twins sets;
                       grammar.js: grammar patterns; dialogues.js: listening dialogues; reading.js: reading texts;
-                      speech-levels.js: speech levels
+                      speech-levels.js: speech levels; honorifics.js: honorifics; stories.js: stories
 js/core/              no UI: config, Hangul engine, numbers, verb conjugation, grammar endings, particles,
                       answer checking, storage, spaced repetition, progress & badges, distractor picking,
                       speech (and the optional Azure voices), speech recognition, sound effects
@@ -362,7 +393,7 @@ js/ui/                components, mascot (and its outfits), Korean keyboard, fee
 js/exercises/         intro · choice · tiles · typing · sentence · dictation
 js/games/             word-cards · sentence-builder · speed-match · balloon-pop · particle-lab ·
                       verb-magic · number-shop · sound-twins · grammar-cards · dialogues · reading ·
-                      speech-levels · shadowing
+                      speech-levels · shadowing · honorifics · stories · weekly-review
 js/screens/           onboarding · home · garden · stats · settings · play · summary
 js/pwa.js             install & offline support (only when opened from a web address)
 js/app.js             start-up and routing (#/home, #/play/word-cards…)
@@ -387,7 +418,7 @@ typical slips), particle questions, answer checking, spaced-repetition schedulin
 the minigames' round logic, streaks, levels, badges, saving, loading and upgrading old saves, and the
 offline file list, and the optional Azure voices (against a simulated Azure: the key stays out of the progress and
 backups, one request per clip, the browser's voice when Azure refuses). They also check every topic, grammar
-pattern, dialogue, reading text and speech-level sentence for authoring mistakes
+pattern, dialogue, reading text, speech-level sentence, honorifics item and story for authoring mistakes
 (including that every verb form and every grammar answer matches the engines).
 
 ## Why plain JavaScript?
@@ -402,6 +433,6 @@ which browsers only allow from a web address, so that part simply switches itsel
 
 ## Ideas for next steps
 
-- Honorifics: 드세요, 계세요, 주무세요 and the -(으)시- in 가셨어요, and when to use them (a next step after Speech Levels)
-- Longer listening: a short story or a podcast-style monologue in a few parts, with questions after each
-- A weekly review: the words and sentences you missed most this week, in one round
+- Hangul from zero: the letters and how they build syllables, for complete beginners (hear them, then build them)
+- Choose your reply: a conversation where you pick (or say) what to answer, and the other person reacts
+- TOPIK I practice: reading and listening questions in the style of the real test, with a score at the end

@@ -142,6 +142,17 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.7.0',
+      body: () => [
+        h('h3', ui.bi('새 게임 3개', '3 new games')),
+        featureList([
+          ['👵', `높임말 · Honorifics: talking about someone you respect: 가세요, 주무세요, 드세요, 연세, 드려요… and never about yourself (${M.content.honorifics().length} sentences).`],
+          ['📻', `이야기 듣기 · Stories: longer listening. ${M.content.stories().length} stories and podcasts in a few parts, with questions after each part.`],
+          ['🗓️', '이번 주 복습 · Weekly Review: the words and sentences you missed most in the last seven days, in one round.'],
+        ]),
+      ],
+    },
+    {
       version: '0.6.0',
       body: () => {
         const fresh = ['travel', 'health', 'work'].map((id) => M.content.topic(id)).filter(Boolean);
