@@ -56,6 +56,12 @@
     const broken = P.brokenStreak();
     if (broken) return { ko: '다시 시작해 봐요!', en: `Your ${broken}-day streak ended — let's start a new one today!` };
     if (P.goalMet()) return { ko: '오늘 목표 달성! 🎉', en: 'Daily goal done! Extra practice makes it stick.' };
+    // Started today, with a streak to keep: the goal is what counts.
+    const streak = P.currentStreak();
+    if (streak && P.todayPoints() > 0 && !P.countedToday()) {
+      const left = P.dailyGoal() - P.todayPoints();
+      return { ko: `목표까지 ${left}점 남았어요 🔥`, en: `${left} ⭐ more today makes it a ${streak + 1}-day streak.` };
+    }
     if (tricky) return { ko: `어려운 단어 ${tricky}개에 물을 줘요 💧`, en: `${plural(tricky, 'tricky word')} could use some water.` };
     if (words.due) return { ko: `복습할 단어가 ${words.due}개 있어요`, en: `${plural(words.due, 'word')} ${words.due === 1 ? 'is' : 'are'} ready for review.` };
     if (words.fresh) return { ko: '새 단어 배워 볼까요?', en: 'Shall we learn some new words?' };
@@ -108,9 +114,11 @@
         }),
         h(
           'div.streak-box',
+          { title: 'Days in a row with your daily goal reached' },
           h('div.streak-flame', { class: streak ? 'lit' : '' }, '🔥'),
           h('div.streak-num', String(streak)),
-          h('div.streak-label', ui.bi('일 연속', 'day streak'))
+          h('div.streak-label', ui.bi('일 연속', 'day streak')),
+          P.countedToday() ? h('div.streak-hint.done', ui.bi('오늘 완료!', 'today counts ✓')) : h('div.streak-hint', ui.bi('목표를 채우면 +1', '+1 at your goal'))
         )
       ),
       h(

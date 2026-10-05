@@ -119,7 +119,7 @@
                 )
               )
             ),
-            h('p.hint', '🔥 Your streak grows every day you practise at all — even one short round counts.'),
+            h('p.hint', '🔥 Your streak grows by one every day you reach your daily goal.'),
             ui.button({ ko: '다음', en: 'Next', variant: 'primary', size: 'big', onClick: () => go(3) }),
           ]),
 

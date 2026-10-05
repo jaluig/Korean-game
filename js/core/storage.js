@@ -8,7 +8,7 @@
 (function (M) {
   'use strict';
 
-  const SCHEMA_VERSION = 2;
+  const SCHEMA_VERSION = 3;
 
   function defaultState() {
     return {
@@ -66,7 +66,7 @@
         bestCombo: 0,
       },
       skills: {}, // accuracy per skill (verb forms, particles, number tasks…): id → { seen, correct }
-      streak: { current: 0, best: 0, lastDay: null },
+      streak: { current: 0, best: 0, lastDay: null }, // days in a row with the daily goal reached; lastDay: the last such day
       days: {}, // 'YYYY-MM-DD' → { points, answers, correct, rounds }
       items: {}, // word/sentence id → spaced-repetition record (see srs.js)
       misses: {}, // 'YYYY-MM-DD' → { id: times missed that day }, the last two weeks (for the weekly review)
@@ -96,6 +96,18 @@
       for (const day of Object.values(state.days || {})) if (day && day.goal == null) day.goal = old;
       const raised = { 50: 250, 100: 500, 200: 800 };
       if (raised[old]) state.settings.dailyGoal = raised[old];
+    }
+    if (from < 3) {
+      // v3: a day counts for the streak once the daily goal is reached (it used to be any practice).
+      // The streak so far is kept; only today, if it counted without the goal, waits for the goal.
+      const U = M.utils;
+      const streak = state.streak || {};
+      const today = U.dayKey(U.now());
+      const day = (state.days && state.days[today]) || {};
+      if (streak.lastDay === today && streak.current > 0 && (day.points || 0) < (day.goal ?? state.settings.dailyGoal)) {
+        streak.current -= 1;
+        streak.lastDay = U.addDays(today, -1);
+      }
     }
     state.version = SCHEMA_VERSION;
     return state;

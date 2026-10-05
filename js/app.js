@@ -29,7 +29,7 @@
     const brandMascot = h('span.brand-mascot', { 'aria-hidden': 'true' });
     brandMascot.innerHTML = M.mascot.svg();
     statEls.mascot = brandMascot;
-    statEls.streak = h('span.stat-chip.streak', { title: 'Day streak' });
+    statEls.streak = h('span.stat-chip.streak', { title: 'Day streak: days in a row with your daily goal reached' });
     statEls.points = h('span.stat-chip.points', { title: 'Total points' });
     statEls.level = h('span.stat-chip.level', { title: 'Level' });
     statEls.nav = NAV.map((item) =>
@@ -51,7 +51,7 @@
     statEls.mascot.dataset.outfit = M.mascot.outfit();
     const streak = M.progress.currentStreak();
     statEls.streak.textContent = `🔥 ${streak}`;
-    statEls.streak.classList.toggle('lit', M.progress.practisedToday());
+    statEls.streak.classList.toggle('lit', M.progress.countedToday());
     statEls.points.textContent = `⭐ ${M.store.state.totals.points.toLocaleString()}`;
     statEls.level.textContent = `Lv ${M.progress.levelInfo().level}`;
   }

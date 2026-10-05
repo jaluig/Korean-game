@@ -18,22 +18,45 @@ test('levels need a little more each time', () => {
   assert.equal(info.progress, 0.5);
 });
 
-test('the streak counts consecutive days with practice', () => {
+test('the streak counts the days in a row with the daily goal reached', () => {
   M.store.reset();
+  M.store.state.settings.dailyGoal = 100;
   P.addPoints(10, NOON);
+  P.finishRound({ gameId: 'word-cards' }, NOON);
+  assert.equal(P.currentStreak(NOON), 0, 'a round alone doesn’t count');
+  assert.equal(P.countedToday(NOON), false);
+  P.addPoints(90, NOON + 1000);
+  assert.equal(P.currentStreak(NOON), 1, 'the goal reached: today counts');
+  assert.equal(P.countedToday(NOON), true);
+  P.addPoints(100, NOON + 2000); // more the same day
   assert.equal(P.currentStreak(NOON), 1);
-  P.addPoints(10, NOON + 1000); // same day
-  assert.equal(P.currentStreak(NOON), 1);
-  P.addPoints(10, NOON + DAY);
+  // The next day: practice below the goal keeps it alive but doesn't grow it…
+  P.addPoints(50, NOON + DAY);
+  assert.equal(P.currentStreak(NOON + DAY), 1);
+  P.addPoints(50, NOON + DAY);
   assert.equal(P.currentStreak(NOON + DAY), 2);
-  // Still alive the next day before practising…
+  // …still alive the next morning before practising…
   assert.equal(P.currentStreak(NOON + 2 * DAY), 2);
-  // …but gone after a full missed day.
+  // …and a day of practice without the goal ends it the day after.
+  P.addPoints(40, NOON + 2 * DAY);
   assert.equal(P.currentStreak(NOON + 3 * DAY), 0);
   assert.equal(P.brokenStreak(NOON + 3 * DAY), 2);
-  P.addPoints(10, NOON + 3 * DAY);
+  P.addPoints(100, NOON + 3 * DAY);
   assert.equal(P.currentStreak(NOON + 3 * DAY), 1);
   assert.equal(M.store.state.streak.best, 2);
+});
+
+test('a goal lowered in Settings to what you already have counts for today', () => {
+  M.store.reset();
+  M.store.state.settings.dailyGoal = 500;
+  const now = M.utils.now();
+  P.addPoints(120, now);
+  assert.equal(P.countedToday(now), false);
+  M.store.state.settings.dailyGoal = 100;
+  M.events.emit('settings');
+  assert.equal(P.countedToday(now), true);
+  assert.equal(P.currentStreak(now), 1);
+  assert.equal(M.store.state.days[M.utils.dayKey(now)].goal, 100, 'the day keeps the goal it was reached with');
 });
 
 test('events fire when the daily goal and a new level are reached', () => {

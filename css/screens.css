@@ -168,6 +168,21 @@
   font-size: 0.9rem;
 }
 
+.streak-hint {
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.streak-hint.done {
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+}
+
 .week {
   display: flex;
   justify-content: space-between;

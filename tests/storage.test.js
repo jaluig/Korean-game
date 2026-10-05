@@ -51,7 +51,7 @@ test('version 1 saves get the raised daily goals, and old days keep their goal',
     M.store.load();
     assert.equal(M.store.state.settings.dailyGoal, after, `${before} → ${after}`);
     assert.equal(M.store.state.days['2026-09-20'].goal, before);
-    assert.equal(M.store.state.version, 2);
+    assert.equal(M.store.state.version, M.store.defaultState().version);
   }
 });
 
@@ -59,4 +59,42 @@ test('new settings have defaults', () => {
   M.store.reset();
   assert.equal(M.store.state.settings.theme, 'light');
   assert.equal(M.store.state.settings.dailyGoal, M.config.defaultDailyGoal);
+});
+
+test('version 2 saves keep their streak; only today, if it counted without the goal, waits for the goal', () => {
+  const U = M.utils;
+  const today = U.dayKey();
+  const yesterday = U.addDays(today, -1);
+  const save = (points, lastDay = today) =>
+    localStorage.setItem(key, JSON.stringify({ version: 2, settings: { dailyGoal: 500 }, items: {}, streak: { current: 6, best: 9, lastDay }, days: { [today]: { points, goal: 500 } } }));
+  // Practised today below the goal: today no longer counts, the five days before it do.
+  save(120);
+  M.store.load();
+  assert.deepEqual(M.store.state.streak, { current: 5, best: 9, lastDay: yesterday });
+  assert.equal(M.progress.currentStreak(), 5);
+  // Reaching the goal today brings it back to six.
+  M.progress.addPoints(380);
+  assert.equal(M.progress.currentStreak(), 6);
+  // The goal already reached today, or no practice yet today: nothing changes.
+  save(600);
+  M.store.load();
+  assert.deepEqual(M.store.state.streak, { current: 6, best: 9, lastDay: today });
+  save(0, yesterday);
+  M.store.load();
+  assert.deepEqual(M.store.state.streak, { current: 6, best: 9, lastDay: yesterday });
+  assert.equal(M.store.state.version, 3);
+});
+
+test('the streak check uses the goal the day was played with (a version 1 save’s old goal, a goal raised later)', () => {
+  const U = M.utils;
+  const today = U.dayKey();
+  // Version 1: today met the old goal of 100 (raised to 500 on loading), so today stays counted.
+  localStorage.setItem(key, JSON.stringify({ version: 1, settings: { dailyGoal: 100 }, items: {}, streak: { current: 3, best: 3, lastDay: today }, days: { [today]: { points: 120 } } }));
+  M.store.load();
+  assert.equal(M.store.state.settings.dailyGoal, 500);
+  assert.deepEqual(M.store.state.streak, { current: 3, best: 3, lastDay: today });
+  // Version 2: today's goal of 250 was reached, then the goal was raised to 800.
+  localStorage.setItem(key, JSON.stringify({ version: 2, settings: { dailyGoal: 800 }, items: {}, streak: { current: 3, best: 3, lastDay: today }, days: { [today]: { points: 300, goal: 250 } } }));
+  M.store.load();
+  assert.deepEqual(M.store.state.streak, { current: 3, best: 3, lastDay: today });
 });

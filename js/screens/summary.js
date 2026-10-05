@@ -130,7 +130,9 @@
               'div',
               h('div.summary-goal-text', ui.bi('오늘의 목표', 'Daily goal')),
               h('div.summary-goal-num', `${Math.min(today, goal)} / ${goal} ⭐`),
-              h('div.summary-streak', `🔥 `, ui.bi(`${streak}일 연속`, `${streak}-day streak`, 'inline'))
+              M.progress.countedToday()
+                ? h('div.summary-streak', `🔥 `, ui.bi(`${streak}일 연속`, `${streak}-day streak`, 'inline'))
+                : h('div.summary-streak', `🔥 `, ui.bi(`목표를 채우면 ${streak + 1}일 연속`, `Reach the goal for a ${streak + 1}-day streak`, 'inline'))
             )
           ),
           badges.length ? h('section.summary-badges', h('h3', ui.bi('새 배지!', 'New badge!')), h('div.badge-grid', badges)) : null,

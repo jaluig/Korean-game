@@ -2,7 +2,7 @@
  * Motivation: points, levels, the daily goal, streaks and badges.
  *
  * - Points (⭐) come from correct answers; they fill the daily goal and raise your level.
- * - The streak (🔥) counts days in a row with any practice at all.
+ * - The streak (🔥) counts days in a row with the daily goal reached.
  * - Badges reward habits that genuinely help learning (streaks, typing, sentences…).
  */
 (function (M) {
@@ -44,26 +44,38 @@
     return { level, points, start, end, progress: (points - start) / (end - start), toNext: end - points };
   }
 
-  /* ---------- Streak: consecutive days with any practice ---------- */
+  /* ---------- Streak: consecutive days with the daily goal reached ---------- */
 
-  function markPractised(now = U.now()) {
+  /** Today joins the streak once the daily goal is reached. Returns true when the streak grew. */
+  function syncStreak(now = U.now()) {
     const s = state().streak;
     const today = U.dayKey(now);
-    if (s.lastDay === today) return false;
+    if (s.lastDay === today || !goalMet(now)) return false;
     s.current = s.lastDay === U.addDays(today, -1) ? s.current + 1 : 1;
     s.lastDay = today;
     s.best = Math.max(s.best, s.current);
     return true;
   }
 
-  /** The streak as it stands right now (0 once a whole day was missed). */
+  // A goal changed in Settings is today's goal (a lowered one you've already reached counts straight away).
+  M.events.on('settings', () => {
+    const day = state().days[U.dayKey()];
+    if (day) day.goal = dailyGoal();
+    if (!syncStreak()) return;
+    checkBadges();
+    M.store.save();
+    M.events.emit('streak', currentStreak());
+  });
+
+  /** The streak as it stands right now (0 once a whole day went by without the goal). */
   function currentStreak(now = U.now()) {
     const s = state().streak;
     const today = U.dayKey(now);
     return s.lastDay === today || s.lastDay === U.addDays(today, -1) ? s.current : 0;
   }
 
-  const practisedToday = (now = U.now()) => state().streak.lastDay === U.dayKey(now);
+  /** Has today already counted for the streak (the goal reached)? */
+  const countedToday = (now = U.now()) => state().streak.lastDay === U.dayKey(now);
 
   /** A streak that ended since the last visit (for a gentle "let's start again"). */
   function brokenStreak(now = U.now()) {
@@ -91,7 +103,7 @@
 
     state().totals.points += amount;
     dayRecord(now).points += amount;
-    const streakGrew = markPractised(now);
+    const streakGrew = syncStreak(now);
 
     M.events.emit('progress', { amount });
     if (streakGrew) M.events.emit('streak', currentStreak(now));
@@ -160,7 +172,7 @@
     const hour = new Date(now).getHours();
     if (hour >= 22 || hour < 4) bump('nightRounds');
     if (hour >= 5 && hour < 8) bump('earlyRounds');
-    markPractised(now);
+    syncStreak(now);
     const earned = checkBadges(now);
     M.store.save();
     M.events.emit('progress', { amount: 0 });
@@ -202,9 +214,9 @@
       earned: (s) => grownWords(s) >= 10 },
     { id: 'words-30', emoji: '🏡', ko: '푸른 정원', en: 'Green thumb', desc: 'Grow 30 words to 🌿 or beyond.',
       earned: (s) => grownWords(s) >= 30 },
-    { id: 'streak-3', emoji: '🔥', ko: '3일 연속', en: 'On a roll', desc: 'Practise 3 days in a row.',
+    { id: 'streak-3', emoji: '🔥', ko: '3일 연속', en: 'On a roll', desc: 'Reach your daily goal 3 days in a row.',
       earned: (s) => s.streak.best >= 3 },
-    { id: 'streak-7', emoji: '🗓️', ko: '일주일 연속', en: 'Week warrior', desc: 'Practise 7 days in a row.',
+    { id: 'streak-7', emoji: '🗓️', ko: '일주일 연속', en: 'Week warrior', desc: 'Reach your daily goal 7 days in a row.',
       earned: (s) => s.streak.best >= 7 },
     { id: 'perfect', emoji: '💯', ko: '만점', en: 'Flawless', desc: 'Finish a Word Cards round without a mistake.',
       earned: (s) => s.totals.perfectRounds >= 1 },
@@ -228,13 +240,13 @@
       earned: (s) => grownWords(s) >= 400 },
     { id: 'explorer', emoji: '🗺️', ko: '탐험가', en: 'Explorer', desc: 'Learn at least one word in every topic.',
       earned: everyTopicStarted },
-    { id: 'streak-14', emoji: '🌟', ko: '2주 연속', en: 'Two weeks strong', desc: 'Practise 14 days in a row.',
+    { id: 'streak-14', emoji: '🌟', ko: '2주 연속', en: 'Two weeks strong', desc: 'Reach your daily goal 14 days in a row.',
       earned: (s) => s.streak.best >= 14 },
-    { id: 'streak-30', emoji: '🏆', ko: '한 달 연속', en: 'A month of Korean', desc: 'Practise 30 days in a row.',
+    { id: 'streak-30', emoji: '🏆', ko: '한 달 연속', en: 'A month of Korean', desc: 'Reach your daily goal 30 days in a row.',
       earned: (s) => s.streak.best >= 30 },
-    { id: 'streak-60', emoji: '💎', ko: '두 달 연속', en: 'Diamond streak', desc: 'Practise 60 days in a row.',
+    { id: 'streak-60', emoji: '💎', ko: '두 달 연속', en: 'Diamond streak', desc: 'Reach your daily goal 60 days in a row.',
       earned: (s) => s.streak.best >= 60 },
-    { id: 'streak-100', emoji: '🎂', ko: '100일 연속', en: 'A hundred days', desc: 'Practise 100 days in a row.',
+    { id: 'streak-100', emoji: '🎂', ko: '100일 연속', en: 'A hundred days', desc: 'Reach your daily goal 100 days in a row.',
       earned: (s) => s.streak.best >= 100 },
     { id: 'goal-5', emoji: '🎯', ko: '목표 달성', en: 'Goal getter', desc: 'Reach your daily goal on 5 days.',
       earned: (s) => goalDays(s) >= 5 },
@@ -329,7 +341,8 @@
     goalMinutes,
     levelInfo,
     currentStreak,
-    practisedToday,
+    countedToday,
+    syncStreak,
     brokenStreak,
     recentActivity,
     addPoints,
