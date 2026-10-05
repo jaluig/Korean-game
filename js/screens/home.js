@@ -68,6 +68,16 @@
     return { ko: '오늘 할 일 끝!', en: 'All caught up — see you tomorrow!' };
   }
 
+  /** The TOPIK I practice test lives under 말랑이: a check of your level now and then, apart from the daily practice. */
+  function topikButton() {
+    return h(
+      'a.btn.btn-soft.btn-small.hero-topik',
+      { href: '#/topik', title: 'TOPIK I practice test' },
+      h('span.btn-icon', { 'aria-hidden': 'true' }, '📝'),
+      ui.bi('TOPIK I', '모의시험 · Practice test')
+    );
+  }
+
   function heroCard(topicId) {
     const mascot = M.mascot.create({ size: 150, bubble: false });
     const hello = M.mascot.greeting();
@@ -78,7 +88,7 @@
 
     return h(
       'section.card.home-hero',
-      h('div.hero-mascot', mascot.el),
+      h('div.hero-mascot', mascot.el, topikButton()),
       h(
         'div.hero-main',
         h('div.hero-bubble', h('p.hero-hello', ui.bi(hello.ko, hello.en)), h('p.hero-message', ui.bi(message.ko, message.en))),

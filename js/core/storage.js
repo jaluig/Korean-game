@@ -70,6 +70,7 @@
       days: {}, // 'YYYY-MM-DD' → { points, answers, correct, rounds }
       items: {}, // word/sentence id → spaced-repetition record (see srs.js)
       misses: {}, // 'YYYY-MM-DD' → { id: times missed that day }, the last two weeks (for the weekly review)
+      topik: { history: [], best: {}, seen: {} }, // TOPIK I practice: past results (newest first), best scores, when each item was last seen
       badges: {}, // badge id → time earned
     };
   }

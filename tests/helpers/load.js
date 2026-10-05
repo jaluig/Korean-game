@@ -18,6 +18,7 @@ const CORE = [
   'js/core/content.js',
   'js/core/srs.js',
   'js/core/progress.js',
+  'js/core/topik.js',
   'js/core/distractors.js',
   'js/core/particles.js',
   'js/core/answers.js',
@@ -43,6 +44,7 @@ const CONTENT = [
   'content/speech-levels.js',
   'content/stories.js',
   'content/honorifics.js',
+  'content/topik.js',
 ];
 // Minigames only touch the DOM when a round starts, so their round-building logic can be tested.
 const GAMES = [

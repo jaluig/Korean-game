@@ -368,3 +368,87 @@ body {
     display: none;
   }
 }
+
+/* TOPIK I practice: on phones the way in sits in the corner of 말랑이's card, and the test paper is a little tighter. */
+@media (max-width: 600px) {
+  .home-hero {
+    position: relative;
+  }
+
+  .hero-topik {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    min-height: 40px;
+    padding: 4px 10px;
+  }
+
+  .hero-topik .bi .en {
+    display: none;
+  }
+
+  .topik-test {
+    padding-top: 10px;
+    gap: 12px;
+  }
+
+  .topik-timer {
+    padding: 4px 9px;
+    font-size: 0.85rem;
+  }
+
+  .topik-nav {
+    gap: 6px 12px;
+  }
+
+  .topik-nav-list {
+    gap: 4px;
+  }
+
+  .topik-nav-dot {
+    width: 25px;
+    height: 25px;
+    font-size: 0.72rem;
+  }
+
+  .topik-nav-label .en {
+    display: none;
+  }
+
+  .topik-paper {
+    gap: 14px;
+    padding: 16px 14px;
+  }
+
+  .topik-listen {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .topik-text {
+    padding: 12px 14px;
+    font-size: 1.05rem;
+  }
+
+  .topik-actions .key-hint {
+    display: none;
+  }
+
+  .topik-score-num {
+    font-size: 2.8rem;
+  }
+
+  .topik-history-list li {
+    grid-template-columns: 4em minmax(0, 1fr) auto;
+  }
+
+  .topik-history-list .topik-level {
+    grid-column: 2 / -1;
+    justify-self: start;
+  }
+
+  .topik-script-line {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}

@@ -62,6 +62,20 @@
       stories: { perRound: 1 },
       // The words and sentences missed most in the last seven days, at most `size` of them.
       weeklyReview: { size: 12 },
+      // TOPIK I practice: a short mock test, 10 questions a section, with the kinds of questions in the real test's
+      // order (a list of types: one of them). Each listening item can be heard twice, as on the real test.
+      topik: {
+        blueprint: {
+          listening: [['reply', 2], ['next', 1], ['place', 1], ['topic', 1], ['match', 2], ['idea', 1], ['set', 1]],
+          reading: [['about', 1], ['blank', 2], ['notice', 1], ['match', 1], [['idea', 'order'], 1], ['set', 2]],
+        },
+        plays: 2,
+        // The real test's pace (40 minutes for 30 listening questions, 60 for 40 reading ones): the suggested time.
+        secondsPer: { listening: 80, reading: 90 },
+        // A share of the points and the TOPIK I level it stands for: 140 of 200 is level 2, 80 of 200 level 1.
+        levels: [{ level: 2, percent: 70 }, { level: 1, percent: 40 }],
+        history: 30, // past results kept
+      },
       // A well-known sentence is sometimes written from dictation instead of built from tiles.
       dictation: { fromStage: 4, chance: 0.35 },
       newWordsPerDay: 20, // default cap (adjustable in Settings) so reviews never pile up
@@ -98,6 +112,7 @@
       honor: 12, // an Honorifics question
       story: 12, // a Stories question
       storyRead: 6, // answered after showing the script
+      topik: 30, // a right answer in a TOPIK I practice test (each takes a minute or more)
       dictation: 20,
       spoken: 3,
       comboEvery: 5, // every 5 correct in a row…

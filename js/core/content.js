@@ -19,6 +19,7 @@
   const speech = { card: null, scenes: [], items: [] };
   const honor = { card: null, items: [] };
   const stories = [];
+  const topik = { listening: [], reading: [] };
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -330,6 +331,108 @@
     }
   }
 
+  /**
+   * TOPIK I practice (content/topik.js): questions in the style of the real
+   * test, in its two sections. Each entry is one thing to hear (`script`, read
+   * aloud by a man 'm' and a woman 'w') or to read (`text`, or a `notice`), with
+   * one question, or two for a "set". Its type is the kind of question: how many
+   * lines it has, and the instruction shown above it (as on the real test).
+   * Ids become 'topik:<id>'.
+   */
+  const TOPIK_TYPES = {
+    listening: {
+      reply: { lines: [1, 1], ko: '다음을 듣고 물음에 맞는 대답을 고르십시오.', en: 'Listen and choose the right answer to the question.' },
+      next: { lines: [1, 1], ko: '다음을 듣고 이어지는 말을 고르십시오.', en: 'Listen and choose what comes next.' },
+      place: { lines: [2, 2], ko: '여기는 어디입니까? 알맞은 것을 고르십시오.', en: 'Where are they? Choose the place.' },
+      topic: { lines: [2, 2], ko: '다음은 무엇에 대해 말하고 있습니까? 알맞은 것을 고르십시오.', en: 'What are they talking about?' },
+      match: { lines: [3, 6], ko: '다음을 듣고 대화 내용과 같은 것을 고르십시오.', en: 'Listen and choose what matches the conversation.' },
+      idea: { lines: [3, 6], ko: '다음을 듣고 {whose}의 중심 생각을 고르십시오.', en: 'Listen and choose what the {whose} mainly thinks.' },
+      set: { lines: [3, 10], questions: 2, ko: '다음을 듣고 물음에 답하십시오.', en: 'Listen and answer the questions.' },
+    },
+    reading: {
+      about: { lines: [2, 2], ko: '무엇에 대한 이야기입니까? 알맞은 것을 고르십시오.', en: 'What is it about?' },
+      blank: { lines: [1, 2], ko: '(    )에 들어갈 가장 알맞은 것을 고르십시오.', en: 'Choose what fits the blank best.' },
+      notice: { lines: [0, 0], ko: '다음을 읽고 맞지 않는 것을 고르십시오.', en: 'Read it and choose what is NOT true.' },
+      match: { lines: [3, 4], ko: '다음의 내용과 같은 것을 고르십시오.', en: 'Choose what matches the text.' },
+      idea: { lines: [3, 4], ko: '다음을 읽고 중심 내용을 고르십시오.', en: 'Read it and choose the main idea.' },
+      order: { lines: [4, 4], ko: '다음을 순서대로 맞게 나열한 것을 고르십시오.', en: 'Choose the right order of the sentences.' },
+      set: { lines: [3, 8], questions: 2, ko: '다음을 읽고 물음에 답하십시오.', en: 'Read it and answer the questions.' },
+    },
+  };
+  /** A notice (reading) looks like a poster, a phone message, a ticket, a list (a menu, a timetable) or a sign. */
+  const NOTICE_KINDS = ['poster', 'message', 'ticket', 'list', 'sign'];
+  /** Where does the quoted sentence go? Options ㉠–㉣ (kept in this order). */
+  const TOPIK_MARKS = ['㉠', '㉡', '㉢', '㉣'];
+
+  function registerTopik(sections = {}) {
+    for (const section of Object.keys(TOPIK_TYPES)) {
+      for (const t of sections[section] || []) {
+        const id = `topik:${t.id}`;
+        if (!t.id || !Array.isArray(t.questions)) problems.push(`topik "${t.id}": needs id and questions`);
+        else if ([...topik.listening, ...topik.reading].some((x) => x.id === id)) problems.push(`${id}: duplicate TOPIK item`);
+        else topik[section].push(Object.freeze({ ...t, id, localId: t.id, section, index: topik[section].length }));
+      }
+    }
+  }
+
+  const occurrences = (text, part) => text.split(part).length - 1;
+
+  function checkTopik(found) {
+    for (const t of [...topik.listening, ...topik.reading]) {
+      const spec = TOPIK_TYPES[t.section][t.type];
+      if (!spec) {
+        found.push(`${t.id}: unknown ${t.section} type "${t.type}" (one of ${Object.keys(TOPIK_TYPES[t.section]).join(', ')})`);
+        continue;
+      }
+      const listening = t.section === 'listening';
+      const given = listening ? t.script : t.text;
+      const lines = Array.isArray(given) ? given : [];
+      const [min, max] = spec.lines;
+      if (lines.length < min || lines.length > max) {
+        found.push(`${t.id}: a ${t.section} "${t.type}" needs ${min === max ? min : `${min}–${max}`} ${listening ? 'lines in "script"' : 'sentences in "text"'}`);
+      }
+      lines.forEach((l, i) => {
+        if (!l || !l.ko || !l.en) found.push(`${t.id} line ${i}: needs ko and en`);
+        else if (listening && !['m', 'w'].includes(l.who)) found.push(`${t.id} line ${i}: who is 'm' (남자, a man) or 'w' (여자, a woman)`);
+        // Read aloud: numbers in Hangul, or a "say" with them.
+        else if (listening && /\d/.test(l.say || M.numbers.readAloud(l.ko))) found.push(`${t.id} line ${i}: write the number in Hangul, or add "say"`);
+      });
+      const all = lines.map((l) => (l && l.ko) || '').join(' ');
+      if (listening && ['place', 'topic'].includes(t.type) && lines.length === 2 && lines[0]?.who === lines[1]?.who) found.push(`${t.id}: two people talk, one line each`);
+      if (listening && t.type === 'idea' && !lines.some((l) => l && l.who === t.whose)) found.push(`${t.id}: "whose" ('m' or 'w') must be one of the speakers`);
+      if (t.type === 'blank' && (all.match(/\(\s+\)/g) || []).length !== 1) found.push(`${t.id}: the text needs exactly one blank (    )`);
+      if (t.type === 'notice') {
+        const n = t.notice || {};
+        if (!NOTICE_KINDS.includes(n.kind)) found.push(`${t.id}: notice.kind is one of ${NOTICE_KINDS.join(', ')}`);
+        if (!n.title || !n.title.ko || !n.title.en) found.push(`${t.id}: the notice needs a title { ko, en }`);
+        if (!Array.isArray(n.lines) || n.lines.length < 2 || n.lines.some((l) => !l || !l.ko || !l.en)) found.push(`${t.id}: the notice needs 2+ lines, each with ko and en`);
+      }
+      const want = spec.questions || 1;
+      if (t.questions.length !== want) found.push(`${t.id}: a "${t.type}" has ${want === 1 ? 'one question' : `${want} questions`}`);
+      t.questions.forEach((q, k) => {
+        const label = `${t.id} question ${k + 1}`;
+        if (!q || typeof q !== 'object') {
+          found.push(`${label}: not a question`);
+          return;
+        }
+        if (spec.questions ? !q.q || !q.q.ko || !q.q.en : q.q && (!q.q.ko || !q.q.en)) found.push(`${label}: needs q { ko, en }`);
+        const options = Array.isArray(q.options) ? q.options : [];
+        const texts = options.map((o) => (typeof o === 'string' ? o : o && o.ko));
+        const marks = texts.every((x) => TOPIK_MARKS.includes(x));
+        if (options.length !== 4 || texts.some((x) => !x) || new Set(texts).size !== 4) found.push(`${label}: needs 4 different options`);
+        else if (t.type === 'order') {
+          if (texts.some((x) => !/^(\((가|나|다|라)\)-){3}\((가|나|다|라)\)$/.test(x) || new Set(x.match(/[가나다라]/g)).size !== 4)) found.push(`${label}: each option is an order like (나)-(가)-(라)-(다)`);
+        } else if (marks) {
+          if (!q.quote || !q.quote.ko || !q.quote.en) found.push(`${label}: needs quote { ko, en }: the sentence to put in its place`);
+          if (TOPIK_MARKS.some((m) => occurrences(all, m) !== 1)) found.push(`${label}: the text needs each of ㉠ ㉡ ㉢ ㉣ once`);
+        } else if (options.some((o) => typeof o === 'string' || !o.en)) found.push(`${label}: each option needs ko and en`);
+        if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4)) found.push(`${label}: answer must be an option index (0–3)`);
+        if (!q.why) found.push(`${label}: needs "why"`);
+        if (!marks && typeof q.q?.ko === 'string' && q.q.ko.includes('㉠') && occurrences(all, '㉠') !== 1) found.push(`${label}: the text needs the blank ( ㉠ ) once`);
+      });
+    }
+  }
+
   function checkReadings(found) {
     for (const r of readings) {
       if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
@@ -434,6 +537,7 @@
     checkSpeech(found);
     checkHonorifics(found);
     checkStories(found);
+    checkTopik(found);
     return found;
   }
 
@@ -448,6 +552,7 @@
     registerSpeechLevels,
     registerHonorifics,
     registerStories,
+    registerTopik,
     check,
     grammar: () => grammar.slice(),
     grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
@@ -465,6 +570,12 @@
     PLAIN_WHO,
     stories: (topicId = 'all') => stories.filter((st) => !topicId || topicId === 'all' || st.topic === topicId),
     story: (id) => stories.find((st) => st.id === id) || null,
+    /** TOPIK I practice items: one section ('listening' or 'reading') or both. */
+    topik: (section) => (section ? topik[section] || [] : [...topik.listening, ...topik.reading]).slice(),
+    topikItem: (id) => [...topik.listening, ...topik.reading].find((t) => t.id === id) || null,
+    TOPIK_TYPES,
+    TOPIK_MARKS,
+    NOTICE_KINDS,
     LEVELS,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,

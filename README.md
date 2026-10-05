@@ -11,9 +11,10 @@ practice rounds keep it growing.
 - **Speech levels and honorifics:** 45 sentences in 합니다체, 해요체 and 반말, with who each one is for, and 42 on showing respect for the person you talk about (가세요, 주무세요, 드세요, 연세, 드려요…)
 - **Built-in Korean keyboard**, so you never need a Korean input method
 - **Pronunciation audio** through your browser's own Korean voice (or, optionally, Azure's neural voices with your own key), **dictation** of whole sentences, and **🎤 speaking practice** and **shadowing** in Chrome and Edge
-- **Streaks, points, levels, an adjustable daily goal, 56 badges** and 14 outfits for the mascot, saved on your computer
+- **An adjustable daily goal, a streak of the days you reach it, points, levels, 58 badges** and 14 outfits for the mascot, saved on your computer
 - Korean interface with small English subtitles, which you can turn off once you're ready, and a **dark theme**
 - A **weekly review** of the words and sentences you missed most
+- **TOPIK I practice tests**: listening and reading in the style of the real test (113 questions), with your score and the level it stands for
 - Works on **phones** too, and can be **installed as an app** that plays offline
 
 <p align="center"><img src="docs/screenshots/home.png" alt="Home screen: the mascot, today's practice, the daily goal and the minigames" width="760"></p>
@@ -65,7 +66,7 @@ The game follows a few well-established ideas about learning vocabulary:
 | **Grammar you can see** | Particle Lab turns your sentences into "which particle?" questions (을/를, 이/가, 에/에서, (으)로…), and Verb Magic drills verb forms (past, future, negative, "want to"…). The wrong options are the mistakes learners really make (`듣어요`, `먹아요`, `안 공부해요`), each with the reason, and every answer shows how the form is built. |
 | **Train your ear** | Sound Twins plays one of two or three look-alike words (달 / 탈 / 딸, 거울 / 겨울, 반 / 방 / 밤) so you learn to hear the difference. Well-known sentences are sometimes dictated for you to write down. |
 | **Practice counts everywhere** | The fast games (Speed Match, Balloon Pop, Particle Lab, Verb Magic, Number Shop) use the words and sentences you've learned: a slip marks that word or sentence as tricky, so Word Cards and the Sentence Builder bring it back soon. |
-| **A daily goal that means real practice** | Presets from 250 ⭐ (about 6 minutes) to 1200 ⭐ (about 30), or any amount on a slider in Settings. |
+| **A daily goal that means real practice** | Presets from 250 ⭐ (about 6 minutes) to 1200 ⭐ (about 30), or any amount on a slider in Settings. The 🔥 streak counts the days in a row you reach it. |
 | **Grammar in real sentences** | Grammar Cards teaches the endings that join ideas (-고, -지만, -아서/어서, -(으)면, -(으)니까, -(으)러, -(으)ㄹ 때, -기 전에, -(으)ㄴ 후에, -는데), the helpers for "can", "must" and "may", and everyday endings: -고 있어요 ("am …-ing"), -아/어 보다 ("try"), -(으)ㄹ게요 ("I'll…") and the polite -(으)세요 / -(으)셨어요. Each pattern starts with a card (meaning, how to make it with a table of forms, a note, examples), then you fill the blank in real sentences. The wrong options are the same word with another ending (a different meaning: `오면` "if it rains" vs `오니까` "because it's raining") and the slips learners really make (`먹아서`, `듣으면`, `가을 때`), each explained. Every pattern has its own review schedule. |
 | **Listening to real conversations** | Dialogues plays short two-person conversations (ordering, asking the way, making plans…) with two different voices and the script hidden, then asks about them. After each answer you see the line that holds it; at the end, the whole script with translations. Reading the script first is allowed, for fewer points. |
 | **Speaking in a conversation** | In the role-play, you take one part of a dialogue you've just heard and say its lines out loud: the other part answers you, and the game checks how close you were. Then you swap parts. |
@@ -75,6 +76,7 @@ The game follows a few well-established ideas about learning vocabulary:
 | **Showing respect** | Honorifics is the next step after the speech levels: they're about who you talk *to*, honorifics about who you talk *about*. Each sentence comes twice: about someone you respect (할머니께서 지금 **주무세요**) and about someone else (동생이 지금 **자요**). First: which plain word is this the respectful form of; then fill the blank in each, next to the slips learners really make (`자세요`, `있으세요` for being somewhere, `저는 가세요`), each explained. |
 | **Longer listening** | Stories are short stories and podcast-style talks in two or three parts, read by one narrator, with questions after each part, so you follow something longer than a dialogue without losing the thread. |
 | **Going over your mistakes** | Every wrong answer is remembered (for two weeks). The Weekly Review gathers the words and sentences you missed most in the last seven days, in any game, and goes over them in one round; the home screen suggests it once a week. |
+| **Checking your level** | The TOPIK I practice test is a short mock test in the style of the real one: listening, reading or both, with the real test's kinds of questions in its order. As on the day, nothing is marked until you hand it in; then you see your score, the TOPIK I level it stands for, and every question again with the script and the English. |
 
 ### The minigames
 
@@ -94,6 +96,22 @@ The game follows a few well-established ideas about learning vocabulary:
 - **👵 높임말 · Honorifics**: -(으)시- (가세요, 가셨어요), the verbs and nouns with a word of their own (주무세요, 드세요, 계세요, 연세, 성함), and the humble words for what you do for someone you respect (드려요, 여쭤봐요). The very first round opens with the card (📖 reopens it); each sentence has its own review schedule and opens once you know its key words. The feedback shows both sentences of a pair, with a 🔊 each.
 - **📻 이야기 듣기 · Stories**: one story a round, part by part. ▶ plays the part (🐢 slowly, `R` replays it); its script can be shown for fewer points. After each answer you see the line that holds it; at the end, the whole story with translations and a 🔊 for every line. Without a Korean voice it becomes reading practice.
 - **🗓️ 이번 주 복습 · Weekly Review**: the words and sentences you got wrong in the last seven days, most missed first (up to 12), listed before the round starts. Each one is asked the way Word Cards and the Sentence Builder ask it, and one you miss again comes back once more at the end. Once gone over, a word leaves the list (unless you missed it again just then).
+
+### TOPIK I practice
+
+**📝 TOPIK I 모의시험** is under 말랑이 on the home screen (on a phone, in the corner of 말랑이's card), apart from
+the games: a check of your level now and then. Choose listening (10 questions, about 13 minutes at the real test's
+pace), reading (10 questions, about 15 minutes) or both. Each section has the real test's kinds of questions in its
+order: in listening, the right answer to a question, what comes next, where they are, what they're talking about,
+what matches a conversation, what someone mainly thinks, and a longer talk with two questions; in reading, what a text
+is about, the word for a blank, which statement about a notice or a message is *not* true, what matches a text, its
+main idea, the right order of four sentences, and longer texts with two questions. Each listening item plays by
+itself and can be heard twice, as on the real test (`R` plays it again); `1`–`4` choose an answer, and the numbers at
+the top jump to any question. When you hand it in: your score out of 100 a section, the level it stands for (on the
+real test, 80 of 200 is level 1 and 140 is level 2; this one is shorter, so it's a rough guide), and every question
+again with the script or text, the English, a 🔊 for each line, and why the answer is right. Each right answer earns
+⭐ for your daily goal, and the questions you've seen least recently come first next time. The 56 listening and 57
+reading questions are written for this game in the style of the real test, not taken from past papers.
 
 **Dictation and speaking.** Sentences you know well are sometimes dictated in the Sentence Builder: listen and write the whole sentence (spaces and punctuation don't matter). In Chrome and Edge, 🎤 buttons next to new words and answers let you say them out loud: the browser's speech recognition checks how close you were. Both can be switched off in Settings.
 
@@ -182,7 +200,7 @@ On a phone, the menu moves to a tab bar at the bottom and the games fit the scre
 
 ## Your progress
 
-Everything (garden, streak, points, badges, settings) is saved automatically in your browser's
+Everything (garden, streak, points, badges, TOPIK results, settings) is saved automatically in your browser's
 `localStorage`. In **Settings → Your data** you can download a backup file, restore it (for example
 on another computer), or reset everything. Progress is kept separately for each way of opening the
 game (as a file, from a web address, as the installed app), so use a backup to move it from one to
@@ -339,6 +357,22 @@ lines (numbers in Hangul) and questions whose `line` points at a line of that pa
                           options: [{ ko: '7시', en: '7:00' }, …], answer: 0, line: 0, why: '…' }] }, …] },
 ```
 
+**TOPIK I practice questions** live in `content/topik.js`, in two lists, `listening` and `reading`. Each entry has a
+`type` (the kind of question, in the real test's order: listening `reply`, `next`, `place`, `topic`, `match`, `idea`,
+`set`; reading `about`, `blank`, `notice`, `match`, `idea`, `order`, `set`), what to hear (`script`, with a man `'m'`
+and a woman `'w'`, numbers in Hangul) or read (`text`, or a `notice`), and one question (two for a `set`) with four
+options. The test shuffles the options; the checker makes sure each type has the right shape (one blank, four orders
+of (가)–(라), the places ㉠–㉣…):
+
+```js
+{ id: 'l-place-shoes', type: 'place',
+  script: [{ who: 'm', ko: '이 운동화 다른 색도 있어요?', en: 'Do you have these trainers in another colour?' },
+           { who: 'w', ko: '네, 흰색하고 검은색이 있어요.', en: 'Yes, in white and black.' }],
+  questions: [{ options: [{ ko: '신발 가게', en: 'a shoe shop' }, { ko: '은행', en: 'a bank' },
+                          { ko: '식당', en: 'a restaurant' }, { ko: '우체국', en: 'a post office' }],
+                answer: 0, why: '운동화 (trainers) in other colours: a shoe shop.' }] },
+```
+
 ## Adding a minigame
 
 A minigame is one file in `js/games/` that registers itself; add its `<script>` tag in `index.html`
@@ -385,16 +419,18 @@ css/                  base (tokens, light and dark theme, layout), components, s
                       phone (small screens, loaded last)
 content/              one file per topic: words, sentences, lesson notes; sounds.js: Sound Twins sets;
                       grammar.js: grammar patterns; dialogues.js: listening dialogues; reading.js: reading texts;
-                      speech-levels.js: speech levels; honorifics.js: honorifics; stories.js: stories
+                      speech-levels.js: speech levels; honorifics.js: honorifics; stories.js: stories;
+                      topik.js: TOPIK I practice questions
 js/core/              no UI: config, Hangul engine, numbers, verb conjugation, grammar endings, particles,
                       answer checking, storage, spaced repetition, progress & badges, distractor picking,
-                      speech (and the optional Azure voices), speech recognition, sound effects
+                      TOPIK I practice tests (building and scoring them), speech (and the optional Azure
+                      voices), speech recognition, sound effects
 js/ui/                components, mascot (and its outfits), Korean keyboard, feedback sheet, 🎤 buttons
 js/exercises/         intro · choice · tiles · typing · sentence · dictation
 js/games/             word-cards · sentence-builder · speed-match · balloon-pop · particle-lab ·
                       verb-magic · number-shop · sound-twins · grammar-cards · dialogues · reading ·
                       speech-levels · shadowing · honorifics · stories · weekly-review
-js/screens/           onboarding · home · garden · stats · settings · play · summary
+js/screens/           onboarding · home · garden · stats · settings · play · summary · topik (TOPIK I practice)
 js/pwa.js             install & offline support (only when opened from a web address)
 js/app.js             start-up and routing (#/home, #/play/word-cards…)
 sw.js                 service worker: keeps a copy of every file for offline play
@@ -415,10 +451,11 @@ npm test          # or: node --test tests/*.test.js
 They cover the Hangul typing engine, Korean numbers, the verb conjugation engine and the grammar
 endings (both checked against hand-verified tables of regular and irregular verbs, including the
 typical slips), particle questions, answer checking, spaced-repetition scheduling and round building,
-the minigames' round logic, streaks, levels, badges, saving, loading and upgrading old saves, and the
+the minigames' round logic, the TOPIK I practice tests (their order, shuffling and scoring), streaks (and keeping
+them when an old save is upgraded), levels, badges, saving, loading and upgrading old saves, and the
 offline file list, and the optional Azure voices (against a simulated Azure: the key stays out of the progress and
 backups, one request per clip, the browser's voice when Azure refuses). They also check every topic, grammar
-pattern, dialogue, reading text, speech-level sentence, honorifics item and story for authoring mistakes
+pattern, dialogue, reading text, speech-level sentence, honorifics item, story and TOPIK question for authoring mistakes
 (including that every verb form and every grammar answer matches the engines).
 
 ## Why plain JavaScript?
@@ -435,4 +472,4 @@ which browsers only allow from a web address, so that part simply switches itsel
 
 - Hangul from zero: the letters and how they build syllables, for complete beginners (hear them, then build them)
 - Choose your reply: a conversation where you pick (or say) what to answer, and the other person reacts
-- TOPIK I practice: reading and listening questions in the style of the real test, with a score at the end
+- Sound changes: how final consonants link up and change in speech (먹어요 [머거요], 학년 [항년], 좋다 [조타]), heard and then said

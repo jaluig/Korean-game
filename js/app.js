@@ -142,6 +142,22 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.8.0',
+      body: () => {
+        const questions = M.content.topik().reduce((n, t) => n + t.questions.length, 0);
+        return [
+          h('h3', ui.bi('TOPIK I 모의시험', 'TOPIK I practice tests')),
+          featureList([
+            ['📝', `A short practice test in the style of the real TOPIK I: listening, reading or both, from ${questions} questions written for this game. At the end, your score and the level it stands for, then every question again with the script and the English. It’s under 말랑이 on the home screen.`],
+          ]),
+          h('h3', ui.bi('연속 학습은 목표와 함께', 'The streak now follows your daily goal')),
+          featureList([
+            ['🔥', 'A day counts for your streak once you reach your daily goal (it used to be any practice at all). Your streak so far is kept.'],
+          ]),
+        ];
+      },
+    },
+    {
       version: '0.7.0',
       body: () => [
         h('h3', ui.bi('새 게임 3개', '3 new games')),
@@ -272,7 +288,12 @@
 
   function start() {
     M.store.load();
-    const problems = M.content.check();
+    let problems = [];
+    try {
+      problems = M.content.check();
+    } catch (err) {
+      console.error('[content] the content check failed', err); // (the game still starts)
+    }
     if (problems.length) console.warn(`[content] ${problems.length} problem(s):\n- ${problems.join('\n- ')}`);
     // New topics since last time: words below your starting level become quick checks.
     if (M.store.state.profile.onboarded && M.srs.syncStartLevel()) M.store.save();
@@ -296,7 +317,7 @@
         M.store.save();
         updateStats();
       }
-      if (currentRoute !== 'play') {
+      if (currentRoute !== 'play' && currentRoute !== 'topik') {
         ui.toast({ icon: outfit ? outfit.emoji : '🎉', ko: `레벨 ${level}!`, en: outfit ? `Level ${level}! 말랑이 got a new outfit: ${outfit.en}` : `Level ${level}!`, tone: 'good' });
       }
     });

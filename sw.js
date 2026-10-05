@@ -11,7 +11,7 @@
  */
 'use strict';
 
-const VERSION = '0.7.0'; // keep in step with Mallang.version (js/core/namespace.js)
+const VERSION = '0.8.0'; // keep in step with Mallang.version (js/core/namespace.js)
 const CACHE = `mallang-${VERSION}`;
 const FONT_CACHE = `mallang-fonts-${VERSION}`; // fetched again with each version, so a bad copy can't stay
 const PAGE = 'index.html'; // what a page load gets from the copy
@@ -40,6 +40,7 @@ const FILES = [
   'js/core/content.js',
   'js/core/srs.js',
   'js/core/progress.js',
+  'js/core/topik.js',
   'js/core/distractors.js',
   'js/core/particles.js',
   'js/core/answers.js',
@@ -67,6 +68,7 @@ const FILES = [
   'content/speech-levels.js',
   'content/stories.js',
   'content/honorifics.js',
+  'content/topik.js',
   'js/ui/components.js',
   'js/ui/mascot.js',
   'js/ui/keyboard.js',
@@ -101,6 +103,7 @@ const FILES = [
   'js/screens/settings.js',
   'js/screens/play.js',
   'js/screens/summary.js',
+  'js/screens/topik.js',
   'js/pwa.js',
   'js/app.js',
 ];
