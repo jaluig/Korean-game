@@ -22,6 +22,7 @@ const CORE = [
   'js/core/distractors.js',
   'js/core/particles.js',
   'js/core/answers.js',
+  'js/core/mic.js',
 ];
 const CONTENT = [
   'content/cafe.js',
@@ -45,6 +46,8 @@ const CONTENT = [
   'content/stories.js',
   'content/honorifics.js',
   'content/topik.js',
+  'content/replies.js',
+  'content/sound-changes.js',
 ];
 // Minigames only touch the DOM when a round starts, so their round-building logic can be tested.
 const GAMES = [
@@ -53,8 +56,10 @@ const GAMES = [
   'js/games/verb-magic.js',
   'js/games/number-shop.js',
   'js/games/sound-twins.js',
+  'js/games/sound-changes.js',
   'js/games/grammar-cards.js',
   'js/games/dialogues.js',
+  'js/games/replies.js',
   'js/games/reading.js',
   'js/games/speech-levels.js',
   'js/games/shadowing.js',

@@ -53,10 +53,10 @@
   // Things that happen to you rather than things you do: no "want to", "shall we?" or "please".
   const NOT_VOLITIONAL = new Set([
     '모르다', '알다', '화나다', '좋아하다', '싫어하다', '있다', '없다', '걸리다', '나다', '사랑하다', '되다', '낫다',
-    '걱정되다', '떨리다', '신나다', '놀라다',
+    '걱정되다', '떨리다', '신나다', '놀라다', '어울리다',
   ]);
   // "Shall we…?" sounds odd with these (✗ 울까요?), though "want to" is fine (울고 싶어요).
-  const NO_SUGGEST = new Set(['웃다', '울다', '씻다']);
+  const NO_SUGGEST = new Set(['웃다', '울다', '씻다', '싸우다', '웃기다']);
   // …and "want to" is odd with these (✗ 돌고 싶어요).
   const NO_WANT = new Set(['출근하다', '돌다']);
   // Verbs whose "for me" form is a single dictionary word (도와주다, 빌려주다): 도와주세요, no space.

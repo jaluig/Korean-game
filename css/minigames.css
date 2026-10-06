@@ -2702,3 +2702,411 @@ details.dlg-script-box > summary .bi {
 .weekly-count.tricky {
   background: var(--butter-soft);
 }
+
+/* ---------- Choose your reply ---------- */
+
+.reply-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(680px, 100%);
+  padding: 24px 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--lilac);
+  box-shadow: 0 6px 0 var(--lilac-shadow);
+  text-align: center;
+}
+
+.reply-scene {
+  font-family: var(--font-emoji);
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.reply-title {
+  margin: 0;
+}
+
+.reply-title .ko {
+  font-family: var(--font-ko);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.reply-cast {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  font-weight: 700;
+}
+
+.reply-who {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--lilac-soft);
+}
+
+.reply-goal {
+  padding: 8px 14px;
+  border-radius: 14px;
+  background: var(--butter-soft);
+  border: 2px dashed var(--butter-deep);
+  font-weight: 700;
+  text-align: left;
+}
+
+.reply-goal .ko {
+  font-family: var(--font-ko);
+}
+
+.reply-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  width: min(680px, 100%);
+}
+
+.reply-head-scene {
+  font-family: var(--font-emoji);
+  font-size: 1.6rem;
+}
+
+.reply-head-title {
+  font-weight: 800;
+}
+
+.reply-head .reply-goal {
+  flex: 1 1 260px;
+  padding: 6px 12px;
+  font-size: 0.92rem;
+}
+
+.reply-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(680px, 100%);
+}
+
+.reply-bubble {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 88%;
+  animation: pop-in 0.25s ease;
+}
+
+.reply-bubble.them {
+  align-self: flex-start;
+}
+
+.reply-bubble.you {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.reply-avatar {
+  flex-shrink: 0;
+  font-family: var(--font-emoji);
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.reply-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 10px 14px;
+  border-radius: 20px 20px 20px 6px;
+  background: var(--card);
+  border: 2px solid var(--line);
+  box-shadow: 0 3px 0 var(--shadow);
+}
+
+.reply-bubble.you .reply-body {
+  border-radius: 20px 20px 6px 20px;
+  background: var(--lilac-soft);
+  border-color: var(--lilac);
+}
+
+.reply-bubble.you.wrong .reply-body {
+  background: var(--bad-soft);
+  border-color: var(--bad-line);
+}
+
+.reply-bubble.you.wrong .reply-ko {
+  text-decoration: line-through;
+  text-decoration-color: var(--bad);
+}
+
+.reply-bubble.them.react .reply-body {
+  border-style: dashed;
+}
+
+.reply-ko {
+  font-family: var(--font-ko);
+  font-size: 1.15rem;
+  font-weight: 700;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.reply-en {
+  flex-basis: 100%;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.reply-en-toggle {
+  padding: 1px 7px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.reply-why,
+.reply-note {
+  align-self: stretch;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--butter-soft);
+  font-size: 0.95rem;
+}
+
+.reply-note {
+  flex-basis: 100%;
+  margin-top: 4px;
+  background: transparent;
+  padding: 0;
+  color: var(--ink-soft);
+}
+
+.reply-turn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(680px, 100%);
+}
+
+.reply-turn[hidden] {
+  display: none;
+}
+
+.reply-ask {
+  margin: 4px 0 0;
+  font-weight: 800;
+}
+
+.reply-options {
+  grid-template-columns: 1fr;
+}
+
+.reply-option {
+  min-height: 60px;
+}
+
+.reply-option .option-text {
+  font-size: 1.15rem;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.reply-say {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+}
+
+.reply-mic.listening {
+  --btn-bg: var(--pink-soft);
+  --btn-border: var(--pink-deep);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.reply-hint {
+  min-height: 1.2em;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.reply-hint.miss {
+  color: var(--bad-ink);
+}
+
+.reply-summary {
+  gap: 14px;
+}
+
+.reply-result {
+  margin: 0;
+  font-weight: 800;
+}
+
+.reply-transcript {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+}
+
+.reply-transcript .reply-bubble {
+  animation: none;
+}
+
+/* ---------- Sound changes ---------- */
+
+.pron-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(680px, 100%);
+  padding: 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--butter);
+  box-shadow: 0 6px 0 var(--butter-shadow);
+}
+
+.modal .pron-card {
+  width: 100%;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.pron-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pron-card-head h2 {
+  margin: 0;
+}
+
+.pron-card-emoji {
+  font-family: var(--font-emoji);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.pron-card-text,
+.pron-card-note {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.pron-card-note {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--butter-soft);
+}
+
+.pron-examples {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pron-examples li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--card-soft);
+}
+
+.pron-ex-ko,
+.pron-ex-pron {
+  font-family: var(--font-ko);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.pron-ex-pron,
+.pron-fb-pron {
+  color: var(--almost-ink);
+}
+
+.pron-arrow {
+  color: var(--ink-faint);
+}
+
+.pron-ex-en {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.pron-q-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: min(560px, 100%);
+  padding: 24px 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--butter);
+  box-shadow: 0 6px 0 var(--butter-shadow);
+}
+
+.pron-q-word {
+  font-family: var(--font-ko);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.pron-q-en {
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.pron-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border: 2px solid var(--mint-shadow);
+  border-radius: 999px;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--mint-shadow);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pron-play .bi .en {
+  color: inherit;
+  opacity: 0.9;
+}
+
+/* Like the dark theme's mint buttons: its brighter mint takes dark text. */
+:root[data-theme='dark'] .pron-play {
+  color: #2b1f24;
+}
+
+.pron-fb-rule {
+  font-weight: 800;
+}

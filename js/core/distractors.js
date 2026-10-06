@@ -137,9 +137,11 @@
     // sentence and be marked wrong:
     //  - the bare form of an answer tile (아침 next to 아침을, 얼마예요? next to 얼마예요),
     //  - another form of a word the sentence uses (가요 next to 가세요, 먹어요 next to 먹었어요),
-    //  - 같이 when the sentence already says "with someone" (가족하고 같이 먹어요 is fine too).
+    //  - 같이 when the sentence already says "with someone" (가족하고 같이 먹어요 is fine too),
+    //  - a word too close in meaning to one the sentence uses (따뜻한 next to 뜨거운, 녹차 next to 차).
     const answerForms = answer.map(U.normalize);
     const neededIds = new Set(sentence.needs || []);
+    const neededWords = (sentence.needs || []).map((id) => M.content.word(id)).filter(Boolean);
     const neededDicts = new Set((sentence.needs || []).map((id) => M.content.word(id)).filter((w) => w && w.dict).map((w) => w.dict));
     const withSomeone = answerForms.some((t) => /(하고|이랑|랑)$/.test(t));
     const fillers = U.sample(
@@ -150,6 +152,7 @@
           !neededIds.has(w.id) &&
           !(w.dict && neededDicts.has(w.dict)) &&
           !(withSomeone && bare === '같이') &&
+          !neededWords.some((n) => tooClose(n, w)) &&
           !answerForms.some((t) => t.startsWith(bare)) &&
           !traps.some((t) => U.normalize(t.tile) === bare)
         );

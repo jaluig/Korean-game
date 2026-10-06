@@ -306,3 +306,42 @@ test('the newer endings: typical slips, never a correct form, always explained',
   }
   for (const id of ENDS2) assert.ok(G.table(id).length >= 3, `${id} table`);
 });
+
+test('the newer endings: -지 마세요, -(으)려고, -(으)면서, -(으)ㄴ 적이 있어요/없어요', () => {
+  const NEW = ['jimaseyo', 'ryeogo', 'myeonseo', 'jeogi', 'jeogiNot'];
+  // Checked by hand, in the order of NEW. null = doesn't apply.
+  const rows = [
+    ['가다', V, '가지 마세요', '가려고', '가면서', '간 적이 있어요', '간 적이 없어요'],
+    ['먹다', V, '먹지 마세요', '먹으려고', '먹으면서', '먹은 적이 있어요', '먹은 적이 없어요'],
+    ['하다', V, '하지 마세요', '하려고', '하면서', '한 적이 있어요', '한 적이 없어요'],
+    ['살다', V, '살지 마세요', '살려고', '살면서', '산 적이 있어요', '산 적이 없어요'],
+    ['만들다', V, '만들지 마세요', '만들려고', '만들면서', '만든 적이 있어요', '만든 적이 없어요'],
+    ['듣다', V, '듣지 마세요', '들으려고', '들으면서', '들은 적이 있어요', '들은 적이 없어요'],
+    ['걷다', V, '걷지 마세요', '걸으려고', '걸으면서', '걸은 적이 있어요', '걸은 적이 없어요'],
+    ['돕다', V, '돕지 마세요', '도우려고', '도우면서', '도운 적이 있어요', '도운 적이 없어요'],
+    ['짓다', V, '짓지 마세요', '지으려고', '지으면서', '지은 적이 있어요', '지은 적이 없어요'],
+    ['부르다', V, '부르지 마세요', '부르려고', '부르면서', '부른 적이 있어요', '부른 적이 없어요'],
+    ['춥다', A, null, null, '추우면서', null, null],
+    ['비싸다', A, null, null, '비싸면서', null, null],
+  ];
+  for (const [dict, pos, ...expected] of rows) {
+    NEW.forEach((id, i) => {
+      const got = G.form(dict, id, { pos });
+      if (expected[i] === null) assert.equal(got, null, `${dict} ${id} should not apply`);
+      else assert.equal(got && got.text, expected[i], `${dict} ${id}`);
+    });
+  }
+  // -아/어 본 적이 있어요 is right too: never offered as a wrong answer.
+  assert.ok(G.form('먹다', 'jeogi').variants.includes('먹어 본 적이 있어요'));
+  const has = (dict, id, text) => assert.ok(G.slips(dict, id).some((s) => s.text === text), `${dict} ${id}: ${text}`);
+  has('먹다', 'jimaseyo', '먹지 말세요');
+  has('먹다', 'jimaseyo', '안 먹으세요');
+  has('듣다', 'jimaseyo', '들지 마세요');
+  has('먹다', 'ryeogo', '먹을려고');
+  has('가다', 'ryeogo', '가으려고');
+  has('먹다', 'myeonseo', '먹면서');
+  has('듣다', 'myeonseo', '듣으면서');
+  has('먹다', 'jeogi', '먹는 적이 있어요');
+  has('가다', 'jeogi', '갈 적이 있어요');
+  for (const id of NEW) for (const s of G.slips('듣다', id)) assert.notEqual(s.text, G.form('듣다', id).text, 'a slip is never the right form');
+});

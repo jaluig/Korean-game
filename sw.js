@@ -11,7 +11,7 @@
  */
 'use strict';
 
-const VERSION = '0.8.0'; // keep in step with Mallang.version (js/core/namespace.js)
+const VERSION = '0.9.0'; // keep in step with Mallang.version (js/core/namespace.js)
 const CACHE = `mallang-${VERSION}`;
 const FONT_CACHE = `mallang-fonts-${VERSION}`; // fetched again with each version, so a bad copy can't stay
 const PAGE = 'index.html'; // what a page load gets from the copy
@@ -69,6 +69,8 @@ const FILES = [
   'content/stories.js',
   'content/honorifics.js',
   'content/topik.js',
+  'content/replies.js',
+  'content/sound-changes.js',
   'js/ui/components.js',
   'js/ui/mascot.js',
   'js/ui/keyboard.js',
@@ -88,8 +90,10 @@ const FILES = [
   'js/games/verb-magic.js',
   'js/games/number-shop.js',
   'js/games/sound-twins.js',
+  'js/games/sound-changes.js',
   'js/games/grammar-cards.js',
   'js/games/dialogues.js',
+  'js/games/replies.js',
   'js/games/reading.js',
   'js/games/speech-levels.js',
   'js/games/shadowing.js',

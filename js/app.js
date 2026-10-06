@@ -142,6 +142,22 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.9.0',
+      body: () => [
+        h('h3', ui.bi('새 게임 2개', '2 new games')),
+        featureList([
+          ['💬', `대답 고르기 · Choose Your Reply: you’re in the conversation. Pick (or say) what to answer, and the other person reacts the way a real person would: ${M.content.replies().length} conversations, from ordering at a café to a chat with a friend in 반말.`],
+          ['👄', `발음 변화 · Sound Changes: how Korean really sounds when the letters meet, like 먹어요 [머거요], 학년 [항년] and 좋다 [조타]. ${M.content.soundRules().length} rules, one at a time, with ${M.content.soundItems().length} words to hear and say.`],
+        ]),
+        h('h3', ui.bi('더 많은 단어와 연습', 'More words and practice')),
+        featureList([
+          ['🌱', `195 new words and 78 new sentences across the 13 topics (${M.content.words().length} words in all).`],
+          ['🔗', '4 new grammar patterns: -지 마세요, -(으)려고, -(으)면서 and -(으)ㄴ 적이 있어요, and 3 more sentences for every other pattern.'],
+          ['🎧', 'More in the other games: 10 dialogues, 13 texts to read, 6 stories, 15 speech-level and 18 honorifics sentences, 14 Sound Twins sets and 12 more things to sell in the Number Shop.'],
+        ]),
+      ],
+    },
+    {
       version: '0.8.0',
       body: () => {
         const questions = M.content.topik().reduce((n, t) => n + t.questions.length, 0);

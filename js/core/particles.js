@@ -18,7 +18,7 @@
     { id: 'eseo', forms: ['에서'], role: 'place-action', desc: 'marks the place where an action happens (or where something comes from)' },
     { id: 'ege', forms: ['에게'], role: 'to-person', desc: 'means “to” a person' },
     { id: 'hante', forms: ['한테'], role: 'to-person', desc: 'means “to” a person (spoken)' },
-    { id: 'buteo', forms: ['부터'], role: 'from', desc: 'means “from” (a time)' },
+    { id: 'buteo', forms: ['부터'], role: 'from', desc: 'means “from” (a starting time or point)' },
     { id: 'kkaji', forms: ['까지'], role: 'until', desc: 'means “until” (a time) or “as far as / to” (a place)' },
     { id: 'euro', forms: ['으로', '로'], role: 'means', desc: 'means “by” (bus, card…) or “toward” (a direction)' },
     { id: 'hago', forms: ['하고'], role: 'and', desc: 'means “and / with”' },
@@ -27,7 +27,7 @@
     { id: 'eun', forms: ['은', '는'], role: 'topic', desc: 'marks the topic: what the sentence is about' },
     { id: 'i', forms: ['이', '가'], role: 'subject', desc: 'marks the subject: who or what does something, or is described' },
     { id: 'gwa', forms: ['과', '와'], role: 'and', desc: 'means “and” between two nouns, or “with”' },
-    { id: 'e', forms: ['에'], role: 'place-time', desc: 'marks where you go, where something is, or when something happens' },
+    { id: 'e', forms: ['에'], role: 'place-time', desc: 'marks where someone or something goes, where something is, or when something happens' },
     { id: 'do', forms: ['도'], role: 'also', desc: 'means “also / too”' },
     { id: 'ui', forms: ['의'], role: 'possessive', desc: 'means “’s” (belonging to)' },
   ];
@@ -100,7 +100,7 @@
     'place-action': (stem) => `${stem} is where the action happens`,
     'to-person': (stem) => `${stem} is the person it goes to`,
     means: (stem) => `${stem} is how you do it (by bus, by card…) or the direction you go`,
-    and: (stem) => `${stem} goes together with the next word (“and” / “with”)`,
+    and: (stem) => `${stem} joins another noun (“and”) or is who you do it with (“with”)`,
     from: (stem) => `${stem} is the starting point`,
     until: (stem) => `${stem} is the end point`,
   };

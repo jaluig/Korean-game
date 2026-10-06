@@ -132,4 +132,68 @@ Mallang.content.registerSoundSets([
     { ko: '밥', en: 'rice / meal', emoji: '🍚', rom: 'bap' },
     { ko: '밖', en: 'outside', emoji: '🌳', rom: 'bak' },
   ] },
+
+  // ---- More plain, aspirated and tense consonants ----
+  { id: 'gaeda', words: [
+    { ko: '개다', en: 'to fold (clothes)', emoji: '👕', rom: 'gaeda' },
+    { ko: '캐다', en: 'to dig up', emoji: '🥔', rom: 'kaeda' },
+    { ko: '깨다', en: 'to wake up / to break', emoji: '⏰', rom: 'kkaeda' },
+  ] },
+  { id: 'keuda', words: [
+    { ko: '크다', en: 'to be big', emoji: '🐘', rom: 'keuda' },
+    { ko: '끄다', en: 'to turn off', emoji: '📴', rom: 'kkeuda' },
+  ] },
+  { id: 'sal', words: [
+    { ko: '살', en: 'years old', emoji: '🎈', rom: 'sal' },
+    { ko: '쌀', en: 'rice (uncooked)', emoji: '🌾', rom: 'ssal' },
+  ] },
+  { id: 'jida', words: [
+    { ko: '지다', en: 'to lose (a game)', emoji: '😞', rom: 'jida' },
+    { ko: '치다', en: 'to hit', emoji: '🥁', rom: 'chida' },
+    { ko: '찌다', en: 'to steam', emoji: '🥟', rom: 'jjida' },
+  ] },
+  { id: 'tada', words: [
+    { ko: '타다', en: 'to ride', emoji: '🚲', rom: 'tada' },
+    { ko: '따다', en: 'to pick (fruit)', emoji: '🍎', rom: 'ttada' },
+  ] },
+
+  // ---- More vowels that sound close ----
+  { id: 'na', words: [
+    { ko: '나', en: 'I / me (casual)', emoji: '🙋', rom: 'na' },
+    { ko: '너', en: 'you (casual)', emoji: '🫵', rom: 'neo' },
+  ] },
+  { id: 'sori', words: [
+    { ko: '소리', en: 'sound', emoji: '🔔', rom: 'sori' },
+    { ko: '수리', en: 'repair', emoji: '🔧', rom: 'suri' },
+  ] },
+  { id: 'eok', words: [
+    { ko: '억', en: 'hundred million', emoji: '💰', rom: 'eok' },
+    { ko: '역', en: 'station', emoji: '🚉', rom: 'yeok' },
+  ] },
+  { id: 'yeong', words: [
+    { ko: '영', en: 'zero', emoji: '0️⃣', rom: 'yeong' },
+    { ko: '용', en: 'dragon', emoji: '🐉', rom: 'yong' },
+  ] },
+  { id: 'eun', words: [
+    { ko: '은', en: 'silver', emoji: '🥈', rom: 'eun' },
+    { ko: '운', en: 'luck', emoji: '🍀', rom: 'un' },
+  ] },
+  { id: 'uisa', words: [
+    { ko: '의사', en: 'doctor', emoji: '🧑‍⚕️', rom: 'uisa' },
+    { ko: '이사', en: 'moving house', emoji: '🚚', rom: 'isa' },
+  ] },
+
+  // ---- More final consonants (받침) ----
+  { id: 'jakda', words: [
+    { ko: '작다', en: 'to be small', emoji: '🐭', rom: 'jakda' },
+    { ko: '잡다', en: 'to catch', emoji: '🎣', rom: 'japda' },
+  ] },
+  { id: 'jan', words: [
+    { ko: '잔', en: 'cup / glass', emoji: '🥃', rom: 'jan' },
+    { ko: '장', en: 'sheet (counter)', emoji: '📄', rom: 'jang' },
+  ] },
+  { id: 'mal', words: [
+    { ko: '말', en: 'horse / words', emoji: '🐴', rom: 'mal' },
+    { ko: '맛', en: 'taste', emoji: '👅', rom: 'mat' },
+  ] },
 ]);

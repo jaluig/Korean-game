@@ -20,6 +20,8 @@
   const honor = { card: null, items: [] };
   const stories = [];
   const topik = { listening: [], reading: [] };
+  const replies = [];
+  const sounds = { rules: [], items: [] };
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -433,6 +435,118 @@
     }
   }
 
+  /**
+   * Choose your reply (content/replies.js): a conversation in which you play one
+   * part. They speak (`{ them: { ko, en } }`), then you pick (or say) your line
+   * from three (`{ you: [options] }`): one is right; after a wrong one they react
+   * (`react`), and `why` explains it. Ids become 'reply:<id>'.
+   */
+  function registerReplies(list) {
+    for (const r of list || []) {
+      const id = `reply:${r.id}`;
+      if (!r.id || !Array.isArray(r.steps)) problems.push(`reply "${r.id}": needs id and steps`);
+      else if (replies.some((x) => x.id === id)) problems.push(`${id}: duplicate conversation`);
+      else replies.push(Object.freeze({ ...r, id, localId: r.id, level: r.level || 1, type: 'reply', needs: r.words || [], index: replies.length }));
+    }
+  }
+
+  function checkReplies(found) {
+    for (const r of replies) {
+      if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
+      if (!r.title || !r.title.ko || !r.title.en) found.push(`${r.id}: needs title { ko, en }`);
+      if (![1, 2, 3].includes(r.level)) found.push(`${r.id}: level 1, 2 or 3`);
+      if (!r.role || !r.role.ko || !r.role.en) found.push(`${r.id}: needs role { ko, en } (who you are in it)`);
+      if (!r.goal || !r.goal.ko || !r.goal.en) found.push(`${r.id}: needs goal { ko, en } (what you want from it)`);
+      const them = r.them || {};
+      if (!them.name || !them.en || !them.emoji || !['high', 'low'].includes(them.voice)) found.push(`${r.id}: needs them { name, en, emoji, voice: 'high' | 'low' } (who you talk to)`);
+      for (const ref of r.needs) if (!words.has(ref)) found.push(`${r.id}: unknown word "${ref}" (use topic:id)`);
+      if (r.needs.length < 2) found.push(`${r.id}: list 2–4 key words in "words" (it opens once they're learned)`);
+      const kinds = r.steps.map((st) => (st && st.them && st.you ? '?' : st && st.them ? 'them' : st && Array.isArray(st.you) ? 'you' : '?'));
+      if (kinds.includes('?')) found.push(`${r.id}: each step is { them: { ko, en } } or { you: [three options] }`);
+      if (kinds[0] !== 'them' || kinds[kinds.length - 1] !== 'them') found.push(`${r.id}: they speak first and last`);
+      kinds.forEach((k, i) => {
+        if (k === 'you' && kinds[i + 1] === 'you') found.push(`${r.id} step ${i}: they answer between two of your turns`);
+      });
+      const turns = kinds.filter((k) => k === 'you').length;
+      if (turns < 3 || turns > 5) found.push(`${r.id}: needs 3–5 turns of yours`);
+      // Everything is read aloud: numbers in Hangul, or a "say" with them.
+      const spoken = (label, x) => {
+        if (!x || !x.ko || !x.en) found.push(`${label}: needs ko and en`);
+        else if (/\d/.test(x.say || M.numbers.readAloud(x.ko))) found.push(`${label}: write the number in Hangul, or add "say"`);
+      };
+      r.steps.forEach((st, i) => {
+        const label = `${r.id} step ${i}`;
+        if (st && st.them) spoken(label, st.them);
+        if (!st || !Array.isArray(st.you)) return;
+        const options = st.you;
+        if (options.length !== 3 || new Set(options.map((o) => o && o.ko)).size !== 3) found.push(`${label}: needs 3 different options`);
+        if (options.filter((o) => o && o.right).length !== 1) found.push(`${label}: exactly one option is right (right: true)`);
+        options.forEach((o, k) => {
+          spoken(`${label} option ${k + 1}`, o);
+          if (o && !o.right) {
+            spoken(`${label} option ${k + 1} react`, o.react);
+            if (!o.why) found.push(`${label} option ${k + 1}: a wrong option needs "why"`);
+          }
+        });
+      });
+    }
+  }
+
+  /**
+   * Sound changes (content/sound-changes.js): the rules that change how words
+   * sound (연음, 비음화…), each with a card, and items: a word or phrase, how it's
+   * said (`pron`, in Hangul, without brackets), wrong pronunciations and wrong
+   * spellings learners might pick. Rule ids become 'pronrule:<id>', items 'pron:<id>'.
+   */
+  function registerSoundChanges({ rules, items } = {}) {
+    for (const r of rules || []) {
+      const id = `pronrule:${r.id}`;
+      if (!r.id) problems.push('sound-change rule: needs an id');
+      else if (sounds.rules.some((x) => x.id === id)) problems.push(`${id}: duplicate rule`);
+      else sounds.rules.push(Object.freeze({ ...r, id, localId: r.id, level: r.level || 1, type: 'pronrule', index: sounds.rules.length }));
+    }
+    for (const x of items || []) {
+      const id = `pron:${x.id}`;
+      if (!x.id) problems.push('sound-change item: needs an id');
+      else if (sounds.items.some((y) => y.id === id)) problems.push(`${id}: duplicate item`);
+      else sounds.items.push(Object.freeze({ ...x, id, localId: x.id, rule: `pronrule:${x.rule}`, level: x.level || 1, type: 'pron', index: sounds.items.length }));
+    }
+    sounds.rules.sort((a, b) => (a.order ?? 99) - (b.order ?? 99) || a.index - b.index);
+  }
+
+  function checkSoundChanges(found) {
+    const plain = (t) => String(t).replace(/\s+/g, '');
+    const known = new Map([...words.values()].map((w) => [plain(w.ko), w.id]));
+    for (const r of sounds.rules) {
+      if (!r.title || !r.title.ko || !r.title.en) found.push(`${r.id}: needs title { ko, en }`);
+      if (!r.text) found.push(`${r.id}: needs text (the rule in plain English, Korean in **bold**)`);
+      const examples = Array.isArray(r.examples) ? r.examples : [];
+      if (examples.length < 2 || examples.some((e) => !e || !e.ko || !e.pron || !e.en)) found.push(`${r.id}: needs 2+ examples { ko, pron, en }`);
+      else if (examples.some((e) => !/^[가-힣 ]+$/.test(e.pron) || plain(e.pron) === plain(e.ko))) found.push(`${r.id}: an example's pron is in Hangul only, without brackets, and differs from its spelling`);
+      if (sounds.items.filter((x) => x.rule === r.id).length < 6) found.push(`${r.id}: needs 6+ items`);
+    }
+    for (const x of sounds.items) {
+      if (!sounds.rules.some((r) => r.id === x.rule)) found.push(`${x.id}: unknown rule "${x.rule}"`);
+      if (![1, 2, 3].includes(x.level)) found.push(`${x.id}: level 1, 2 or 3`);
+      if (!x.ko || !x.pron || !x.en) {
+        found.push(`${x.id}: needs ko, pron and en`);
+        continue;
+      }
+      if (!/^[가-힣 ]+$/.test(x.pron)) found.push(`${x.id}: pron in Hangul only, without brackets`);
+      if (plain(x.ko) === plain(x.pron)) found.push(`${x.id}: pron must differ from the spelling`);
+      const wrong = Array.isArray(x.wrong) ? x.wrong : [];
+      if (wrong.length < 2 || wrong.length > 3 || new Set(wrong.map(plain)).size !== wrong.length || wrong.some((w) => plain(w) === plain(x.pron) || !/^[가-힣 ]+$/.test(w))) {
+        found.push(`${x.id}: needs 2–3 different wrong pronunciations in "wrong" (Hangul, not the right one)`);
+      }
+      const spellings = Array.isArray(x.spellings) ? x.spellings : [];
+      if (spellings.length !== 2 || new Set(spellings.map(plain)).size !== 2 || spellings.some((w) => plain(w) === plain(x.ko) || !/^[가-힣 ]+$/.test(w))) {
+        found.push(`${x.id}: needs 2 different wrong spellings in "spellings" (Hangul, not the right one)`);
+      }
+      // A wrong spelling must not be a real word that sounds the same (같이 → 가치 "value"): at least none of the game's words.
+      for (const w of spellings) if (known.has(plain(w))) found.push(`${x.id}: the spelling "${w}" is a real word (${known.get(plain(w))}): pick another`);
+    }
+  }
+
   function checkReadings(found) {
     for (const r of readings) {
       if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
@@ -538,6 +652,8 @@
     checkHonorifics(found);
     checkStories(found);
     checkTopik(found);
+    checkReplies(found);
+    checkSoundChanges(found);
     return found;
   }
 
@@ -553,6 +669,8 @@
     registerHonorifics,
     registerStories,
     registerTopik,
+    registerReplies,
+    registerSoundChanges,
     check,
     grammar: () => grammar.slice(),
     grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
@@ -576,6 +694,13 @@
     TOPIK_TYPES,
     TOPIK_MARKS,
     NOTICE_KINDS,
+    replies: (topicId = 'all') => replies.filter((r) => !topicId || topicId === 'all' || r.topic === topicId),
+    reply: (id) => replies.find((r) => r.id === id) || null,
+    soundRules: () => sounds.rules.slice(),
+    soundRule: (id) => sounds.rules.find((r) => r.id === id) || null,
+    /** Sound-change items: all, or one rule's ('pronrule:<id>'). */
+    soundItems: (ruleId) => sounds.items.filter((x) => !ruleId || x.rule === ruleId),
+    soundItem: (id) => sounds.items.find((x) => x.id === id) || null,
     LEVELS,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,

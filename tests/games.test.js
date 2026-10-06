@@ -93,6 +93,19 @@ test('Number Shop connects numbers to the words that name them', () => {
   assert.ok(!M.numberShop.sinoWords(1000).includes('numbers:il'), '천, not 일천');
 });
 
+test('Number Shop: every item has a fitting native counter and a word in the game', () => {
+  const N = M.numbers;
+  const kos = new Set();
+  for (const g of M.numberShop.GOODS) {
+    assert.ok(!kos.has(g.ko), `${g.ko} twice`);
+    kos.add(g.ko);
+    assert.equal(N.COUNTERS[g.counter]?.system, 'native', `${g.ko}: ${g.counter}`);
+    assert.ok(N.COUNTERS[g.wrong] && g.wrong !== g.counter, `${g.ko}: ${g.wrong}`);
+    assert.ok(M.content.word(g.word)?.ko === g.ko, `${g.ko}: ${g.word}`);
+  }
+  for (const id of [...Object.values(M.numberShop.COUNTER_WORD), ...Object.values(M.numberShop.NATIVE_WORD)]) assert.ok(M.content.word(id), id);
+});
+
 test('Sound Twins: every twin in a set differs in one explainable sound', () => {
   const sets = M.content.soundSets();
   assert.ok(sets.length >= 20);

@@ -630,4 +630,403 @@ Mallang.content.registerStories([
       },
     ],
   },
+  // ---------- numbers · level 1 · a story ----------
+  {
+    id: 'numbers-ten-friends',
+    topic: 'numbers',
+    level: 1,
+    emoji: '🚌',
+    kind: { ko: '이야기', en: 'A story' },
+    title: { ko: '한 명이 없어요!', en: 'One of us is missing!' },
+    voice: 'high',
+    words: ['numbers:ten', 'numbers:six', 'numbers:oclock'],
+    parts: [
+      {
+        lines: [
+          { ko: '지난 토요일에 친구들하고 바다에 갔어요.', en: 'Last Saturday, I went to the beach with my friends.' },
+          { ko: '우리는 모두 열 명이었어요.', en: 'There were ten of us in all.' },
+          { ko: '바다에서 하루 종일 재미있게 놀았어요.', en: 'We had fun at the beach all day.' },
+          { ko: '그리고 저녁 여섯 시에 버스를 탔어요.', en: 'Then at six in the evening, we got on the bus.' },
+        ],
+        questions: [
+          { q: { ko: '모두 몇 명이 바다에 갔어요?', en: 'How many people went to the beach in all?' },
+            options: [{ ko: '10명', en: '10 people' }, { ko: '6명', en: '6 people' }, { ko: '9명', en: '9 people' }],
+            answer: 0, line: 1,
+            why: '우리는 모두 열 명이었어요: there were ten of them in all (열 = 10; 모두 = in all). 여섯 (6) is the time they got on the bus: 저녁 여섯 시.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '버스에서 제가 친구들을 셌어요.', en: 'On the bus, I counted my friends.' },
+          { ko: '하나, 둘, 셋, 넷… 아홉!', en: 'One, two, three, four… nine!' },
+          { ko: '아홉 명이었어요. 한 명이 없었어요!', en: 'There were nine. One of us was missing!' },
+          { ko: '다시 셌어요. 또 아홉 명이었어요!', en: 'I counted again. Nine again!' },
+        ],
+        questions: [
+          { q: { ko: '이 사람은 버스에서 몇 명을 셌어요?', en: 'How many people did she count on the bus?' },
+            options: [{ ko: '9명', en: '9 people' }, { ko: '10명', en: '10 people' }, { ko: '4명', en: '4 people' }],
+            answer: 0, line: [2, 3],
+            why: '아홉 명이었어요: she counted nine (셌어요 = counted, from 세다; 아홉 = 9), and again: 또 아홉 명이었어요. They were ten, so she thought 한 명이 없었어요: one of them was missing.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '우리는 모두 걱정했어요.', en: 'We were all worried.' },
+          { ko: '그때 지유가 저를 보고 “너는?”이라고 했어요.', en: 'Then Jiyu looked at me and said, “What about you?”' },
+          { ko: '아! 제가 저를 안 셌어요!', en: 'Oh! I hadn’t counted myself!' },
+          { ko: '우리는 열 명 모두 버스에 있었어요!', en: 'All ten of us were on the bus!' },
+        ],
+        questions: [
+          { q: { ko: '정말 한 명이 없었어요?', en: 'Was someone really missing?' },
+            options: [
+              { ko: '아니요, 열 명 다 있었어요', en: 'No, all ten were there' },
+              { ko: '네, 지유가 없었어요', en: 'Yes, Jiyu was missing' },
+              { ko: '네, 한 명이 바다에 있었어요', en: 'Yes, one was still at the beach' },
+            ],
+            answer: 0, line: [2, 3],
+            why: 'Jiyu asks 너는? (“What about you?”), and the speaker sees it: 제가 저를 안 셌어요, she hadn’t counted herself. 우리는 열 명 모두 버스에 있었어요: all ten of them were on the bus.' },
+        ],
+      },
+    ],
+  },
+
+  // ---------- past · level 2 · a story ----------
+  {
+    id: 'past-night-customer',
+    topic: 'past',
+    level: 2,
+    emoji: '🏪',
+    kind: { ko: '이야기', en: 'A story' },
+    title: { ko: '새벽 두 시의 손님', en: 'The 2 a.m. customer' },
+    voice: 'low',
+    words: ['past:worked', 'past:came', 'past:saw', 'past:received'],
+    parts: [
+      {
+        lines: [
+          { ko: '저는 주말에 편의점에서 일해요.', en: 'I work at a convenience store at weekends.' },
+          { ko: '지난 토요일에도 밤 열 시부터 일했어요.', en: 'Last Saturday, too, I worked from ten at night.' },
+          { ko: '새벽 두 시쯤 한 남자가 라면하고 우유를 사러 왔어요.', en: 'At about two in the morning, a man came in to buy some ramen and milk.' },
+          { ko: '모자하고 마스크를 써서 얼굴은 잘 못 봤어요.', en: 'He had a cap and a mask on, so I couldn’t really see his face.' },
+        ],
+        questions: [
+          { q: { ko: '손님은 몇 시쯤 왔어요?', en: 'At about what time did the man come in?' },
+            options: [{ ko: '새벽 2시', en: '2 a.m.' }, { ko: '밤 10시', en: '10 p.m.' }, { ko: '밤 12시', en: 'midnight' }],
+            answer: 0, line: 2,
+            why: '새벽 두 시쯤 한 남자가 라면하고 우유를 사러 왔어요: he came in at about two (두 시쯤) in the morning (새벽 = the small hours). 밤 열 시 (10 p.m.) is when the speaker’s shift started.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '그런데 손님 카드가 안 됐어요.', en: 'But his card didn’t work.' },
+          { ko: '현금도 없었어요.', en: 'And he had no cash, either.' },
+          { ko: '손님은 “죄송해요. 그냥 갈게요”라고 했어요.', en: 'He said, “Sorry. I’ll just go.”' },
+          { ko: '그래서 제가 제 돈으로 사 줬어요. 사천 원이었어요.', en: 'So I paid for them myself. It was 4,000 won.' },
+          { ko: '손님은 “고마워요! 내일 꼭 올게요!”라고 했어요.', en: 'He said, “Thank you! I’ll come back tomorrow, I promise!”' },
+        ],
+        questions: [
+          { q: { ko: '손님은 왜 돈을 못 냈어요?', en: 'Why couldn’t the man pay?' },
+            options: [
+              { ko: '카드가 안 되고 현금도 없어서', en: 'His card didn’t work, and he had no cash' },
+              { ko: '지갑을 집에 두고 와서', en: 'He’d left his wallet at home' },
+              { ko: '라면이 너무 비싸서', en: 'The ramen was too expensive' },
+            ],
+            answer: 0, line: [0, 1],
+            why: '손님 카드가 안 됐어요: his card didn’t work (안 되다), and 현금도 없었어요: he had no cash, either (도 = also).' },
+          { q: { ko: '라면하고 우유는 모두 얼마였어요?', en: 'How much were the ramen and milk together?' },
+            options: [{ ko: '4,000원', en: '4,000 won' }, { ko: '2,000원', en: '2,000 won' }, { ko: '10,000원', en: '10,000 won' }],
+            answer: 0, line: 3,
+            why: '사천 원이었어요: it came to 4,000 won (사천 = four thousand), and the speaker paid it himself: 제가 제 돈으로 사 줬어요.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '다음 날 밤, 그 손님이 정말 왔어요.', en: 'The next night, he really did come back.' },
+          { ko: '이번에는 모자도 마스크도 안 썼어요.', en: 'This time he wasn’t wearing a cap or a mask.' },
+          { ko: '드디어 얼굴을 봤어요. 제가 제일 좋아하는 가수였어요!', en: 'At last I saw his face. It was my favourite singer!' },
+          { ko: '가수한테서 사천 원하고 콘서트 표 두 장을 받았어요.', en: 'He gave me back my 4,000 won, plus two tickets to his concert.' },
+          { ko: '다음 달에 여자 친구하고 같이 콘서트에 갈 거예요!', en: 'I’m going to the concert with my girlfriend next month!' },
+        ],
+        questions: [
+          { q: { ko: '그 손님은 누구였어요?', en: 'Who was the customer?' },
+            options: [{ ko: '이 사람이 좋아하는 가수', en: 'the speaker’s favourite singer' }, { ko: '편의점 사장님', en: 'the owner of the shop' }, { ko: '이 사람의 친구', en: 'a friend of the speaker’s' }],
+            answer: 0, line: 2,
+            why: '제가 제일 좋아하는 가수였어요!: he was the speaker’s favourite singer (제일 좋아하는 = liked the most). The first night, the cap and mask had hidden his face.' },
+          { q: { ko: '이 사람은 가수한테서 뭘 받았어요?', en: 'What did the speaker get from the singer?' },
+            options: [{ ko: '돈하고 콘서트 표', en: 'his money and concert tickets' }, { ko: '라면하고 우유', en: 'ramen and milk' }, { ko: '모자하고 마스크', en: 'a cap and a mask' }],
+            answer: 0, line: 3,
+            why: '가수한테서 사천 원하고 콘서트 표 두 장을 받았어요: he got his 4,000 won back, and two concert tickets (표 두 장; 장 counts tickets).' },
+        ],
+      },
+    ],
+  },
+
+  // ---------- hobbies · level 2 · a radio show ----------
+  {
+    id: 'hobbies-yoga-tango',
+    topic: 'hobbies',
+    level: 2,
+    emoji: '💃',
+    kind: { ko: '라디오', en: 'A radio show' },
+    title: { ko: '요가? 탱고!', en: 'Yoga? Tango!' },
+    voice: 'low',
+    words: ['hobbies:hobby', 'hobbies:learn', 'hobbies:dance', 'hobbies:music'],
+    parts: [
+      {
+        lines: [
+          { ko: '여러분, 저녁 드셨어요? 말랑 라디오의 태오예요.', en: 'Have you all had dinner? It’s Taeo on Mallang Radio.' },
+          { ko: '오늘은 채원 씨의 재미있는 메시지를 읽을게요.', en: 'Tonight I’m going to read you a funny message from Chaewon.' },
+          { ko: '채원 씨는 지난달에 요가 수업에 처음 갔어요.', en: 'Last month, Chaewon went to her very first yoga class.' },
+          { ko: '요가 교실은 삼 층이었어요.', en: 'The yoga room was on the third floor.' },
+          { ko: '그런데 채원 씨는 이 층 교실에 들어갔어요!', en: 'But Chaewon walked into a room on the second floor!' },
+        ],
+        questions: [
+          { q: { ko: '채원 씨는 몇 층 교실에 들어갔어요?', en: 'On which floor was the room Chaewon walked into?' },
+            options: [{ ko: '2층', en: 'the 2nd floor' }, { ko: '3층', en: 'the 3rd floor' }, { ko: '1층', en: 'the 1st floor' }],
+            answer: 0, line: 4,
+            why: '채원 씨는 이 층 교실에 들어갔어요: she walked into a room on the second floor (이 층). The yoga room was on the third: 요가 교실은 삼 층이었어요.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '교실 안에는 사람이 열 명쯤 있었어요.', en: 'There were about ten people in the room.' },
+          { ko: '그런데 요가 매트가 하나도 없었어요.', en: 'But there wasn’t a single yoga mat.' },
+          { ko: '음악이 나오고, 선생님이 “시작해요!”라고 하셨어요.', en: 'The music came on, and the teacher said, “Let’s begin!”' },
+          { ko: '탱고 수업이었어요!', en: 'It was a tango class!' },
+          { ko: '채원 씨는 너무 부끄러워서 못 나갔어요.', en: 'Chaewon was too embarrassed to leave.' },
+        ],
+        questions: [
+          { q: { ko: '채원 씨가 들어간 교실은 무슨 수업이었어요?', en: 'What class had Chaewon walked into?' },
+            options: [{ ko: '탱고 수업', en: 'a tango class' }, { ko: '요가 수업', en: 'a yoga class' }, { ko: '노래 수업', en: 'a singing class' }],
+            answer: 0, line: 3,
+            why: '탱고 수업이었어요!: it was a tango class (탱고 수업), not yoga. That’s why 요가 매트가 하나도 없었어요: there wasn’t a single yoga mat.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '그날 채원 씨는 한 시간 동안 탱고를 배웠어요.', en: 'That day, Chaewon learned the tango for an hour.' },
+          { ko: '발은 아팠지만 계속 웃었어요.', en: 'Her feet hurt, but she smiled the whole time.' },
+          { ko: '이제 탱고는 채원 씨의 새 취미예요.', en: 'Now the tango is Chaewon’s new hobby.' },
+          { ko: '매주 화요일에 춰요. 요가는 아직 한 번도 못 갔어요!', en: 'She dances every Tuesday. As for yoga, she still hasn’t made it once!' },
+          { ko: '그럼 오늘은 탱고 음악 한 곡 들어 볼까요?', en: 'So, shall we listen to a tango tonight?' },
+        ],
+        questions: [
+          { q: { ko: '채원 씨는 지금 매주 화요일에 뭐 해요?', en: 'What does Chaewon do every Tuesday now?' },
+            options: [{ ko: '탱고를 춰요', en: 'She dances the tango' }, { ko: '요가를 해요', en: 'She does yoga' }, { ko: '노래를 배워요', en: 'She has singing lessons' }],
+            answer: 0, line: [2, 3],
+            why: '이제 탱고는 채원 씨의 새 취미예요, and 매주 화요일에 춰요: the tango is her new hobby, and she dances it (추다 = dance) every Tuesday (매주 = every week).' },
+          { q: { ko: '채원 씨는 처음에 뭘 배우러 갔어요?', en: 'What did Chaewon set out to learn?' },
+            options: [{ ko: '요가', en: 'yoga' }, { ko: '탱고', en: 'the tango' }, { ko: '노래', en: 'singing' }],
+            answer: 0, line: 3,
+            why: 'She was going to her first yoga class (요가 수업에 처음 갔어요) and walked into the tango class by mistake. As for yoga, 아직 한 번도 못 갔어요: she still hasn’t been!' },
+        ],
+      },
+    ],
+  },
+
+  // ---------- travel · level 2 · an audio diary ----------
+  {
+    id: 'travel-tangerines',
+    topic: 'travel',
+    level: 2,
+    emoji: '🍊',
+    kind: { ko: '오디오 일기', en: 'An audio diary' },
+    title: { ko: '할머니의 귤', en: 'Grandma’s tangerines' },
+    voice: 'high',
+    words: ['travel:airport', 'travel:luggage', 'travel:checkin', 'travel:heavy'],
+    parts: [
+      {
+        lines: [
+          { ko: '오늘 제주도에서 서울로 돌아왔어요.', en: 'Today I came back to Seoul from Jeju Island.' },
+          { ko: '일주일 동안 할머니 집에 있었어요.', en: 'I’d been staying at Grandma’s for a week.' },
+          { ko: '할머니 집 뒤에는 귤나무가 아주 많아요.', en: 'There are lots of tangerine trees behind her house.' },
+          { ko: '아침에 할머니가 공항까지 같이 가 주셨어요.', en: 'This morning, Grandma came with me to the airport.' },
+          { ko: '그런데 체크인 카운터에서 문제가 있었어요.', en: 'But at the check-in desk, there was a problem.' },
+        ],
+        questions: [
+          { q: { ko: '할머니는 어디까지 같이 가셨어요?', en: 'How far did Grandma go with her?' },
+            options: [{ ko: '공항까지', en: 'to the airport' }, { ko: '서울까지', en: 'all the way to Seoul' }, { ko: '버스 정류장까지', en: 'to the bus stop' }],
+            answer: 0, line: 3,
+            why: '할머니가 공항까지 같이 가 주셨어요: Grandma went with her as far as the airport (공항까지; 까지 = as far as). The speaker flew back to Seoul on her own.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '직원이 “짐이 너무 무거워요”라고 했어요.', en: 'The clerk said, “Your luggage is too heavy.”' },
+          { ko: '제 가방은 이십오 킬로였어요.', en: 'My bag weighed twenty-five kilos.' },
+          { ko: '그런데 짐은 십오 킬로까지만 돼요.', en: 'But you’re only allowed fifteen.' },
+          { ko: '저는 바로 가방 안을 봤어요.', en: 'I looked inside my bag straight away.' },
+          { ko: '가방 안에 귤이 정말 많이 있었어요!', en: 'It was full of tangerines!' },
+        ],
+        questions: [
+          { q: { ko: '이 사람 가방은 몇 킬로였어요?', en: 'How much did her bag weigh?' },
+            options: [{ ko: '25킬로', en: '25 kg' }, { ko: '15킬로', en: '15 kg' }, { ko: '20킬로', en: '20 kg' }],
+            answer: 0, line: 1,
+            why: '제 가방은 이십오 킬로였어요: her bag weighed 25 kilos (이십오 = 25). 십오 킬로 (15 kg) is all you’re allowed to take.' },
+          { q: { ko: '가방은 왜 무거웠어요?', en: 'Why was the bag so heavy?' },
+            options: [{ ko: '귤이 많이 있어서', en: 'It was full of tangerines' }, { ko: '옷이 많이 있어서', en: 'It was full of clothes' }, { ko: '책이 많이 있어서', en: 'It was full of books' }],
+            answer: 0, line: 4,
+            why: '가방 안에 귤이 정말 많이 있었어요!: her bag was full of tangerines (귤), like the ones on the trees behind Grandma’s house.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '할머니가 아침에 넣으셨어요. 저는 몰랐어요!', en: 'Grandma had put them in that morning. I had no idea!' },
+          { ko: '그래서 이만 원을 더 내고 비행기를 탔어요.', en: 'So I paid 20,000 won extra and got on the plane.' },
+          { ko: '저녁에 집에 오니까 문 앞에 큰 상자가 있었어요!', en: 'When I got home in the evening, there was a big box at the door!' },
+          { ko: '할머니가 보내신 귤 십 킬로였어요!', en: 'It was ten kilos of tangerines from Grandma!' },
+          { ko: '이제 우리 가족은 매일 귤만 먹을 거예요!', en: 'Now my family will be eating nothing but tangerines every day!' },
+        ],
+        questions: [
+          { q: { ko: '이 사람은 돈을 얼마 더 냈어요?', en: 'How much extra did she pay?' },
+            options: [{ ko: '20,000원', en: '20,000 won' }, { ko: '10,000원', en: '10,000 won' }, { ko: '25,000원', en: '25,000 won' }],
+            answer: 0, line: 1,
+            why: '이만 원을 더 내고 비행기를 탔어요: she paid 20,000 won more (이만 원; 더 = more), and then got on the plane.' },
+          { q: { ko: '집에 온 상자 안에는 뭐가 있었어요?', en: 'What was in the box at home?' },
+            options: [{ ko: '귤 10킬로', en: '10 kg of tangerines' }, { ko: '귤 15킬로', en: '15 kg of tangerines' }, { ko: '귤 25킬로', en: '25 kg of tangerines' }],
+            answer: 0, line: 3,
+            why: '할머니가 보내신 귤 십 킬로였어요!: the box held ten kilos (십 킬로) of tangerines from Grandma. 25 kg (이십오 킬로) was her bag, and 15 kg (십오 킬로) the limit.' },
+        ],
+      },
+    ],
+  },
+
+  // ---------- directions · level 3 · a story ----------
+  {
+    id: 'directions-taxi-hotel',
+    topic: 'directions',
+    level: 3,
+    emoji: '🚕',
+    kind: { ko: '이야기', en: 'A story' },
+    title: { ko: '서울 길은 다 알아요', en: 'I know every road in Seoul' },
+    voice: 'low',
+    words: ['directions:exit', 'directions:walk', 'directions:takes', 'directions:pharmacy'],
+    parts: [
+      {
+        lines: [
+          { ko: '저는 서울에서 이십 년 동안 택시를 운전했어요.', en: 'I’ve been driving a taxi in Seoul for twenty years.' },
+          { ko: '그래서 서울 길은 다 알아요.', en: 'So I know every road in Seoul.' },
+          { ko: '금요일 밤에 강남역 십 번 출구에서 손님이 탔어요.', en: 'On Friday night, a passenger got in at Exit 10 of Gangnam Station.' },
+          { ko: '한국어를 조금 하는 외국인 여자 손님이었어요.', en: 'She was a visitor from abroad who spoke a little Korean.' },
+          { ko: '그런데 호텔 이름도 모르고, 핸드폰 배터리도 없었어요.', en: 'But she didn’t know the name of her hotel, and her phone battery was dead.' },
+          { ko: '“일 층은 카페고, 옆은 약국이에요”라고만 했어요.', en: 'All she could tell me was, “The first floor is a café, and next door is a pharmacy.”' },
+        ],
+        questions: [
+          { q: { ko: '손님은 어디에서 택시를 탔어요?', en: 'Where did the passenger get in?' },
+            options: [{ ko: '강남역 10번 출구', en: 'at Exit 10 of Gangnam Station' }, { ko: '강남역 1번 출구', en: 'at Exit 1 of Gangnam Station' }, { ko: '호텔 앞', en: 'outside her hotel' }],
+            answer: 0, line: 2,
+            why: '강남역 십 번 출구에서 손님이 탔어요: she got in at Exit 10 (십 번 출구) of Gangnam Station. 출구 is an exit, and 번 follows its number.' },
+          { q: { ko: '호텔 옆에는 뭐가 있어요?', en: 'What’s next to the hotel?' },
+            options: [{ ko: '약국', en: 'a pharmacy' }, { ko: '카페', en: 'a café' }, { ko: '편의점', en: 'a convenience store' }],
+            answer: 0, line: 5,
+            why: '일 층은 카페고, 옆은 약국이에요: the hotel’s first floor (일 층) is a café, and next door (옆) is a pharmacy (약국).' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '서울에는 일 층에 카페가 있는 호텔이 정말 많아요.', en: 'Seoul has so many hotels with a café on the first floor.' },
+          { ko: '우리는 이 호텔, 저 호텔 다 가 봤어요.', en: 'We tried one hotel after another.' },
+          { ko: '하지만 옆에 약국이 있는 호텔은 없었어요.', en: 'But none of them had a pharmacy next door.' },
+          { ko: '그렇게 한 시간이 지났어요.', en: 'An hour went by like that.' },
+          { ko: '택시 요금은 벌써 삼만 원이었어요.', en: 'The fare was already 30,000 won.' },
+          { ko: '손님은 계속 “죄송해요”라고만 했어요.', en: 'She just kept saying, “I’m sorry.”' },
+        ],
+        questions: [
+          { q: { ko: '한 시간 후에 택시 요금은 얼마였어요?', en: 'How much was the fare after an hour?' },
+            options: [{ ko: '30,000원', en: '30,000 won' }, { ko: '3,000원', en: '3,000 won' }, { ko: '10,000원', en: '10,000 won' }],
+            answer: 0, line: 4,
+            why: '택시 요금은 벌써 삼만 원이었어요: the fare was already (벌써) 30,000 won. 삼만 is three 만 (10,000s); 3,000 won would be 삼천 원.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '그때 손님이 가방에서 카드 한 장을 찾았어요.', en: 'Then she found a card in her bag.' },
+          { ko: '호텔 카드키였어요! 거기에 호텔 이름이 있었어요.', en: 'It was her hotel key card, with the hotel’s name on it!' },
+          { ko: '저는 그 이름을 보고 깜짝 놀랐어요.', en: 'When I saw the name, I was stunned.' },
+          { ko: '그 호텔은 강남역 일 번 출구 바로 앞에 있었어요!', en: 'That hotel was right outside Exit 1 of Gangnam Station!' },
+          { ko: '십 번 출구에서 걸어서 오 분 걸리는 곳이었어요.', en: 'It was a five-minute walk from Exit 10.' },
+          { ko: '그날 저는 요금을 안 받았어요.', en: 'I didn’t charge her that night.' },
+        ],
+        questions: [
+          { q: { ko: '호텔은 어디에 있었어요?', en: 'Where was the hotel?' },
+            options: [{ ko: '강남역 1번 출구 앞', en: 'outside Exit 1' }, { ko: '강남역 10번 출구 앞', en: 'outside Exit 10' }, { ko: '강남역 5번 출구 앞', en: 'outside Exit 5' }],
+            answer: 0, line: 3,
+            why: '그 호텔은 강남역 일 번 출구 바로 앞에 있었어요: right (바로) outside Exit 1 (일 번 출구). Exit 10 (십 번) is where she got in, and 오 (5) is the minutes on foot: 걸어서 오 분.' },
+          { q: { ko: '기사님은 왜 깜짝 놀라셨어요?', en: 'Why was the driver so surprised?' },
+            options: [{ ko: '호텔이 아주 가까워서', en: 'The hotel was very close' }, { ko: '요금이 많이 나와서', en: 'The fare had got so high' }, { ko: '손님이 한국어를 잘해서', en: 'She spoke good Korean' }],
+            answer: 0, line: [3, 4],
+            why: 'She had got in at Exit 10, and her hotel was by Exit 1 of the same station: 십 번 출구에서 걸어서 오 분 걸리는 곳이었어요, a five-minute walk (걸어서 = on foot; 걸리다 = take). They had driven around for an hour for nothing!' },
+        ],
+      },
+    ],
+  },
+
+  // ---------- day · level 3 · a podcast ----------
+  {
+    id: 'day-no-phone',
+    topic: 'day',
+    level: 3,
+    emoji: '📵',
+    kind: { ko: '팟캐스트', en: 'A podcast' },
+    title: { ko: '핸드폰 없는 하루', en: 'A day without my phone' },
+    voice: 'high',
+    words: ['day:sleepin', 'day:gotowork', 'day:leavework', 'day:cook'],
+    parts: [
+      {
+        lines: [
+          { ko: '여러분, 반가워요! 말랑 하루 팟캐스트의 소율이에요.', en: 'Hi, everyone! It’s Soyul, on the Mallang Day podcast.' },
+          { ko: '여러분은 하루에 핸드폰을 몇 시간 봐요?', en: 'How many hours a day do you spend on your phone?' },
+          { ko: '저는 보통 다섯 시간쯤 봐요.', en: 'I usually spend about five hours on mine.' },
+          { ko: '그래서 지난주 금요일에는 핸드폰 없이 지내 봤어요.', en: 'So last Friday, I tried going a whole day without it.' },
+          { ko: '목요일 밤에 핸드폰을 껐어요.', en: 'On Thursday night, I switched it off.' },
+          { ko: '그런데 금요일 아침부터 문제가 있었어요.', en: 'But the trouble started first thing on Friday.' },
+        ],
+        questions: [
+          { q: { ko: '소율 씨는 보통 하루에 핸드폰을 몇 시간 봐요?', en: 'How many hours a day does Soyul usually spend on her phone?' },
+            options: [{ ko: '5시간', en: '5 hours' }, { ko: '3시간', en: '3 hours' }, { ko: '10시간', en: '10 hours' }],
+            answer: 0, line: 2,
+            why: '저는 보통 다섯 시간쯤 봐요: she usually (보통) spends about five hours (다섯 시간) on it. 시간 counts hours; 다섯 시 would be five o’clock.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '알람이 없어서 늦잠을 잤어요!', en: 'There was no alarm, so I overslept!' },
+          { ko: '그래서 택시를 타고 출근했어요.', en: 'So I took a taxi to work.' },
+          { ko: '보통은 점심을 먹을 때도 핸드폰을 봐요.', en: 'Usually I look at my phone even while I eat lunch.' },
+          { ko: '그날은 동료들하고 이야기를 많이 했어요.', en: 'That day, I had a good long chat with my colleagues.' },
+          { ko: '퇴근할 때는 지하철에서 책을 읽었어요.', en: 'On the way home from work, I read a book on the subway.' },
+          { ko: '책은 정말 오랜만이었어요!', en: 'I hadn’t read a book in ages!' },
+        ],
+        questions: [
+          { q: { ko: '소율 씨는 왜 늦잠을 잤어요?', en: 'Why did Soyul oversleep?' },
+            options: [{ ko: '알람이 없어서', en: 'There was no alarm' }, { ko: '늦게 자서', en: 'She went to bed late' }, { ko: '너무 피곤해서', en: 'She was too tired' }],
+            answer: 0, line: 0,
+            why: '알람이 없어서 늦잠을 잤어요: with her phone off, there was no alarm (알람이 없어서), so she overslept (늦잠을 자다).' },
+          { q: { ko: '소율 씨는 퇴근할 때 지하철에서 뭐 했어요?', en: 'What did Soyul do on the subway home?' },
+            options: [{ ko: '책을 읽었어요', en: 'She read a book' }, { ko: '동료하고 이야기했어요', en: 'She chatted with a colleague' }, { ko: '잤어요', en: 'She slept' }],
+            answer: 0, line: 4,
+            why: '퇴근할 때는 지하철에서 책을 읽었어요: on the way home from work (퇴근할 때), she read a book. The chat with her colleagues was at lunch.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '저녁에는 집에서 천천히 요리를 했어요.', en: 'In the evening, I took my time cooking at home.' },
+          { ko: '그리고 밤 열 시에 일찍 잤어요.', en: 'And I went to bed early, at ten.' },
+          { ko: '다음 날 아침에 핸드폰을 켰어요.', en: 'The next morning, I switched my phone back on.' },
+          { ko: '그런데 엄마가 스무 번이나 전화하셨어요!', en: 'But Mom had called twenty times!' },
+          { ko: '제가 전화를 안 받아서 엄마가 정말 걱정하셨어요.', en: 'I hadn’t answered, so she’d been really worried.' },
+          { ko: '여러분, 해 보기 전에 꼭 가족한테 말하세요!', en: 'So, everyone: before you try it, make sure you tell your family!' },
+        ],
+        questions: [
+          { q: { ko: '소율 씨는 핸드폰을 켜고 뭘 알았어요?', en: 'What did Soyul find out when she switched her phone on?' },
+            options: [{ ko: '엄마가 20번 전화하셨어요', en: 'Her mom had called 20 times' }, { ko: '엄마가 집에 오셨어요', en: 'Her mom had come over' }, { ko: '동료가 20번 전화했어요', en: 'A colleague had called 20 times' }],
+            answer: 0, line: 3,
+            why: '엄마가 스무 번이나 전화하셨어요: her mom had called twenty times (스무 번: 스물 becomes 스무 before a counter, and 이나 = as many as).' },
+          { q: { ko: '엄마는 왜 걱정하셨어요?', en: 'Why was her mom worried?' },
+            options: [{ ko: '소율 씨가 전화를 안 받아서', en: 'Soyul didn’t answer the phone' }, { ko: '소율 씨가 늦잠을 자서', en: 'Soyul overslept' }, { ko: '소율 씨가 택시를 타서', en: 'Soyul took a taxi' }],
+            answer: 0, line: 4,
+            why: 'Her phone was off from Thursday night, so 제가 전화를 안 받아서 엄마가 정말 걱정하셨어요: she didn’t answer, and her mom was really worried.' },
+        ],
+      },
+    ],
+  },
 ]);

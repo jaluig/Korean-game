@@ -27,14 +27,26 @@
     { ko: '물', emoji: '💧', counter: '병', wrong: '권', word: 'cafe:water' },
     { ko: '책', emoji: '📕', counter: '권', wrong: '개', word: 'day:book' },
     { ko: '사진', emoji: '🖼️', counter: '장', wrong: '병', word: 'hobbies:photo' },
+    { ko: '우유', emoji: '🥛', counter: '병', wrong: '권', word: 'cafe:milk' },
+    { ko: '녹차', emoji: '🍵', counter: '잔', wrong: '장', word: 'cafe:greentea' },
+    { ko: '샌드위치', emoji: '🥪', counter: '개', wrong: '잔', word: 'cafe:sandwich' },
+    { ko: '아이스크림', emoji: '🍦', counter: '개', wrong: '권', word: 'cafe:icecream' },
+    { ko: '신발', emoji: '👟', counter: '켤레', wrong: '벌', word: 'shopping:shoes' },
+    { ko: '양말', emoji: '🧦', counter: '켤레', wrong: '권', word: 'shopping:socks' },
+    { ko: '바지', emoji: '👖', counter: '벌', wrong: '켤레', word: 'shopping:trousers' },
+    { ko: '모자', emoji: '🧢', counter: '개', wrong: '병', word: 'shopping:hat' },
+    { ko: '가방', emoji: '👜', counter: '개', wrong: '잔', word: 'shopping:bag' },
+    { ko: '우산', emoji: '🌂', counter: '개', wrong: '잔', word: 'weather:umbrella' },
+    { ko: '표', emoji: '🎟️', counter: '장', wrong: '권', word: 'travel:ticket' },
+    { ko: '공책', emoji: '📓', counter: '권', wrong: '병', word: 'work:notebook' },
   ];
   const TASKS = ['count', 'price', 'register', 'time'];
 
   // Content words behind each number, so practice here helps them grow in the garden.
   const SINO_WORD = { 1: 'numbers:il', 2: 'numbers:i', 3: 'numbers:sam', 10: 'numbers:sip' };
-  const NATIVE_WORD = { 1: 'cafe:one', 2: 'cafe:two', 3: 'numbers:three', 4: 'numbers:four', 5: 'numbers:five', 10: 'numbers:ten' };
+  const NATIVE_WORD = { 1: 'cafe:one', 2: 'cafe:two', 3: 'numbers:three', 4: 'numbers:four', 5: 'numbers:five', 6: 'numbers:six', 7: 'numbers:seven', 8: 'numbers:eight', 9: 'numbers:nine', 10: 'numbers:ten' };
   const UNIT_WORD = { 10: 'numbers:sip', 100: 'numbers:hundred', 1000: 'numbers:thousand', 10000: 'numbers:tenthousand' };
-  const COUNTER_WORD = { 개: 'numbers:item', 잔: 'cafe:cup', 시: 'numbers:oclock', 분: 'numbers:minute', 원: 'numbers:won' };
+  const COUNTER_WORD = { 개: 'numbers:item', 잔: 'cafe:cup', 병: 'numbers:bottle', 권: 'numbers:books', 장: 'travel:sheet', 켤레: 'shopping:pair', 시: 'numbers:oclock', 분: 'numbers:minute', 원: 'numbers:won' };
 
   /** 12500 → the words for 만, 천, 백 and 이 (and 오, if it were a word). */
   function sinoWords(n) {
@@ -408,5 +420,5 @@
     },
   });
 
-  M.numberShop = { planRound, pickPrice, pickTime, sinoWords };
+  M.numberShop = { planRound, pickPrice, pickTime, sinoWords, GOODS, COUNTER_WORD, NATIVE_WORD };
 })(window.Mallang);

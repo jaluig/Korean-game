@@ -8,7 +8,8 @@
  * Endings: -고, -지만, -아서/어서, -(으)면, -(으)니까, -(으)러, -(으)ㄹ 때,
  * -기 전에, -(으)ㄴ 후에, -아/어야 해요, -아/어도 돼요, -(으)ㄹ 수 있어요/없어요,
  * -고 있어요, -아/어 보세요, -아/어 봤어요, -(으)ㄹ게요, -는데/-(으)ㄴ데,
- * and the polite -(으)세요 and -(으)셨어요.
+ * the polite -(으)세요 and -(으)셨어요, -지 마세요, -(으)려고, -(으)면서 and
+ * -(으)ㄴ 적이 있어요/없어요.
  * The patterns themselves (explanations, example and question sentences)
  * live in content/grammar.js and are practised in Grammar Cards.
  */
@@ -60,6 +61,11 @@
     neunde: { name: '-는데 / -(으)ㄴ데', meaning: '“…, and / but / so …”: it sets the scene for what comes next', base: 'neunde', tail: '데', past: true },
     seyo: { name: '-(으)세요', meaning: '“please …” (a polite request), or the polite present about someone you respect', base: 'eu', tail: '세요' },
     si: { name: '-(으)셨어요', meaning: '“did / was …” (the polite past, about someone you respect)', base: 'eu', tail: '셨어요' },
+    jimaseyo: { name: '-지 마세요', meaning: '“please don’t …”', base: 'stem', tail: '지 마세요', verbOnly: true },
+    ryeogo: { name: '-(으)려고', meaning: '“(in order) to …”, “so that I can …” (what you do something for)', base: 'eu', tail: '려고', verbOnly: true },
+    myeonseo: { name: '-(으)면서', meaning: '“while …” (two things at the same time)', base: 'eu', tail: '면서' },
+    jeogi: { name: '-(으)ㄴ 적이 있어요', meaning: '“have (ever) …” (something you’ve done at least once)', base: 'modifier', tail: ' 적이 있어요', verbOnly: true },
+    jeogiNot: { name: '-(으)ㄴ 적이 없어요', meaning: '“have never …”', base: 'modifier', tail: ' 적이 없어요', verbOnly: true },
   };
 
   // 있다/없다 and the words built on them take 는, not (으)ㄴ, as modifiers (있는), so no 후에 form here.
@@ -75,7 +81,7 @@
     if (dict === '이다' || dict === '아니다') return false;
     if (e.verbOnly && pos !== 'verb') return false;
     if (tense === 'past' && !e.past) return false;
-    if (id === 'hue' && IT_EOP.test(dict)) return false;
+    if ((id === 'hue' || id === 'jeogi' || id === 'jeogiNot') && IT_EOP.test(dict)) return false;
     if (id === 'goIt' && IT_EOP.test(dict)) return false; // 있고 있어요 isn't said
     if ((id === 'boseyo' || id === 'bwasseoyo') && dict === '보다') return false; // 봐 보세요 is awkward
     if ((id === 'seyo' || id === 'si') && OWN_POLITE.test(dict)) return false;
@@ -219,7 +225,8 @@
     }
     const m = modifierStem(stem);
     const text = `${m.text}${e.tail}`;
-    return { text, steps: [m.why, `Then add ${e.tail.trim()} → ${text}.`], variants: [], rule: m.rule };
+    const tried = id === 'jeogi' || id === 'jeogiNot' ? [`${C.infinitive(stem).text} 본${e.tail}`] : []; // 먹어 본 적이 있어요
+    return { text, steps: [m.why, `Then add ${e.tail.trim()} → ${text}.`], variants: tried, rule: m.rule };
   }
 
   /** -는데 after verbs and 있다/없다 words (먹는데, 사는데, 맛있는데); -(으)ㄴ데 after adjectives (비싼데, 추운데). */
@@ -290,6 +297,11 @@
         add(`${pastStem(dict, pos)}${e.tail}`, `기 전에 never takes the past. Even for the past, say ${right.text}: the verb at the end shows the tense.`); // 먹었기 전에
         add(`${modifierStem(stem).text} 전에`, `The (으)ㄴ form goes with 후에 (after). “Before” is 기 전에: ${right.text}.`); // 먹은 전에
       }
+      if (id === 'jimaseyo') {
+        add(`${stem}지 말세요`, `말다 drops its ㄹ before 세요: 마세요, so ${right.text}.`); // 먹지 말세요
+        // Not for noun + 하다 verbs: their 안 goes before 하다 (걱정 안 하세요, not 안 걱정하세요); a question can add that as a trap.
+        if (!(head && last === '하')) add(`안 ${euStem(stem, '세요').text}세요`, `안 …(으)세요 just says someone isn’t doing it. To ask someone not to, use -지 마세요: ${right.text}.`); // 안 먹으세요
+      }
       // (not for verbs where -아/어 있어요 is right too: 가 있어요, 앉아 있어요, 살아 있어요…)
       if (id === 'goIt' && !/(가다|오다|앉다|서다|눕다|살다|남다|붙다)$/.test(dict)) add(`${inf.text} 있어요`, `-아/어 있어요 describes a state after something has happened (앉아 있어요 = is seated). For an action in progress, it’s -고 있어요: ${right.text}.`); // 먹어 있어요
     }
@@ -322,8 +334,9 @@
       // The wrong one of "with 으" / "without 으" (and the irregular change missed): 먹면, 가으면, 살으면, 살니까, 듣으면, 춥으면.
       add(`${stem}${e.tail}`, right.steps[0]);
       add(`${stem}으${e.tail}`, right.steps[0]);
-      if (id === 'reo' && inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes on the stem, not the 아/어 form: ${right.text}.`); // 먹어러
-      if ((id === 'seyo' || id === 'si') && inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes on the stem (with 으 after a consonant), not the 아/어 form: ${right.text}.`); // 앉아세요, 해세요
+      if (['reo', 'ryeogo', 'myeonseo'].includes(id) && inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes on the stem, not the 아/어 form: ${right.text}.`); // 먹어러, 먹어려고
+      if (id === 'ryeogo') add(`${C.futureStem(stem).text}려고`, `People often say [${C.futureStem(stem).text}려고], but it’s written ${right.text}: no extra ㄹ.`); // 먹을려고
+      if ((id === 'seyo' || id === 'si') && inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes on the stem, not the 아/어 form. ${right.steps[0]}`); // 앉아세요, 해세요
       if (id === 'si') add(`${pastStem(dict, pos)}으${e.tail}`, `In the polite past, 시 comes first and the past after it (시 + 었 → 셨): ${right.text}.`); // 갔으셨어요
     }
 
@@ -346,10 +359,11 @@
     }
 
     if (e.base === 'modifier') {
-      add(`${stem}은${e.tail}`, modifierStem(stem).why); // 가은 후에, 살은 후에, 듣은 후에
-      add(`${presentModifier(stem)}${e.tail}`, `후에 takes the past-like (으)ㄴ form: ${right.text}.`); // 먹는 후에
-      add(`${C.futureStem(stem).text}${e.tail}`, `후에 takes the (으)ㄴ form, not the (으)ㄹ form: ${right.text}.`); // 먹을 후에
-      add(`${stem}기${e.tail}`, `기 goes with 전에 (before). “After” is (으)ㄴ 후에: ${right.text}.`); // 먹기 후에
+      const noun = id === 'hue' ? '후에' : '적';
+      add(`${stem}은${e.tail}`, modifierStem(stem).why); // 가은 후에, 살은 후에, 듣은 후에, 가은 적이 있어요
+      add(`${presentModifier(stem)}${e.tail}`, `${noun} takes the past-like (으)ㄴ form: ${right.text}.`); // 먹는 후에, 먹는 적이 있어요
+      add(`${C.futureStem(stem).text}${e.tail}`, `${noun} takes the (으)ㄴ form, not the (으)ㄹ form: ${right.text}.`); // 먹을 후에, 먹을 적이 있어요
+      if (id === 'hue') add(`${stem}기${e.tail}`, `기 goes with 전에 (before). “After” is (으)ㄴ 후에: ${right.text}.`); // 먹기 후에
     }
     return out;
   }
@@ -385,6 +399,11 @@
     neunde: [['가다'], ['먹다'], ['살다'], ['비싸다', 'adjective'], ['춥다', 'adjective'], ['맛있다', 'adjective']],
     seyo: [['가다'], ['앉다'], ['만들다'], ['듣다'], ['돕다']],
     si: [['가다'], ['읽다'], ['만들다'], ['듣다']],
+    jimaseyo: [['가다'], ['먹다'], ['만들다'], ['듣다']],
+    ryeogo: [['가다'], ['먹다'], ['만들다'], ['듣다'], ['돕다']],
+    myeonseo: [['가다'], ['먹다'], ['살다'], ['듣다'], ['싸다', 'adjective']],
+    jeogi: [['가다'], ['먹다'], ['만들다'], ['듣다'], ['돕다']],
+    jeogiNot: [['가다'], ['먹다'], ['만들다'], ['듣다'], ['돕다']],
   };
 
   /** Rows for an intro card: [{ dict, text, rule }]. */

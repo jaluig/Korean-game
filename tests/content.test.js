@@ -84,6 +84,19 @@ test('filler tiles are never another form of a word the sentence uses', () => {
   }
 });
 
+test('filler tiles are never too close in meaning to a word the sentence uses', () => {
+  const known = M.content.words();
+  for (let round = 0; round < 10; round++) {
+    for (const s of M.content.sentences()) {
+      const needed = s.needs.map((id) => M.content.word(id));
+      const { tiles } = D.sentenceTiles(s, { decoys: 3, knownWords: known });
+      for (const t of tiles.filter((x) => x.word)) {
+        assert.ok(!needed.some((n) => D.tooClose(n, t.word)), `${s.id}: filler ${t.text} could stand in for one of its words`);
+      }
+    }
+  }
+});
+
 test('near-synonyms never appear as each other’s wrong options', () => {
   const pool = M.content.words();
   const pairs = [

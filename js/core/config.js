@@ -62,6 +62,10 @@
       stories: { perRound: 1 },
       // The words and sentences missed most in the last seven days, at most `size` of them.
       weeklyReview: { size: 12 },
+      // Two conversations a round; you pick (or say) your replies.
+      replies: { perRound: 2 },
+      // Eight questions a round; a new rule (its card and four of its words) once the rules you've met are all seen.
+      soundChanges: { size: 8, newPerRound: 4 },
       // TOPIK I practice: a short mock test, 10 questions a section, with the kinds of questions in the real test's
       // order (a list of types: one of them). Each listening item can be heard twice, as on the real test.
       topik: {
@@ -113,6 +117,9 @@
       story: 12, // a Stories question
       storyRead: 6, // answered after showing the script
       topik: 30, // a right answer in a TOPIK I practice test (each takes a minute or more)
+      reply: 12, // a reply right the first time (Choose your reply)
+      replyRetry: 4, // …or the second time
+      pron: 10, // a Sound changes question
       dictation: 20,
       spoken: 3,
       comboEvery: 5, // every 5 correct in a row…
