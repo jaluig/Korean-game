@@ -5,6 +5,8 @@
  *   - "이거 얼마예요?"     → read the price tag aloud (Sino-Korean numbers)
  *   - "여기 만 이천오백 원이요." → type the amount the customer hands you on the till
  *   - "지금 몇 시예요?"    → tell the time (native hours, Sino-Korean minutes)
+ *   - 📞 a phone order     → heard at natural speed: write the count, the date, the time
+ *                            and the phone number on the order slip (numbers by ear)
  * Wrong answers are the classic mix-ups (삼 시, 셋 개, 팔백오십 원), each explained.
  */
 (function (M) {
@@ -40,7 +42,7 @@
     { ko: '표', emoji: '🎟️', counter: '장', wrong: '권', word: 'travel:ticket' },
     { ko: '공책', emoji: '📓', counter: '권', wrong: '병', word: 'work:notebook' },
   ];
-  const TASKS = ['count', 'price', 'register', 'time'];
+  const TASKS = ['count', 'price', 'register', 'time', 'phone'];
 
   // Content words behind each number, so practice here helps them grow in the garden.
   const SINO_WORD = { 1: 'numbers:il', 2: 'numbers:i', 3: 'numbers:sam', 10: 'numbers:sip' };
@@ -74,6 +76,36 @@
     if (tier === 1) return { hour, minute: 0 };
     if (tier === 2) return { hour, minute: U.pick([0, 30, 30, 10, 20]) };
     return { hour, minute: between(5, 55, 5) };
+  }
+
+  /** A phone order for the tier: what to write down (1, 2, then 3 things), and the numbers in it. */
+  function pickOrder(tier) {
+    const fields = tier === 1 ? [U.pick(['count', 'time'])] : tier === 2 ? U.pick([['count', 'time'], ['date', 'time'], ['count', 'date']]) : ['date', 'time', 'phone'];
+    const month = U.random() < 0.3 ? U.pick([6, 10]) : between(1, 12); // 유월 and 시월 come up often
+    const minute = tier === 1 ? U.pick([0, 30]) : tier === 2 ? U.pick([0, 10, 20, 30, 40, 50]) : between(5, 55, 5);
+    return {
+      fields,
+      goods: U.pick(fields.includes('date') ? GOODS.filter((g) => g.counter !== '잔') : GOODS), // (a coffee isn't ordered for next month)
+      n: between(1, tier === 1 ? 5 : 10),
+      month,
+      day: between(1, month === 2 ? 28 : 30),
+      hour: between(1, 12),
+      minute,
+      half: minute === 30 && U.random() < 0.5,
+      phone: ['010', String(between(2000, 9999)), String(between(0, 9999)).padStart(4, '0')],
+    };
+  }
+
+  /** What the customer says on the phone, numbers in Hangul (as they're read aloud). */
+  function orderText(o) {
+    const has = (f) => o.fields.includes(f);
+    const when = [has('date') ? N.date(o.month, o.day) : null, has('time') ? N.time(o.hour, o.minute, { half: o.half }) : null].filter(Boolean).join(' ');
+    const lines = ['여보세요?', `${o.goods.ko} ${N.count(o.n, o.goods.counter)} 주문할게요.`, when ? `${when}에 찾으러 갈게요.` : '이따가 찾으러 갈게요.'];
+    if (has('phone')) {
+      const number = N.phone(o.phone.join('-'));
+      lines.push(`제 전화번호는 ${number}${M.hangul.decompose([...number].pop()).final ? '이에요' : '예요'}.`);
+    }
+    return lines.join(' ');
   }
 
   /** Eight customers: every kind of task at least once, weaker kinds more often. */
@@ -340,6 +372,129 @@
           host.stage.append(h('div.ex.ex-shop', ui.exTag('시간을 말해요', 'Tell the customer the time', '🕒'), scene(customer, { ko: '지금 몇 시예요?', en: 'What time is it now?' }, h('div.shop-counter.center', clock(hour, minute))), choice.el));
           return choice.stop;
         },
+
+        /* 📞 "여보세요? 빵 세 개 주문할게요…" → heard at natural speed: write the order on the slip. */
+        phone(task, customer) {
+          const o = pickOrder(task.tier);
+          const text = orderText(o);
+          const listen = M.speech.isReady();
+          const play = (slow) => listen && M.speech.speak(text, { rate: slow ? 0.65 : 1 });
+          const inputs = [];
+          const box = (label, size) => {
+            const input = h('input.slip-box', { type: 'text', inputmode: 'numeric', autocomplete: 'off', spellcheck: 'false', maxlength: String(size), 'aria-label': label, style: { '--chars': String(size) } });
+            input.addEventListener('input', () => {
+              input.value = input.value.replace(/\D/g, '').slice(0, size);
+              if (input.value.length === size && inputs[inputs.indexOf(input) + 1]) inputs[inputs.indexOf(input) + 1].focus();
+            });
+            input.addEventListener('keydown', (event) => {
+              const i = inputs.indexOf(input);
+              if (event.key === 'Backspace' && !input.value && i > 0) {
+                event.preventDefault();
+                inputs[i - 1].focus();
+              }
+            });
+            inputs.push(input);
+            return input;
+          };
+          const rows = o.fields.map((f) => {
+            const spec = PHONE_ROWS[f](o);
+            const boxes = spec.boxes.map(([label, size]) => box(label, size));
+            const cells = boxes.flatMap((b, i) => [i && spec.between ? h('span.slip-dash', spec.between) : null, b, spec.unit[i] ? h('span.slip-unit', { lang: 'ko' }, spec.unit[i]) : null]);
+            const el = h('div.slip-row', h('span.slip-label', h('span', { 'aria-hidden': 'true' }, `${spec.icon} `), ui.bi(spec.ko, spec.en, 'inline')), h('span.slip-boxes', spec.lead ? h('span.slip-lead', spec.lead) : null, cells));
+            return { spec, boxes, el };
+          });
+          const replay = (slow) =>
+            h('button', { type: 'button', class: `audio-btn small ${slow ? 'slow' : ''}`.trim(), title: slow ? 'Play slowly' : 'Play again (R)', 'aria-label': slow ? 'Play slowly' : 'Play again', on: { ...M.keys.noMouseFocus, click: () => play(slow) } }, h('span', { 'aria-hidden': 'true' }, slow ? '🐢' : '🔊'));
+          const bubble = listen
+            ? h('div.shop-bubble', h('span.shop-say', { lang: 'ko' }, '📞 따르릉!'), replay(false), replay(true), h('span.shop-say-en', 'A phone order: listen, and write it down.'))
+            : h('div.shop-bubble.shop-bubble-text', h('span.shop-say.small', { lang: 'ko' }, text), h('span.shop-say-en', 'A phone order: read it, and write it down.'));
+          const slip = h('div.shop-slip', h('div.slip-title', h('span', { 'aria-hidden': 'true' }, '📝 '), ui.bi('주문서', 'Order slip', 'inline')), rows.map((r) => r.el));
+          const doneBtn = ui.button({ icon: '✍️', ko: '다 적었어요', en: 'Done', variant: 'primary', size: 'big', onClick: submit });
+          host.stage.append(
+            h(
+              'div.ex.ex-shop',
+              ui.exTag('전화 주문', listen ? 'A customer orders by phone: listen and fill in the slip' : 'A customer orders by phone: fill in the slip', '📞'),
+              h('div.shop-scene', h('div.shop-awning', { 'aria-hidden': 'true' }), h('div.shop-row', h('div.shop-customer', { 'aria-hidden': 'true' }, customer), bubble), h('div.shop-counter.center', slip)),
+              h('div.ex-actions', h('span.key-hint', ui.bi(listen ? 'R 다시 듣기 · 엔터' : '엔터', listen ? 'R to replay · Enter ↵' : 'Enter ↵')), doneBtn)
+            )
+          );
+          if (listen) M.speech.speakLater(text, 450, { quiet: true, rate: 1 });
+          const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+          if (!coarse) inputs[0].focus({ preventScroll: true }); // (on a phone, the keyboard would cover the slip)
+          let done = false;
+          const stopKeys = M.keys.push((event) => {
+            if (event.key === 'Enter' && !(M.keys.isControl(event) && !M.keys.isTypingTarget(event))) {
+              event.preventDefault();
+              // (Enter in a box moves on to the next empty one, like Tab; with none left, it hands the slip in.)
+              const at = inputs.indexOf(event.target);
+              const empty = at >= 0 ? inputs.slice(at + 1).find((i) => !i.value) : null;
+              if (empty) empty.focus();
+              else submit();
+            } else if (listen && M.keys.isReplay(event) && !event.repeat) {
+              event.preventDefault();
+              play(false);
+            }
+          });
+          function submit() {
+            if (done) return;
+            if (!inputs.some((i) => i.value)) {
+              slip.classList.remove('nudge');
+              void slip.offsetWidth;
+              slip.classList.add('nudge');
+              return;
+            }
+            done = true;
+            stopKeys();
+            doneBtn.disabled = true;
+            inputs.forEach((i) => (i.disabled = true));
+            M.speech.stop();
+            const results = rows.map(({ spec, boxes, el }) => {
+              const values = boxes.map((b, i) => b.value || spec.boxes[i][3] || '');
+              const ok = spec.boxes.every(([, , want], i) => values[i] !== '' && Number(values[i]) === Number(want) && (!spec.exact || values[i] === String(want)));
+              el.classList.add(ok ? 'good' : 'bad');
+              return { spec, ok, given: spec.shown(values.map((v) => v || '?')) };
+            });
+            const correct = results.every((r) => r.ok);
+            const slipText = (pick) => results.map((r) => `${r.spec.icon} ${pick(r)}`).join(' · ');
+            // (A slip in one row is a miss for that row's words only: the rows written down right still count for theirs.)
+            const rowWords = (ok) => U.uniqueBy(results.filter((r) => r.ok === ok).flatMap((r) => r.spec.words).filter(Boolean), (x) => x);
+            const missed = rowWords(false);
+            if (!correct) for (const id of rowWords(true)) if (!missed.includes(id) && M.content.word(id)) M.srs.practice(id, true);
+            answered('phone', correct, {
+              words: correct ? rowWords(true) : missed,
+              speak: text,
+              answer: text,
+              answerEn: slipText((r) => r.spec.shown(r.spec.boxes.map(([, , want]) => want))),
+              given: correct ? null : slipText((r) => `${r.given}${r.ok ? ' ✓' : ' ✗'}`),
+              tips: results.filter((r) => !r.ok).map((r) => r.spec.tip),
+              note: 'Dates, minutes and phone numbers are Sino-Korean (시월 이십오일, 삼십 분, 공일공); hours and counting things are native (세 시, 세 개).',
+            });
+          }
+          return () => {
+            stopKeys();
+            M.speech.stop();
+          };
+        },
+      };
+
+      // The phone order slip: one row per thing to write down, each a few number boxes.
+      const PHONE_ROWS = {
+        count: (o) => ({ icon: '📦', ko: '개수', en: 'How many', boxes: [['How many', 2, o.n]], unit: [o.goods.counter], lead: o.goods.emoji,
+          shown: (v) => `${v[0]}${o.goods.counter}`,
+          tip: `${N.count(o.n, o.goods.counter)} = ${o.n}: things are counted with native numbers, shortened before a counter (한, 두, 세, 네, 스무).`,
+          words: [COUNTER_WORD[o.goods.counter], NATIVE_WORD[o.n]] }),
+        date: (o) => ({ icon: '📅', ko: '날짜', en: 'Date', boxes: [['Month', 2, o.month], ['Day', 2, o.day]], unit: ['월', '일'],
+          shown: (v) => `${v[0]}월 ${v[1]}일`,
+          tip: `${N.date(o.month, o.day)} = ${o.month}월 ${o.day}일: months and days are Sino-Korean.${o.month === 6 ? ' June is 유월: 육 drops its ㄱ before 월.' : o.month === 10 ? ' October is 시월: 십 drops its ㅂ before 월.' : ''}`,
+          words: ['numbers:month', ...sinoWords(o.month), ...sinoWords(o.day)] }),
+        time: (o) => ({ icon: '🕒', ko: '시간', en: 'Time', boxes: [['Hour', 2, o.hour], ['Minute', 2, o.minute, '0']], unit: ['시', '분'], // (no minutes said: an empty box is :00)
+          shown: (v) => `${v[0]}:${String(v[1]).padStart(2, '0')}`,
+          tip: `${N.time(o.hour, o.minute, { half: o.half })} = ${o.hour}:${String(o.minute).padStart(2, '0')}: hours are native (한 시, 두 시…), minutes Sino-Korean (십 분, 이십 분…)${o.half ? ', and 반 is half past' : ''}.`,
+          words: [COUNTER_WORD['시'], NATIVE_WORD[o.hour], o.minute ? COUNTER_WORD['분'] : null, ...(o.minute && !o.half ? sinoWords(o.minute) : [])] }),
+        phone: (o) => ({ icon: '📞', ko: '전화번호', en: 'Phone', boxes: [['First four digits', 4, o.phone[1]], ['Last four digits', 4, o.phone[2]]], unit: [], lead: '010 -', between: '-', exact: true, // (written digit by digit: 0451 isn't 451)
+          shown: (v) => `010-${v[0]}-${v[1]}`,
+          tip: `${N.phone(o.phone.join('-'))} = ${o.phone.join('-')}: phone numbers go digit by digit in Sino-Korean, 0 is 공, and the dashes are 에.`,
+          words: [] }),
       };
 
       function breakdownTip(won) {
@@ -373,9 +528,10 @@
           round.correct++;
           round.combo++;
           round.bestCombo = Math.max(round.bestCombo, round.combo);
-          earned = kind === 'register' ? points().register : points().number;
+          earned = kind === 'register' ? points().register : kind === 'phone' ? points().phone : points().number;
           if (round.combo % points().comboEvery === 0) earned += points().comboBonus;
           M.progress.bump('numbersCorrect');
+          if (kind === 'phone') M.progress.bump('phoneOrders');
         } else {
           round.combo = 0;
           for (const id of words || []) if (M.content.word(id) && M.srs.isIntroduced(id) && !round.mistakes.includes(id)) round.mistakes.push(id);
@@ -420,5 +576,5 @@
     },
   });
 
-  M.numberShop = { planRound, pickPrice, pickTime, sinoWords, GOODS, COUNTER_WORD, NATIVE_WORD };
+  M.numberShop = { planRound, pickPrice, pickTime, pickOrder, orderText, sinoWords, GOODS, COUNTER_WORD, NATIVE_WORD };
 })(window.Mallang);

@@ -44,6 +44,7 @@ test('every answer is the form the engine makes, and every question has four fai
       for (const c of q.contrast) {
         assert.ok(G.ENDINGS[c] && c !== q.form, `${q.id}: contrast ${c}`);
         assert.ok(!OVERLAP.some(([a, b]) => (a === c && b === q.form) || (b === c && a === q.form)), `${q.id}: ${c} overlaps with ${q.form}`);
+        assert.ok(!(c === 'nowN' && q.form === 'futN'), `${q.id}: -는 can be a scheduled future (내일 가는 곳): never a wrong answer for -(으)ㄹ`);
       }
       for (let i = 0; i < 5; i++) {
         const built = G.question(q);

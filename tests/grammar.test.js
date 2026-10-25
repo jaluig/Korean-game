@@ -345,3 +345,56 @@ test('the newer endings: -지 마세요, -(으)려고, -(으)면서, -(으)ㄴ �
   has('가다', 'jeogi', '갈 적이 있어요');
   for (const id of NEW) for (const s of G.slips('듣다', id)) assert.notEqual(s.text, G.form('듣다', id).text, 'a slip is never the right form');
 });
+
+test('describing things: the forms before a noun (예쁜 꽃, 보는 / 본 / 볼 영화)', () => {
+  // Checked by hand. Adjectives: -(으)ㄴ, but 있다/없다 words take 는.
+  const adjectives = [
+    ['크다', '큰'], ['작다', '작은'], ['예쁘다', '예쁜'], ['조용하다', '조용한'], ['춥다', '추운'], ['가깝다', '가까운'],
+    ['좁다', '좁은'], ['길다', '긴'], ['멀다', '먼'], ['하얗다', '하얀'], ['다르다', '다른'], ['낫다', '나은'],
+    ['맛있다', '맛있는'], ['재미없다', '재미없는'],
+  ];
+  for (const [dict, text] of adjectives) {
+    assert.equal(G.form(dict, 'adjN', { pos: A }).text, text, dict);
+    assert.equal(G.form(dict, 'adjN', { pos: V }), null, `${dict}: adjN is for adjectives`);
+  }
+  // Verbs: -는 (now), -(으)ㄴ (done), -(으)ㄹ (to come).
+  const verbs = [
+    ['보다', '보는', '본', '볼'], ['먹다', '먹는', '먹은', '먹을'], ['하다', '하는', '한', '할'], ['살다', '사는', '산', '살'],
+    ['만들다', '만드는', '만든', '만들'], ['듣다', '듣는', '들은', '들을'], ['걷다', '걷는', '걸은', '걸을'],
+    ['돕다', '돕는', '도운', '도울'], ['짓다', '짓는', '지은', '지을'], ['부르다', '부르는', '부른', '부를'], ['입다', '입는', '입은', '입을'],
+  ];
+  for (const [dict, now, past, future] of verbs) {
+    assert.equal(G.form(dict, 'nowN').text, now, `${dict} nowN`);
+    assert.equal(G.form(dict, 'pastN').text, past, `${dict} pastN`);
+    assert.equal(G.form(dict, 'futN').text, future, `${dict} futN`);
+    assert.equal(G.form(dict, 'nowN', { pos: A }), null, `${dict}: verb forms are for verbs`);
+  }
+  assert.equal(G.form('있다', 'nowN').text, '있는');
+  assert.equal(G.form('있다', 'pastN'), null, '있다 has no plain (으)ㄴ form before a noun');
+  const has = (dict, id, text, pos = V) => assert.ok(G.slips(dict, id, { pos }).some((s) => s.text === text), `${dict} ${id}: ${text}`);
+  has('예쁘다', 'adjN', '예쁘는', A);
+  has('춥다', 'adjN', '춥은', A);
+  has('길다', 'adjN', '길은', A);
+  has('맛있다', 'adjN', '맛있은', A);
+  has('예쁘다', 'adjN', '예뻐요', A);
+  has('살다', 'nowN', '살는');
+  has('듣다', 'nowN', '들는');
+  has('보다', 'nowN', '보다');
+  has('가다', 'pastN', '가은');
+  has('먹다', 'pastN', '먹었은');
+  has('듣다', 'pastN', '듣은');
+  has('가다', 'futN', '가을');
+  has('살다', 'futN', '살을');
+  has('보다', 'futN', '볼 거예요');
+  for (const [dict, pos, ids] of [['춥다', A, ['adjN']], ['맛있다', A, ['adjN']], ['살다', V, ['nowN', 'pastN', 'futN']], ['듣다', V, ['nowN', 'pastN', 'futN']]]) {
+    for (const id of ids) {
+      const right = G.form(dict, id, { pos }).text;
+      for (const s of G.slips(dict, id, { pos })) {
+        assert.notEqual(s.text, right, `${dict} ${id}: a slip is never the right form`);
+        assert.ok(s.why, `${dict} ${id}: ${s.text} is explained`);
+      }
+    }
+  }
+  // The intro cards' tables.
+  for (const id of ['adjN', 'nowN', 'pastN', 'futN']) assert.ok(G.table(id).length >= 4, id);
+});

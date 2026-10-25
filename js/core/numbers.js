@@ -127,6 +127,16 @@
   /** '만 이천오백 원'. */
   const price = (won) => `${sino(won)} 원`;
 
+  /**
+   * A phone number, digit by digit in Sino-Korean, 0 as 공 and the dashes as 에:
+   * '010-7382-4516' → '공일공에 칠삼팔이에 사오일육'.
+   */
+  const phone = (number) =>
+    String(number)
+      .split('-')
+      .map((group) => [...group].map((d) => (d === '0' ? '공' : SINO[Number(d)])).join(''))
+      .join('에 ');
+
   /** '스물다섯 살', '스무 살'. */
   const age = (years) => count(years, '살');
 
@@ -283,6 +293,7 @@
     month,
     date,
     price,
+    phone,
     age,
     won,
     readAloud,

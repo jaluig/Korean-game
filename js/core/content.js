@@ -22,6 +22,7 @@
   const topik = { listening: [], reading: [] };
   const replies = [];
   const sounds = { rules: [], items: [] };
+  const families = [];
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -547,6 +548,66 @@
     }
   }
 
+  /**
+   * Word families (content/word-families.js): words that share a Sino-Korean
+   * syllable with one meaning (학 “study”: 학교, 학생, 방학). Each family has its
+   * game words (`words`: it opens once two are learned), new words to guess from
+   * it (`guess`), and look-alikes: the same syllable with another meaning (실수’s
+   * 실 is 失 “lose”, not 室 “room”). Ids become 'family:<id>'.
+   */
+  function registerWordFamilies(list) {
+    for (const f of list || []) {
+      const id = `family:${f.id}`;
+      if (!f.id) problems.push('word family: needs an id');
+      else if (families.some((x) => x.id === id)) problems.push(`${id}: duplicate word family`);
+      else families.push(Object.freeze({ ...f, id, localId: f.id, level: f.level || 1, type: 'family', index: families.length, needs: f.words || [], guess: f.guess || [], lookalikes: f.lookalikes || [] }));
+    }
+  }
+
+  function checkWordFamilies(found) {
+    const plain = (t) => String(t).replace(/\s+/g, '');
+    const han = /^[\u4e00-\u9fff]$/;
+    for (const f of families) {
+      if (!/^[가-힣]$/.test(f.syllable || '')) found.push(`${f.id}: syllable is one Hangul syllable`);
+      if (!han.test(f.hanja || '')) found.push(`${f.id}: hanja is the one Chinese character the syllable stands for`);
+      if (!f.meaning || f.meaning.length > 32) found.push(`${f.id}: needs a short meaning (what the syllable means in these words)`);
+      if (![1, 2, 3].includes(f.level)) found.push(`${f.id}: level 1, 2 or 3`);
+      if (f.needs.length < 2) found.push(`${f.id}: needs 2+ game words in "words" (it opens once two are learned)`);
+      for (const ref of f.needs) {
+        const w = words.get(ref);
+        if (!w) found.push(`${f.id}: unknown word "${ref}" (use topic:id)`);
+        else if (!w.ko.includes(f.syllable)) found.push(`${f.id}: ${ref} (${w.ko}) doesn't contain ${f.syllable}`);
+      }
+      const own = f.needs.map((r) => plain((words.get(r) || {}).ko || r));
+      if (new Set(own).size !== own.length) found.push(`${f.id}: a word is listed twice in "words"`);
+      for (const g of families) {
+        if (g === f || g.index < f.index) continue;
+        const sameMeaning = String(g.meaning).toLowerCase() === String(f.meaning).toLowerCase();
+        if (g.syllable === f.syllable && (g.hanja === f.hanja || sameMeaning)) found.push(`${g.id}: same syllable and hanja or meaning as ${f.id}: make them one family`);
+        else if (sameMeaning) found.push(`${g.id}: same meaning as ${f.id} (“${f.meaning}”): say how they differ`);
+      }
+      for (const ref of f.avoid || []) if (!families.some((g) => g.localId === ref && g !== f)) found.push(`${f.id}: "avoid" lists unknown family "${ref}"`);
+      if (f.guess.length < 2 || f.guess.length > 4) found.push(`${f.id}: needs 2–4 words to guess`);
+      f.guess.forEach((x, i) => {
+        const label = `${f.id} guess ${i + 1}`;
+        if (!x || !x.ko || !x.en || !x.hint) return found.push(`${label}: needs ko, en and hint`);
+        if (!x.ko.includes(f.syllable)) found.push(`${label}: ${x.ko} doesn't contain ${f.syllable}`);
+        if (own.includes(plain(x.ko))) found.push(`${label}: ${x.ko} is one of the family's words already (a word to guess is a new one)`);
+        else if (f.guess.slice(0, i).some((y) => y && y.ko && plain(y.ko) === plain(x.ko))) found.push(`${label}: ${x.ko} is listed twice`);
+        const wrong = Array.isArray(x.wrong) ? x.wrong : [];
+        if (wrong.length !== 2 || new Set([x.en, ...wrong].map((t) => String(t).toLowerCase())).size !== 3) found.push(`${label}: needs 2 different wrong meanings in "wrong"`);
+      });
+      const members = new Set([...f.needs.map((r) => (words.get(r) || {}).ko), ...f.guess.map((x) => x && x.ko)].filter(Boolean).map(plain));
+      f.lookalikes.forEach((x, i) => {
+        const label = `${f.id} look-alike ${i + 1}`;
+        if (!x || !x.ko || !x.en || !x.why) return found.push(`${label}: needs ko, en and why`);
+        if (!x.ko.includes(f.syllable)) found.push(`${label}: ${x.ko} doesn't contain ${f.syllable}`);
+        if (x.hanja != null && (!han.test(x.hanja) || x.hanja === f.hanja)) found.push(`${label}: hanja is another Chinese character (or null for a native Korean word)`);
+        if (members.has(plain(x.ko))) found.push(`${label}: ${x.ko} is in the family too`);
+      });
+    }
+  }
+
   function checkReadings(found) {
     for (const r of readings) {
       if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
@@ -586,6 +647,11 @@
         }
         const at = q.ko.indexOf(q.answer);
         if (at < 0 || q.ko.indexOf(q.answer, at + 1) >= 0) found.push(`${q.id}: the answer "${q.answer}" must appear exactly once in "${q.ko}"`);
+        // A form before a noun (예쁜, 본) is a whole word, with the noun after it.
+        const e = M.grammar && M.grammar.ENDINGS[q.form];
+        if (at >= 0 && e && M.grammar.BEFORE_NOUN.has(e.base) && !((at === 0 || q.ko[at - 1] === ' ') && q.ko[at + q.answer.length] === ' ')) {
+          found.push(`${q.id}: "${q.answer}" goes before a noun: it must be a word of its own, followed by a space`);
+        }
         for (const ref of q.needs) if (!words.has(ref)) found.push(`${q.id}: unknown word "${ref}" (use topic:id)`);
         for (const t of q.traps) if (!t.text || !t.why) found.push(`${q.id}: each trap needs "text" and "why"`);
       }
@@ -654,6 +720,7 @@
     checkTopik(found);
     checkReplies(found);
     checkSoundChanges(found);
+    checkWordFamilies(found);
     return found;
   }
 
@@ -671,6 +738,7 @@
     registerTopik,
     registerReplies,
     registerSoundChanges,
+    registerWordFamilies,
     check,
     grammar: () => grammar.slice(),
     grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
@@ -701,6 +769,8 @@
     /** Sound-change items: all, or one rule's ('pronrule:<id>'). */
     soundItems: (ruleId) => sounds.items.filter((x) => !ruleId || x.rule === ruleId),
     soundItem: (id) => sounds.items.find((x) => x.id === id) || null,
+    wordFamilies: () => families.slice(),
+    wordFamily: (id) => families.find((f) => f.id === id) || null,
     LEVELS,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,

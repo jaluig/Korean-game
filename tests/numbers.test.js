@@ -84,3 +84,8 @@ test('typical number mistakes are wrong, and explained', () => {
   for (const text of ['이십 살', '스물 살']) assert.ok(age.some((m) => m.text === text), text);
   for (const list of [price, time, count, age]) for (const m of list) assert.ok(m.why, m.text);
 });
+
+test('phone numbers are read digit by digit, 0 as 공, the dashes as 에', () => {
+  assert.equal(N.phone('010-7382-4516'), '공일공에 칠삼팔이에 사오일육');
+  assert.equal(N.phone('010-2000-0909'), '공일공에 이공공공에 공구공구');
+});

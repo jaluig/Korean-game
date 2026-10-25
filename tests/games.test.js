@@ -72,7 +72,7 @@ test('every verb form Verb Magic can ask has three distinct wrong options', () =
 test('Number Shop mixes every kind of customer and gets harder', () => {
   const plan = M.numberShop.planRound(8);
   assert.equal(plan.length, 8);
-  for (const kind of ['count', 'price', 'register', 'time']) assert.ok(plan.some((t) => t.kind === kind), kind);
+  for (const kind of ['count', 'price', 'register', 'time', 'phone']) assert.ok(plan.some((t) => t.kind === kind), kind);
   const tiers = plan.map((t) => t.tier);
   assert.deepEqual(tiers, [...tiers].sort(), 'tiers never go down');
   assert.equal(tiers[0], 1);
@@ -104,6 +104,31 @@ test('Number Shop: every item has a fitting native counter and a word in the gam
     assert.ok(M.content.word(g.word)?.ko === g.ko, `${g.ko}: ${g.word}`);
   }
   for (const id of [...Object.values(M.numberShop.COUNTER_WORD), ...Object.values(M.numberShop.NATIVE_WORD)]) assert.ok(M.content.word(id), id);
+});
+
+test('Number Shop: phone orders ask for more as the round goes on, and say every number the slip asks for', () => {
+  const N = M.numbers;
+  for (let i = 0; i < 300; i++) {
+    const tier = 1 + (i % 3);
+    const o = M.numberShop.pickOrder(tier);
+    assert.equal(o.fields.length, tier, `tier ${tier}`);
+    if (tier === 3) assert.deepEqual(o.fields, ['date', 'time', 'phone']);
+    const text = M.numberShop.orderText(o);
+    assert.ok(!/\d/.test(text), `read aloud: no digits in “${text}”`);
+    assert.ok(text.includes(`${o.goods.ko} ${N.count(o.n, o.goods.counter)}`), text);
+    if (o.fields.includes('date')) {
+      assert.ok(text.includes(N.date(o.month, o.day)), text);
+      assert.notEqual(o.goods.counter, '잔', 'no cup of coffee ordered for another day');
+      assert.ok(o.day >= 1 && o.day <= (o.month === 2 ? 28 : 30));
+    }
+    if (o.fields.includes('time')) assert.ok(text.includes(N.time(o.hour, o.minute, { half: o.half })), text);
+    if (o.fields.includes('phone')) {
+      assert.match(o.phone.join('-'), /^010-[2-9]\d{3}-\d{4}$/);
+      const reading = N.phone(o.phone.join('-'));
+      const ending = M.hangul.decompose([...reading].pop()).final ? '이에요' : '예요';
+      assert.ok(text.includes(`제 전화번호는 ${reading}${ending}.`), text);
+    }
+  }
 });
 
 test('Sound Twins: every twin in a set differs in one explainable sound', () => {

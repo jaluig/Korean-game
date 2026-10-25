@@ -1411,6 +1411,13 @@ body.no-en .shop-say-en {
   text-align: right;
 }
 
+.grammar-table-group td {
+  padding-top: 10px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--sky-deep);
+}
+
 .grammar-note {
   padding: 10px 14px;
   border-radius: 14px;
@@ -3109,4 +3116,290 @@ details.dlg-script-box > summary .bi {
 
 .pron-fb-rule {
   font-weight: 800;
+}
+
+/* ---------- Number Shop: phone orders ---------- */
+
+.shop-bubble-text .shop-say.small {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.shop-slip {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(440px, 100%);
+  padding: 14px 18px 16px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 2px dashed var(--butter-deep);
+  box-shadow: 0 4px 0 var(--butter-shadow);
+}
+
+.shop-slip.nudge {
+  animation: shake 0.35s ease;
+}
+
+.slip-title {
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+.slip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 4px 6px;
+  border-radius: 10px;
+}
+
+.slip-row.good {
+  background: var(--good-soft);
+}
+
+.slip-row.bad {
+  background: var(--bad-soft);
+}
+
+.slip-label {
+  min-width: 7.5em;
+  font-weight: 700;
+}
+
+.slip-boxes {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.slip-box {
+  width: calc(var(--chars, 2) * 0.75em + 22px);
+  padding: 4px 6px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--card-soft);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.slip-box:focus {
+  outline: none;
+  border-color: var(--butter-deep);
+  box-shadow: 0 0 0 3px var(--butter-soft);
+}
+
+.slip-row.good .slip-box {
+  border-color: var(--good);
+}
+
+.slip-row.bad .slip-box {
+  border-color: var(--bad);
+}
+
+.slip-unit,
+.slip-lead,
+.slip-dash {
+  font-family: var(--font-ko);
+  font-weight: 800;
+}
+
+.slip-lead {
+  color: var(--ink-soft);
+}
+
+/* (Small phones: smaller boxes, so a phone number stays on one line.) */
+@media (max-width: 400px) {
+  .shop-slip {
+    padding: 12px 10px 14px;
+  }
+
+  .slip-row {
+    padding: 4px 2px;
+  }
+
+  .slip-boxes {
+    gap: 4px;
+  }
+
+  .slip-box {
+    width: calc(var(--chars, 2) * 0.7em + 16px);
+    font-size: 1.2rem;
+  }
+}
+
+/* ---------- Word families ---------- */
+
+.family-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(680px, 100%);
+  padding: 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--mint);
+  box-shadow: 0 6px 0 var(--mint-shadow);
+}
+
+.modal .family-card {
+  width: 100%;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.family-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+}
+
+.family-syllable {
+  font-family: var(--font-ko);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--mint-deep);
+}
+
+.family-hanja {
+  font-family: var(--font-ko);
+  font-size: 1.8rem;
+  color: var(--ink-soft);
+}
+
+.family-meaning {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+}
+
+.family-note {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--mint-soft);
+  line-height: 1.6;
+}
+
+.family-words {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.family-words li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--card-soft);
+}
+
+.family-word {
+  font-family: var(--font-ko);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.family-mark {
+  color: var(--mint-deep);
+  font-weight: 800;
+  text-decoration: underline 3px var(--mint);
+  text-underline-offset: 4px;
+}
+
+.family-en {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.family-new {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+}
+
+.family-q-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: min(600px, 100%);
+  padding: 20px 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--mint);
+  box-shadow: 0 6px 0 var(--mint-shadow);
+  text-align: center;
+}
+
+.family-q {
+  margin: 0;
+  font-weight: 800;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.family-q-word {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ko);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.family-hint {
+  margin: 0;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.family-clue {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.family-clue-word {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: var(--mint-soft);
+  font-family: var(--font-ko);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.family-clue-word .family-en {
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+.family-option-en {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.family-chip b {
+  font-family: var(--font-ko);
 }

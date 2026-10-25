@@ -113,7 +113,10 @@
   /* ---------- The pattern card (intro, and the 📖 button in feedback and the garden) ---------- */
 
   function patternCard(pattern) {
-    const rows = G.table(pattern.form);
+    // A pattern with two forms built differently (본 / 볼) shows a table for each, under its name
+    // (but not 적이 있어요 / 없어요: the same stems, another ending).
+    const forms = U.uniqueBy([pattern.form, ...pattern.questions.map((q) => q.form)].filter((f) => G.table(f).length), (f) => G.ENDINGS[f].base);
+    const rows = forms.flatMap((f) => [...(forms.length > 1 ? [{ group: G.ENDINGS[f].name }] : []), ...G.table(f)]);
     return h(
       'div.grammar-card',
       h(
@@ -129,13 +132,15 @@
             h(
               'tbody',
               rows.map((r) =>
-                h(
-                  'tr',
-                  h('td.grammar-table-dict', { lang: 'ko' }, r.dict),
-                  h('td.grammar-table-arrow', { 'aria-hidden': 'true' }, '→'),
-                  h('td.grammar-table-form', h('span', { lang: 'ko' }, r.text), ui.audioButton(r.text, { size: 'small' })),
-                  h('td.grammar-table-rule', r.rule)
-                )
+                r.group
+                  ? h('tr.grammar-table-group', h('td', { colSpan: 4, lang: 'ko' }, r.group))
+                  : h(
+                      'tr',
+                      h('td.grammar-table-dict', { lang: 'ko' }, r.dict),
+                      h('td.grammar-table-arrow', { 'aria-hidden': 'true' }, '→'),
+                      h('td.grammar-table-form', h('span', { lang: 'ko' }, r.text), ui.audioButton(r.text, { size: 'small' })),
+                      h('td.grammar-table-rule', r.rule)
+                    )
               )
             )
           )

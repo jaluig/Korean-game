@@ -48,6 +48,7 @@ const CONTENT = [
   'content/topik.js',
   'content/replies.js',
   'content/sound-changes.js',
+  'content/word-families.js',
 ];
 // Minigames only touch the DOM when a round starts, so their round-building logic can be tested.
 const GAMES = [
@@ -57,6 +58,7 @@ const GAMES = [
   'js/games/number-shop.js',
   'js/games/sound-twins.js',
   'js/games/sound-changes.js',
+  'js/games/word-families.js',
   'js/games/grammar-cards.js',
   'js/games/dialogues.js',
   'js/games/replies.js',

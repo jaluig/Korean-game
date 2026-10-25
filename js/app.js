@@ -142,6 +142,20 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.10.0',
+      body: () => [
+        h('h3', ui.bi('새 게임', 'A new game')),
+        featureList([
+          ['🌳', `낱말 가족 · Word Families: many Korean words share a Sino-Korean syllable with a meaning of its own (학 = study: 학교, 학생, 방학). ${M.content.wordFamilies().length} families help you guess new words from the ones you know, and spot the look-alikes.`],
+        ]),
+        h('h3', ui.bi('숫자 가게와 문법 카드에도', 'In the Number Shop and Grammar Cards')),
+        featureList([
+          ['📞', 'Phone orders in the Number Shop: a customer calls, and you write down the count, the date, the time and the phone number, heard at natural speed.'],
+          ['🔗', '3 new grammar patterns for describing things: 예쁜 꽃, 지금 보는 영화, 어제 본 영화, 내일 볼 영화.'],
+        ]),
+      ],
+    },
+    {
       version: '0.9.0',
       body: () => [
         h('h3', ui.bi('새 게임 2개', '2 new games')),

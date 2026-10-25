@@ -11,7 +11,7 @@
  */
 'use strict';
 
-const VERSION = '0.9.0'; // keep in step with Mallang.version (js/core/namespace.js)
+const VERSION = '0.10.0'; // keep in step with Mallang.version (js/core/namespace.js)
 const CACHE = `mallang-${VERSION}`;
 const FONT_CACHE = `mallang-fonts-${VERSION}`; // fetched again with each version, so a bad copy can't stay
 const PAGE = 'index.html'; // what a page load gets from the copy
@@ -71,6 +71,7 @@ const FILES = [
   'content/topik.js',
   'content/replies.js',
   'content/sound-changes.js',
+  'content/word-families.js',
   'js/ui/components.js',
   'js/ui/mascot.js',
   'js/ui/keyboard.js',
@@ -85,6 +86,7 @@ const FILES = [
   'js/games/word-cards.js',
   'js/games/sentence-builder.js',
   'js/games/speed-match.js',
+  'js/games/word-families.js',
   'js/games/balloon-pop.js',
   'js/games/particle-lab.js',
   'js/games/verb-magic.js',

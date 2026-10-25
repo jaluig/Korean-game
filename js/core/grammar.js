@@ -9,7 +9,8 @@
  * -기 전에, -(으)ㄴ 후에, -아/어야 해요, -아/어도 돼요, -(으)ㄹ 수 있어요/없어요,
  * -고 있어요, -아/어 보세요, -아/어 봤어요, -(으)ㄹ게요, -는데/-(으)ㄴ데,
  * the polite -(으)세요 and -(으)셨어요, -지 마세요, -(으)려고, -(으)면서 and
- * -(으)ㄴ 적이 있어요/없어요.
+ * -(으)ㄴ 적이 있어요/없어요; and the forms that describe a noun: 예쁜 꽃,
+ * 지금 보는 영화, 어제 본 영화, 내일 볼 영화.
  * The patterns themselves (explanations, example and question sentences)
  * live in content/grammar.js and are practised in Grammar Cards.
  */
@@ -39,6 +40,11 @@
    *         'future'   onto the -(으)ㄹ form (먹을 + 때)
    *         'modifier' onto the -(으)ㄴ form (먹은 + 후에)
    *         'neunde'   verbs: the -는 form (먹는 + 데); adjectives: the -(으)ㄴ form (추운 + 데)
+   * and, before a noun (the form is the whole answer: 예쁜 꽃, 보는 영화):
+   *         'adjMod'   adjectives: -(으)ㄴ (예쁜, 작은, 추운, 긴); 있다/없다 words: -는 (맛있는)
+   *         'nowMod'   verbs, now or usually: -는 (보는, 먹는, 사는)
+   *         'pastMod'  verbs, already done: -(으)ㄴ (본, 먹은, 산, 들은)
+   *         'futMod'   verbs, still to come: -(으)ㄹ (볼, 먹을, 살, 들을)
    */
   const ENDINGS = {
     go: { name: '-고', meaning: '“and” (also “and then”)', base: 'stem', tail: '고', past: true },
@@ -66,7 +72,13 @@
     myeonseo: { name: '-(으)면서', meaning: '“while …” (two things at the same time)', base: 'eu', tail: '면서' },
     jeogi: { name: '-(으)ㄴ 적이 있어요', meaning: '“have (ever) …” (something you’ve done at least once)', base: 'modifier', tail: ' 적이 있어요', verbOnly: true },
     jeogiNot: { name: '-(으)ㄴ 적이 없어요', meaning: '“have never …”', base: 'modifier', tail: ' 적이 없어요', verbOnly: true },
+    adjN: { name: '-(으)ㄴ + noun', meaning: 'an adjective describing the noun after it (예쁜 꽃, a pretty flower)', base: 'adjMod', tail: '', adjOnly: true },
+    nowN: { name: '-는 + noun', meaning: '“the … that … (does)”: a verb describing the noun after it, now or usually (지금 보는 영화, the film I’m watching)', base: 'nowMod', tail: '', verbOnly: true },
+    pastN: { name: '-(으)ㄴ + noun (done)', meaning: '“the … that … did”: something that already happened (어제 본 영화, the film I saw yesterday)', base: 'pastMod', tail: '', verbOnly: true },
+    futN: { name: '-(으)ㄹ + noun', meaning: '“the … that … will …, the … to …”: something still to come (내일 볼 영화, the film I’ll see tomorrow)', base: 'futMod', tail: '', verbOnly: true },
   };
+  // The endings whose form goes before a noun (the answer is the whole word: 예쁜, 보는).
+  const BEFORE_NOUN = new Set(['adjMod', 'nowMod', 'pastMod', 'futMod']);
 
   // 있다/없다 and the words built on them take 는, not (으)ㄴ, as modifiers (있는), so no 후에 form here.
   const IT_EOP = /(있|없)다$/;
@@ -80,8 +92,9 @@
     if (!/[가-힣]다$/.test(String(dict)) || /\s/.test(dict)) return false;
     if (dict === '이다' || dict === '아니다') return false;
     if (e.verbOnly && pos !== 'verb') return false;
+    if (e.adjOnly && pos !== 'adjective') return false;
     if (tense === 'past' && !e.past) return false;
-    if ((id === 'hue' || id === 'jeogi' || id === 'jeogiNot') && IT_EOP.test(dict)) return false;
+    if ((id === 'hue' || id === 'jeogi' || id === 'jeogiNot' || id === 'pastN') && IT_EOP.test(dict)) return false;
     if (id === 'goIt' && IT_EOP.test(dict)) return false; // 있고 있어요 isn't said
     if ((id === 'boseyo' || id === 'bwasseoyo') && dict === '보다') return false; // 봐 보세요 is awkward
     if ((id === 'seyo' || id === 'si') && OWN_POLITE.test(dict)) return false;
@@ -218,6 +231,7 @@
       return { text: `${s.text}${e.tail}`, steps: [s.why], variants, rule: s.rule };
     }
     if (e.base === 'neunde') return neundeForm(dict, stem, pos, e);
+    if (BEFORE_NOUN.has(e.base)) return nounForm(dict, stem, e.base);
     if (e.base === 'future') {
       const f = C.futureStem(stem);
       const text = `${f.text}${e.tail}`;
@@ -241,6 +255,24 @@
     const text = `${m.text}${e.tail}`;
     const rule = m.rule.startsWith('after') ? 'adjective' : `adjective, ${m.rule}`;
     return { text, steps: [`${dict} is an adjective, so it takes (으)ㄴ데. ${m.why}`, `Then add 데 → ${text}.`], variants: [], rule };
+  }
+
+  /** The forms before a noun: 예쁜, 맛있는 (adjectives); 보는, 본, 볼 (verbs). */
+  function nounForm(dict, stem, base) {
+    const ㄹ = C.irregularType(stem) === 'ㄹ';
+    if (base === 'nowMod' || (base === 'adjMod' && IT_EOP.test(dict))) {
+      const text = presentModifier(stem);
+      if (base === 'adjMod') return { text, steps: [`${dict} ends in ${IT_EOP.exec(dict)[1]}다, so before a noun it takes 는, like a verb: ${stem} + 는 → ${text}.`], variants: [], rule: '있다/없다 + 는' };
+      if (ㄹ) return { text, steps: [`For what happens now (or usually), a verb takes 는. ${dict} ends in ㄹ, which drops before ㄴ: ${text}.`], variants: [], rule: 'ㄹ drops' };
+      return { text, steps: [`For what happens now (or usually), a verb takes 는 on the stem: ${stem} + 는 → ${text}.`], variants: [], rule: 'stem + 는' };
+    }
+    if (base === 'futMod') {
+      const f = C.futureStem(stem);
+      return { text: f.text, steps: [`For what’s still to come, a verb takes (으)ㄹ. ${f.why}`], variants: [], rule: futureRule(stem) };
+    }
+    const m = modifierStem(stem);
+    const lead = base === 'adjMod' ? `${dict} is an adjective, so before a noun it takes (으)ㄴ.` : 'For what already happened, a verb takes (으)ㄴ.';
+    return { text: m.text, steps: [`${lead} ${m.why}`], variants: [], rule: m.rule };
   }
 
   function futureRule(stem) {
@@ -358,6 +390,39 @@
       }
     }
 
+    if (BEFORE_NOUN.has(e.base)) {
+      const present = C.conjugate(dict, 'present', { pos });
+      const sentenceEnd = (text) => `${text} ends a sentence. Before a noun, ${dict} takes ${right.text}.`;
+      add(dict, `The dictionary form (${dict}) never goes before a noun: ${right.text}.`); // 예쁘다 꽃, 보다 영화
+      if (e.base === 'adjMod') {
+        if (IT_EOP.test(dict)) add(`${stem}은`, `Words ending in 있다/없다 take 는 before a noun, like verbs: ${right.text}.`); // 맛있은
+        else {
+          // (Not for words that are verbs too: 크는 아이, a growing child; 늦는 사람; 날이 밝는.)
+          if (!/^(크다|늦다|밝다)$/.test(dict)) add(`${stem}는`, `는 is for verbs (and words ending in 있다/없다). ${dict} is an adjective, so it takes (으)ㄴ: ${right.text}.`); // 예쁘는
+          add(`${stem}은`, `${modifierStem(stem).why}`); // 예쁘은, 춥은, 길은
+        }
+        if (present) add(present.text, sentenceEnd(present.text)); // 예뻐요 꽃
+      }
+      if (e.base === 'nowMod') {
+        if (type === 'ㄹ') add(`${stem}는`, `ㄹ drops before ㄴ: ${right.text}.`); // 살는, 만들는
+        if (type === 'ㄷ') add(`${head}${withFinal(last, 'ㄹ')}는`, `${dict}’s ㄷ only turns into ㄹ before a vowel. Before 는, it stays: ${right.text}.`); // 들는
+        if (present) add(present.text, sentenceEnd(present.text)); // 봐요 영화
+      }
+      if (e.base === 'pastMod') {
+        add(`${stem}은`, modifierStem(stem).why); // 가은, 살은, 듣은, 돕은
+        const ps = pastStem(dict, pos);
+        if (ps) add(`${ps}은`, `The (으)ㄴ form already says it happened, so it never takes 었/았: ${right.text}.`); // 먹었은, 갔은
+        const past = C.conjugate(dict, 'past', { pos });
+        if (past) add(past.text, sentenceEnd(past.text)); // 봤어요 영화
+      }
+      if (e.base === 'futMod') {
+        add(`${stem}을`, C.futureStem(stem).why); // 가을, 살을, 듣을
+        const future = C.conjugate(dict, 'future', { pos });
+        if (future) add(future.text, sentenceEnd(future.text)); // 볼 거예요 영화
+      }
+      return out;
+    }
+
     if (e.base === 'modifier') {
       const noun = id === 'hue' ? '후에' : '적';
       add(`${stem}은${e.tail}`, modifierStem(stem).why); // 가은 후에, 살은 후에, 듣은 후에, 가은 적이 있어요
@@ -404,6 +469,10 @@
     myeonseo: [['가다'], ['먹다'], ['살다'], ['듣다'], ['싸다', 'adjective']],
     jeogi: [['가다'], ['먹다'], ['만들다'], ['듣다'], ['돕다']],
     jeogiNot: [['가다'], ['먹다'], ['만들다'], ['듣다'], ['돕다']],
+    adjN: [['크다', 'adjective'], ['작다', 'adjective'], ['춥다', 'adjective'], ['길다', 'adjective'], ['맛있다', 'adjective']],
+    nowN: [['보다'], ['먹다'], ['살다'], ['듣다']],
+    pastN: [['보다'], ['먹다'], ['살다'], ['듣다'], ['돕다']],
+    futN: [['보다'], ['먹다'], ['살다'], ['듣다'], ['돕다']],
   };
 
   /** Rows for an intro card: [{ dict, text, rule }]. */
@@ -472,5 +541,5 @@
     };
   }
 
-  M.grammar = { ENDINGS, applies, form, slips, contrast, table, question, euStem, modifierStem };
+  M.grammar = { ENDINGS, BEFORE_NOUN, applies, form, slips, contrast, table, question, euStem, modifierStem };
 })(window.Mallang);

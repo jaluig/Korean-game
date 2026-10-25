@@ -66,6 +66,9 @@
       replies: { perRound: 2 },
       // Eight questions a round; a new rule (its card and four of its words) once the rules you've met are all seen.
       soundChanges: { size: 8, newPerRound: 4 },
+      // Two families a round, two or three questions each: one new one (with its card), a second only when
+      // there's no other to fill the round.
+      wordFamilies: { perRound: 2, newPerRound: 1 },
       // TOPIK I practice: a short mock test, 10 questions a section, with the kinds of questions in the real test's
       // order (a list of types: one of them). Each listening item can be heard twice, as on the real test.
       topik: {
@@ -103,6 +106,8 @@
       verbTyped: 18,
       number: 10,
       register: 12,
+      phone: 15, // a Number Shop phone order (heard, then written down)
+      family: 10, // a Word Families question
       sound: 8,
       grammar: 12,
       dialogue: 12,
