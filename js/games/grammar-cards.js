@@ -258,6 +258,18 @@
         }
       }
 
+      /** The line before the sentence: what someone just said (💬 왜 안 먹어요?), or the scene ((Looking out of the window)). */
+      function contextLine(context) {
+        if (!context) return null;
+        if (!context.ko) return h('div.grammar-context.scene', `(${context.en})`);
+        return h(
+          'div.grammar-context',
+          h('span.grammar-context-ko', { lang: 'ko' }, h('span', { 'aria-hidden': 'true' }, '💬 '), context.ko),
+          ui.audioButton(context.ko, { size: 'small' }),
+          h('span.grammar-context-en', `“${context.en}”`)
+        );
+      }
+
       /** The sentence around the blank, as words that wrap nicely; punctuation sticks to the blank. */
       function sentenceLine(built, slot) {
         const words = (text) => text.trim().split(/\s+/).filter(Boolean);
@@ -295,7 +307,7 @@
           h(
             'div.ex.ex-grammar',
             ui.exTag('빈칸을 채워요', 'Fill in the blank', '🔗'),
-            h('div.grammar-q-card', sentenceLine(built, slot), h('div.grammar-en', `“${q.en}”`)),
+            h('div.grammar-q-card', contextLine(q.context), sentenceLine(built, slot), h('div.grammar-en', `“${q.en}”`)),
             h('div.options', { role: 'group', 'aria-label': 'Forms' }, buttons)
           )
         );

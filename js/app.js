@@ -142,6 +142,19 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.11.0',
+      body: () => [
+        h('h3', ui.bi('새 게임', 'A new game')),
+        featureList([
+          ['🙏', `상황 표현 · What to Say When: ${M.content.phrases().length} set phrases for everyday moments (잘 먹겠습니다, 수고하셨습니다, 실례합니다…). See the moment and pick what you’d say, or hear a phrase and pick when you’d say it.`],
+        ]),
+        h('h3', ui.bi('문법 카드에도', 'In Grammar Cards')),
+        featureList([
+          ['🔗', '4 chatty endings that say how you mean a sentence: -네요 (oh, …!), -죠 (…, right?), -잖아요 (…, you know) and -거든요 (…, you see).'],
+        ]),
+      ],
+    },
+    {
       version: '0.10.0',
       body: () => [
         h('h3', ui.bi('새 게임', 'A new game')),

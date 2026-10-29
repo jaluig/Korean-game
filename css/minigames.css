@@ -1509,6 +1509,39 @@ body.no-en .shop-say-en {
   text-align: center;
 }
 
+/* What someone just said (or the scene), before a sentence with a chatty ending. */
+.grammar-context {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 8px;
+  max-width: 100%;
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: var(--card-soft);
+  text-align: center;
+}
+
+.grammar-context-ko {
+  font-family: var(--font-ko);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.grammar-context-en {
+  flex-basis: 100%;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.grammar-context.scene {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-weight: 700;
+}
+
 .ex-grammar .options {
   width: min(680px, 100%);
 }
@@ -3402,4 +3435,164 @@ details.dlg-script-box > summary .bi {
 
 .family-chip b {
   font-family: var(--font-ko);
+}
+
+/* ---------- What to Say When ---------- */
+
+.phrase-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(640px, 100%);
+  padding: 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--pink);
+  box-shadow: 0 6px 0 var(--pink-shadow);
+}
+
+.modal .phrase-card {
+  width: 100%;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.phrase-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.phrase-ko {
+  font-family: var(--font-ko);
+  font-size: clamp(1.6rem, 7.5vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--pink-deep);
+  word-break: keep-all;
+}
+
+.phrase-en {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+}
+
+.phrase-literal,
+.phrase-when,
+.phrase-reply {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  line-height: 1.5;
+}
+
+.phrase-literal {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.phrase-label {
+  min-width: 7em;
+  font-style: normal;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+.phrase-when {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--pink-soft);
+}
+
+.phrase-when .phrase-label {
+  color: var(--ink);
+}
+
+.phrase-reply-ko {
+  font-family: var(--font-ko);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.phrase-reply-en {
+  color: var(--ink-soft);
+}
+
+.phrase-note {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--card-soft);
+  line-height: 1.6;
+}
+
+.phrase-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: min(600px, 100%);
+  padding: 20px 22px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 3px solid var(--pink);
+  box-shadow: 0 6px 0 var(--pink-shadow);
+  text-align: center;
+}
+
+.phrase-scene-emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.phrase-scene-text {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.phrase-q-ko {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ko);
+  font-size: clamp(1.6rem, 7.5vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--pink-deep);
+  word-break: keep-all;
+}
+
+.phrase-q {
+  margin: 0;
+  font-weight: 800;
+}
+
+.ex-phrase .options {
+  width: min(600px, 100%);
+}
+
+.phrase-scene-options {
+  grid-template-columns: 1fr;
+}
+
+.phrase-option-scene {
+  min-height: 0;
+}
+
+.phrase-option-scene .option-text {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.phrase-option-emoji {
+  margin-right: 6px;
 }

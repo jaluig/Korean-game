@@ -398,3 +398,58 @@ test('describing things: the forms before a noun (예쁜 꽃, 보는 / 본 / 볼
   // The intro cards' tables.
   for (const id of ['adjN', 'nowN', 'pastN', 'futN']) assert.ok(G.table(id).length >= 4, id);
 });
+
+test('chatty endings: -네요, -죠, -잖아요, -거든요 on the stem (ㄹ drops before 네요)', () => {
+  // Checked by hand: [dict, pos, -네요, -죠, -잖아요, -거든요, past -네요].
+  const rows = [
+    ['가다', V, '가네요', '가죠', '가잖아요', '가거든요', '갔네요'],
+    ['먹다', V, '먹네요', '먹죠', '먹잖아요', '먹거든요', '먹었네요'],
+    ['살다', V, '사네요', '살죠', '살잖아요', '살거든요', '살았네요'],
+    ['만들다', V, '만드네요', '만들죠', '만들잖아요', '만들거든요', '만들었네요'],
+    ['듣다', V, '듣네요', '듣죠', '듣잖아요', '듣거든요', '들었네요'],
+    ['하다', V, '하네요', '하죠', '하잖아요', '하거든요', '했네요'],
+    ['멀다', A, '머네요', '멀죠', '멀잖아요', '멀거든요', '멀었네요'],
+    ['춥다', A, '춥네요', '춥죠', '춥잖아요', '춥거든요', '추웠네요'],
+    ['바쁘다', A, '바쁘네요', '바쁘죠', '바쁘잖아요', '바쁘거든요', '바빴네요'],
+    ['맛있다', A, '맛있네요', '맛있죠', '맛있잖아요', '맛있거든요', '맛있었네요'],
+  ];
+  for (const [dict, pos, neyo, jyo, janayo, geodeunyo, past] of rows) {
+    assert.equal(G.form(dict, 'neyo', { pos }).text, neyo, `${dict} neyo`);
+    assert.equal(G.form(dict, 'jyo', { pos }).text, jyo, `${dict} jyo`);
+    assert.equal(G.form(dict, 'janayo', { pos }).text, janayo, `${dict} janayo`);
+    assert.equal(G.form(dict, 'geodeunyo', { pos }).text, geodeunyo, `${dict} geodeunyo`);
+    assert.equal(G.form(dict, 'neyo', { pos, tense: 'past' }).text, past, `${dict} past neyo`);
+  }
+  // Other right spellings are never offered as wrong: 지요 (죠 in full), and 그러네요 next to 그렇네요.
+  assert.ok(G.form('먹다', 'jyo').variants.includes('먹지요'));
+  assert.ok(G.form('가다', 'jyo', { tense: 'past' }).variants.includes('갔지요'));
+  assert.deepEqual(G.form('그렇다', 'neyo', { pos: A }).variants, ['그러네요']);
+  const has = (dict, id, text, opts = {}) => assert.ok(G.slips(dict, id, opts).some((s) => s.text === text), `${dict} ${id}: ${text}`);
+  has('살다', 'neyo', '살네요');
+  has('살다', 'jyo', '사죠');
+  has('먹다', 'neyo', '먹어네요');
+  has('듣다', 'geodeunyo', '들거든요');
+  has('먹다', 'janayo', '먹자나요');
+  has('가다', 'janayo', '갔자나요', { tense: 'past' });
+  has('가다', 'geodeunyo', '가거든요', { tense: 'past' });
+  has('가다', 'neyo', '가내요');
+  has('먹다', 'neyo', '먹었내요', { tense: 'past' });
+  has('살다', 'janayo', '살자나요');
+  has('가다', 'jyo', '가죠요');
+  has('가다', 'jyo', '갔죠요', { tense: 'past' });
+  assert.ok(!G.slips('좋다', 'janayo', { pos: A }).some((s) => s.text === '좋자나요'), '좋잖아요 is [조차나요]: no one writes 좋자나요');
+  assert.match(G.slips('먹다', 'janayo').find((s) => s.text === '먹자나요').why, /\[짜나요\]/);
+  assert.match(G.slips('가다', 'janayo').find((s) => s.text === '가자나요').why, /\[자나요\]/);
+  // Even a plain vowel stem gets a slip for -네요 (가내요), so a question can always be built.
+  assert.ok(G.slips('가다', 'neyo').length >= 1);
+  for (const id of ['neyo', 'jyo', 'janayo', 'geodeunyo']) {
+    for (const [dict, pos] of [['살다', V], ['그렇다', A], ['먹다', V]]) {
+      for (const tense of ['present', 'past']) {
+        const right = G.form(dict, id, { pos, tense });
+        const ok = new Set([right.text, ...right.variants]);
+        for (const s of G.slips(dict, id, { pos, tense })) assert.ok(!ok.has(s.text) && s.why, `${dict} ${id} ${tense}: ${s.text}`);
+      }
+    }
+    assert.ok(G.table(id).length >= 4, id);
+  }
+});

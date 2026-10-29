@@ -9,8 +9,9 @@
  * -기 전에, -(으)ㄴ 후에, -아/어야 해요, -아/어도 돼요, -(으)ㄹ 수 있어요/없어요,
  * -고 있어요, -아/어 보세요, -아/어 봤어요, -(으)ㄹ게요, -는데/-(으)ㄴ데,
  * the polite -(으)세요 and -(으)셨어요, -지 마세요, -(으)려고, -(으)면서 and
- * -(으)ㄴ 적이 있어요/없어요; and the forms that describe a noun: 예쁜 꽃,
- * 지금 보는 영화, 어제 본 영화, 내일 볼 영화.
+ * -(으)ㄴ 적이 있어요/없어요; the forms that describe a noun: 예쁜 꽃,
+ * 지금 보는 영화, 어제 본 영화, 내일 볼 영화; and the chatty endings that
+ * say how you mean a sentence: -네요, -죠, -잖아요, -거든요.
  * The patterns themselves (explanations, example and question sentences)
  * live in content/grammar.js and are practised in Grammar Cards.
  */
@@ -76,7 +77,19 @@
     nowN: { name: '-는 + noun', meaning: '“the … that … (does)”: a verb describing the noun after it, now or usually (지금 보는 영화, the film I’m watching)', base: 'nowMod', tail: '', verbOnly: true },
     pastN: { name: '-(으)ㄴ + noun (done)', meaning: '“the … that … did”: something that already happened (어제 본 영화, the film I saw yesterday)', base: 'pastMod', tail: '', verbOnly: true },
     futN: { name: '-(으)ㄹ + noun', meaning: '“the … that … will …, the … to …”: something still to come (내일 볼 영화, the film I’ll see tomorrow)', base: 'futMod', tail: '', verbOnly: true },
+    // Chatty endings: they end the sentence, and say how you mean it.
+    neyo: { name: '-네요', meaning: '“Oh, …!”: something you’ve just noticed or found out (와, 맛있네요!)', base: 'stem', tail: '네요', past: true },
+    jyo: { name: '-죠 (-지요)', meaning: '“…, right?” or “of course …”: something you both know, or expect them to agree with', base: 'stem', tail: '죠', past: true },
+    janayo: { name: '-잖아요', meaning: '“…, you know”, “remember?”: reminding them of something they already know', base: 'stem', tail: '잖아요', past: true },
+    geodeunyo: { name: '-거든요', meaning: '“(it’s because) …, you see”: a reason or background they don’t know yet', base: 'stem', tail: '거든요', past: true },
   };
+  const CHATTY = new Set(['neyo', 'jyo', 'janayo', 'geodeunyo']);
+  /** Other correct spellings: 죠 is short for 지요 (먹지요); after ㅎ-irregular adjectives, -네요 may drop the ㅎ (그러네요). */
+  function chattyVariants(id, text, stem) {
+    if (id === 'jyo') return [text.replace(/죠$/, '지요')];
+    if (id === 'neyo' && C.irregularType(stem) === 'ㅎ' && text === `${stem}네요`) return [`${allButLast(stem)}${withFinal(lastChar(stem), '')}네요`];
+    return [];
+  }
   // The endings whose form goes before a noun (the answer is the whole word: 예쁜, 보는).
   const BEFORE_NOUN = new Set(['adjMod', 'nowMod', 'pastMod', 'futMod']);
 
@@ -201,17 +214,23 @@
       return {
         text,
         steps: [`It happened in the past: ${past} → ${ps}, then add ${(glue + e.tail).trim()} → ${text}.`],
-        variants: [],
+        variants: chattyVariants(id, text, stem),
         rule: 'past',
       };
     }
 
     if (e.base === 'stem') {
+      // ㄹ drops before ㄴ: 살다 → 사네요, 멀다 → 머네요 (but 살고, 살죠).
+      if (C.irregularType(stem) === 'ㄹ' && parts(e.tail.charAt(0)).initial === 'ㄴ') {
+        const bare = `${allButLast(stem)}${withFinal(lastChar(stem), '')}`;
+        const text = `${bare}${e.tail}`;
+        return { text, steps: [`${dict} ends in ㄹ, which drops before ㄴ: ${bare} + ${e.tail.trim()} → ${text}.`], variants: [], rule: 'ㄹ drops' };
+      }
       const text = `${stem}${e.tail}`;
       return {
         text,
         steps: [`${e.name} goes straight onto the stem (the dictionary form without 다): ${stem} + ${e.tail.trim()} → ${text}.`],
-        variants: also(text),
+        variants: [...also(text), ...chattyVariants(id, text, stem)],
         rule: 'stem',
       };
     }
@@ -318,12 +337,20 @@
 
     if (tense === 'past') {
       // The same ending without the past: wrong when the English is about the past.
-      if (['jiman', 'nikka', 'neunde'].includes(id)) add(form(dict, id, { pos }).text, `It happened in the past, so ${e.name} takes the past too: ${right.text}.`);
+      if (['jiman', 'nikka', 'neunde'].includes(id) || CHATTY.has(id)) add(form(dict, id, { pos }).text, `It happened in the past, so ${e.name} takes the past too: ${right.text}.`);
+      if (id === 'janayo') janayoSlip(add, right.text); // 갔자나요
+      if (id === 'neyo') add(right.text.replace(/네요$/, '내요'), spelledNe(right.text)); // 갔내요
+      if (id === 'jyo') add(`${right.text}요`, jyoHasYo(right.text)); // 갔죠요
+      if (CHATTY.has(id)) {
+        const past = C.conjugate(dict, 'past', { pos }).text;
+        add(`${past.replace(/요$/, '')}${e.tail}`, `For the past, ${e.name} goes straight onto the past stem (${past} without 어요): ${pastStem(dict, pos)} + ${e.tail} → ${right.text}.`); // 갔어거든요
+      }
       return out;
     }
 
     if (e.base === 'stem') {
-      if (inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes straight onto the stem, not the 아/어 form: ${stem} + ${e.tail.trim()} → ${right.text}.`); // 먹어지만
+      const onto = right.rule === 'ㄹ drops' ? `${head}${withFinal(last, '')} + ${e.tail.trim()} (the ㄹ drops before ㄴ)` : `${stem} + ${e.tail.trim()}`;
+      if (inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes straight onto the stem, not the 아/어 form: ${onto} → ${right.text}.`); // 먹어지만, 멀어네요
       if (type === 'ㄷ') add(`${head}${withFinal(last, 'ㄹ')}${e.tail}`, `${dict}’s ㄷ only turns into ㄹ before a vowel. Before ${e.tail.trim().charAt(0)}, it stays ㄷ: ${right.text}.`); // 들지만
       if (id === 'gijeone') {
         add(`${pastStem(dict, pos)}${e.tail}`, `기 전에 never takes the past. Even for the past, say ${right.text}: the verb at the end shows the tense.`); // 먹었기 전에
@@ -334,6 +361,13 @@
         // Not for noun + 하다 verbs: their 안 goes before 하다 (걱정 안 하세요, not 안 걱정하세요); a question can add that as a trap.
         if (!(head && last === '하')) add(`안 ${euStem(stem, '세요').text}세요`, `안 …(으)세요 just says someone isn’t doing it. To ask someone not to, use -지 마세요: ${right.text}.`); // 안 먹으세요
       }
+      if (CHATTY.has(id) && type === 'ㄹ') {
+        if (id === 'neyo') add(`${stem}${e.tail}`, `${dict} ends in ㄹ, and ㄹ drops before ㄴ: ${right.text}.`); // 살네요
+        else add(`${head}${withFinal(last, '')}${e.tail}`, `${dict}’s ㄹ only drops before ㄴ, ㅂ and ㅅ. Before ${parts(e.tail.charAt(0)).initial}, it stays: ${right.text}.`); // 사죠 (for 살다)
+      }
+      if (id === 'janayo') janayoSlip(add, right.text); // 먹자나요
+      if (id === 'neyo') add(right.text.replace(/네요$/, '내요'), spelledNe(right.text)); // 가내요
+      if (id === 'jyo') add(`${right.text}요`, jyoHasYo(right.text)); // 가죠요
       // (not for verbs where -아/어 있어요 is right too: 가 있어요, 앉아 있어요, 살아 있어요…)
       if (id === 'goIt' && !/(가다|오다|앉다|서다|눕다|살다|남다|붙다)$/.test(dict)) add(`${inf.text} 있어요`, `-아/어 있어요 describes a state after something has happened (앉아 있어요 = is seated). For an action in progress, it’s -고 있어요: ${right.text}.`); // 먹어 있어요
     }
@@ -433,6 +467,23 @@
     return out;
   }
 
+  /**
+   * -잖아요 sounds like [자나요] after a vowel or ㄹ, [짜나요] after other consonants, so
+   * learners write 자나요. (Not after ㅎ: 좋잖아요 is [조차나요], and no one writes 좋자나요.)
+   */
+  function janayoSlip(add, text) {
+    const before = text.slice(0, -'잖아요'.length);
+    const final = before ? parts(lastChar(before)).final : '';
+    if (/[ㅎㄶㅀ]/.test(final)) return;
+    const sound = !final || final === 'ㄹ' ? '자나요' : '짜나요';
+    add(`${before}자나요`, `It sounds like [${sound}], but it’s spelled 잖아요: it comes from -지 않아요. So: ${text}.`);
+  }
+
+  /** ㅔ and ㅐ sound the same, so learners write 가내요. */
+  const spelledNe = (text) => `네 and 내 sound the same, but the ending is spelled 네요 (with ㅔ): ${text}.`;
+  /** 죠 is 지요 already, so learners who add the polite 요 again write 가죠요. */
+  const jyoHasYo = (text) => `죠 is short for 지요, so it already has its 요: ${text}.`;
+
   /** The same word with another ending: correct Korean, but a different meaning. */
   function contrast(dict, otherId, { pos = 'verb', tense = 'present' } = {}) {
     const other = ENDINGS[otherId];
@@ -473,6 +524,10 @@
     nowN: [['보다'], ['먹다'], ['살다'], ['듣다']],
     pastN: [['보다'], ['먹다'], ['살다'], ['듣다'], ['돕다']],
     futN: [['보다'], ['먹다'], ['살다'], ['듣다'], ['돕다']],
+    neyo: [['가다'], ['먹다'], ['살다'], ['좋다', 'adjective'], ['멀다', 'adjective']],
+    jyo: [['가다'], ['먹다'], ['살다'], ['춥다', 'adjective']],
+    janayo: [['가다'], ['먹다'], ['알다'], ['바쁘다', 'adjective']],
+    geodeunyo: [['가다'], ['먹다'], ['살다'], ['아프다', 'adjective']],
   };
 
   /** Rows for an intro card: [{ dict, text, rule }]. */
@@ -541,5 +596,5 @@
     };
   }
 
-  M.grammar = { ENDINGS, BEFORE_NOUN, applies, form, slips, contrast, table, question, euStem, modifierStem };
+  M.grammar = { ENDINGS, BEFORE_NOUN, CHATTY, applies, form, slips, contrast, table, question, euStem, modifierStem };
 })(window.Mallang);

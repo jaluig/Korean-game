@@ -10,7 +10,7 @@ const squash = (t) => String(t).replace(/\s+/g, '');
 const OVERLAP = [
   ['myeon', 'ttae'], ['aseo', 'nikka'], ['aseo', 'go'], ['hue', 'go'], ['su', 'ado'], ['hue', 'aseo'],
   ['neunde', 'jiman'], ['neunde', 'nikka'], ['neunde', 'go'], ['seyo', 'boseyo'],
-  ['reo', 'ryeogo'], ['bwasseoyo', 'jeogi'], ['bwasseoyo', 'jeogiNot'],
+  ['reo', 'ryeogo'], ['bwasseoyo', 'jeogi'], ['bwasseoyo', 'jeogiNot'], ['jyo', 'janayo'],
 ];
 
 function learnWords(now = NOON) {

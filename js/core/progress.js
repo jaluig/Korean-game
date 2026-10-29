@@ -312,6 +312,8 @@
       earned: (s) => count(s, 'pronCorrect') >= 50 },
     { id: 'families-50', emoji: '🔍', ko: '낱말 탐정', en: 'Word detective', desc: 'Answer 50 Word Families questions right.',
       earned: (s) => count(s, 'familiesRight') >= 50 },
+    { id: 'phrases-50', emoji: '🎩', ko: '예의 바른', en: 'Good manners', desc: 'Answer 50 What to Say When questions right.',
+      earned: (s) => count(s, 'phrasesRight') >= 50 },
     { id: 'phone-20', emoji: '📞', ko: '주문 접수', en: 'Order taker', desc: 'Take down 20 phone orders right in the Number Shop.',
       earned: (s) => count(s, 'phoneOrders') >= 20 },
     { id: 'topik-first', emoji: '📝', ko: '첫 모의시험', en: 'Test day', desc: 'Finish a TOPIK I practice test.',

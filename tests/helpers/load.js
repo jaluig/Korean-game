@@ -49,6 +49,7 @@ const CONTENT = [
   'content/replies.js',
   'content/sound-changes.js',
   'content/word-families.js',
+  'content/phrases.js',
 ];
 // Minigames only touch the DOM when a round starts, so their round-building logic can be tested.
 const GAMES = [
@@ -62,6 +63,7 @@ const GAMES = [
   'js/games/grammar-cards.js',
   'js/games/dialogues.js',
   'js/games/replies.js',
+  'js/games/phrases.js',
   'js/games/reading.js',
   'js/games/speech-levels.js',
   'js/games/shadowing.js',

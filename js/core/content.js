@@ -23,6 +23,7 @@
   const replies = [];
   const sounds = { rules: [], items: [] };
   const families = [];
+  const phrases = [];
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -608,6 +609,64 @@
     }
   }
 
+  /**
+   * Set phrases (content/phrases.js), practised in What to Say When: what you say
+   * at an everyday moment (잘 먹겠습니다 before a meal, 수고하셨습니다 at the end of the
+   * day). Each says `when` it's said, and has situations, each listing the phrases
+   * that would be wrong there (`wrong`: the game's wrong answers, never a phrase that
+   * could also be said). Ids become 'phrase:<id>'.
+   */
+  function registerPhrases(list) {
+    for (const p of list || []) {
+      const id = `phrase:${p.id}`;
+      if (!p.id) problems.push('phrase: needs an id');
+      else if (phrases.some((x) => x.id === id)) problems.push(`${id}: duplicate phrase`);
+      else {
+        if (p.situations !== undefined && !Array.isArray(p.situations)) problems.push(`${id}: "situations" is a list`);
+        // (Only lists, so one malformed entry can't break the game: the checker reports what's missing.)
+        const situations = (Array.isArray(p.situations) ? p.situations : []).filter((x) => x && typeof x === 'object').map((x) => ({ ...x, wrong: Array.isArray(x.wrong) ? x.wrong : [] }));
+        phrases.push(Object.freeze({ ...p, id, localId: p.id, level: p.level || 1, type: 'phrase', index: phrases.length, needs: Array.isArray(p.words) ? p.words : [], situations }));
+      }
+    }
+  }
+
+  function checkPhrases(found) {
+    const plain = (t) => String(t).replace(/[\s.,!?~]+/g, '');
+    const filled = (t) => typeof t === 'string' && !!t.trim();
+    // The same moment, however it's typed: ’ or ', spaces, capitals.
+    const sameScene = (t) => String(t).toLowerCase().replace(/[’‘]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
+    const ids = new Set(phrases.map((p) => p.localId));
+    const scenes = new Map();
+    for (const p of phrases) {
+      if (!filled(p.ko) || !/[가-힣]/.test(p.ko) || !filled(p.en) || !filled(p.when)) found.push(`${p.id}: needs ko, en and when`);
+      if (![1, 2, 3].includes(p.level)) found.push(`${p.id}: level 1, 2 or 3`);
+      if (p.en && p.en.length > 60) found.push(`${p.id}: "en" is a short gloss, 60 characters at most (it's shown under the phrase)`);
+      if (p.when && p.when.length > 160) found.push(`${p.id}: "when" is 160 characters at most`);
+      for (const q of phrases) if (q.index > p.index && p.ko && q.ko && plain(q.ko) === plain(p.ko)) found.push(`${q.id}: the same phrase as ${p.id}`);
+      if (p.reply !== undefined && !(p.reply && /[가-힣]/.test(p.reply.ko || '') && p.reply.en)) found.push(`${p.id}: "reply" is { ko, en }: what you often hear back`);
+      for (const ref of p.needs) {
+        const w = words.get(ref);
+        if (!w) found.push(`${p.id}: unknown word "${ref}" (use topic:id)`);
+        else if (plain(w.ko) !== plain(p.ko)) found.push(`${p.id}: "words" is the game word the phrase is, and ${ref} is ${w.ko}`);
+      }
+      if (!p.situations.length) found.push(`${p.id}: needs 1+ situations`);
+      p.situations.forEach((x, i) => {
+        const label = `${p.id} situation ${i + 1}`;
+        if (!filled(x.emoji) || !/\p{Extended_Pictographic}/u.test(x.emoji) || !filled(x.en)) return found.push(`${label}: needs an emoji and en`);
+        if (x.en.length > 130) found.push(`${label}: 130 characters at most (it's an answer option too)`);
+        const key = sameScene(x.en);
+        if (scenes.has(key)) found.push(`${label}: the same situation as ${scenes.get(key)}`);
+        scenes.set(key, label);
+        const wrong = x.wrong;
+        if (wrong.length < 3 || new Set(wrong).size !== wrong.length) found.push(`${label}: needs 3+ different phrases in "wrong" (ones you wouldn't say here)`);
+        for (const ref of wrong) {
+          if (ref === p.localId) found.push(`${label}: "wrong" lists the phrase itself`);
+          else if (!ids.has(ref)) found.push(`${label}: "wrong" lists unknown phrase "${ref}"`);
+        }
+      });
+    }
+  }
+
   function checkReadings(found) {
     for (const r of readings) {
       if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
@@ -652,8 +711,20 @@
         if (at >= 0 && e && M.grammar.BEFORE_NOUN.has(e.base) && !((at === 0 || q.ko[at - 1] === ' ') && q.ko[at + q.answer.length] === ' ')) {
           found.push(`${q.id}: "${q.answer}" goes before a noun: it must be a word of its own, followed by a space`);
         }
+        // A chatty ending (맛있네요, 갔잖아요) ends its sentence.
+        if (at >= 0 && M.grammar && M.grammar.CHATTY.has(q.form) && !/^([.!?…]|$)/.test(q.ko.slice(at + q.answer.length))) {
+          found.push(`${q.id}: "${q.answer}" ends a sentence: put . ! or ? right after it`);
+        }
         for (const ref of q.needs) if (!words.has(ref)) found.push(`${q.id}: unknown word "${ref}" (use topic:id)`);
         for (const t of q.traps) if (!t.text || !t.why) found.push(`${q.id}: each trap needs "text" and "why"`);
+        if (q.context !== undefined && !(q.context && typeof q.context.en === 'string' && q.context.en.trim() && (q.context.ko === undefined || /[가-힣]/.test(q.context.ko)))) {
+          found.push(`${q.id}: "context" is { ko, en } (what someone just said) or { en } (the scene)`);
+        } else if (q.context && q.context.ko && M.grammar) {
+          const squash = (t) => String(t).replace(/\s+/g, '');
+          const right = M.grammar.form(q.dict, q.form, { pos: q.pos, tense: q.tense });
+          const forms = [q.answer, ...(right ? [right.text, ...right.variants] : [])].map(squash);
+          if (forms.some((f) => squash(q.context.ko).includes(f))) found.push(`${q.id}: the context line says the answer (${q.answer}) already`);
+        }
       }
     }
   }
@@ -721,6 +792,7 @@
     checkReplies(found);
     checkSoundChanges(found);
     checkWordFamilies(found);
+    checkPhrases(found);
     return found;
   }
 
@@ -739,6 +811,7 @@
     registerReplies,
     registerSoundChanges,
     registerWordFamilies,
+    registerPhrases,
     check,
     grammar: () => grammar.slice(),
     grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
@@ -771,6 +844,8 @@
     soundItem: (id) => sounds.items.find((x) => x.id === id) || null,
     wordFamilies: () => families.slice(),
     wordFamily: (id) => families.find((f) => f.id === id) || null,
+    phrases: () => phrases.slice(),
+    phrase: (id) => phrases.find((p) => p.id === id) || null,
     LEVELS,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,

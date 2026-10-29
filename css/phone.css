@@ -34,6 +34,11 @@ h3,
 .grammar-meaning,
 .grammar-how p,
 .grammar-note,
+.grammar-context-ko,
+.phrase-note,
+.phrase-when,
+.phrase-reply,
+.ex-phrase .option-ko .option-text,
 .dlg-line-ko,
 .dlg-line-en {
   word-break: keep-all;
