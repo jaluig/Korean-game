@@ -1514,4 +1514,61 @@ Mallang.content.registerDialogues([
       },
     ],
   },
+  {
+    id: 'soundwords-cold-visit',
+    topic: 'soundwords',
+    level: 2,
+    scene: '🤧',
+    title: { ko: '콜록콜록, 괜찮아요?', en: 'Cough, cough: are you OK?' },
+    speakers: {
+      A: { name: '지호', en: 'Jiho', emoji: '🧑', voice: 'low' },
+      B: { name: '유나', en: 'Yuna', emoji: '👩', voice: 'high' },
+    },
+    lines: [
+      { who: 'B', ko: '똑똑! 지호 씨, 저 유나예요.', en: 'Knock knock! Jiho, it’s me, Yuna.' },
+      { who: 'A', ko: '아, 유나 씨! 콜록콜록… 들어오세요.', en: 'Oh, Yuna! (cough, cough) Come in.' },
+      { who: 'B', ko: '기침을 많이 하네요. 감기에 걸렸어요?', en: 'You’re coughing a lot. Have you caught a cold?' },
+      { who: 'A', ko: '네, 어제부터 콜록콜록 기침이 나요. 오늘은 학교에도 못 갔어요.', en: 'Yes, I’ve been coughing since yesterday. I couldn’t even go to school today.' },
+      { who: 'B', ko: '그래서 제가 죽을 사 왔어요. 아직 따뜻해요.', en: 'That’s why I’ve brought you some rice porridge. It’s still warm.' },
+      { who: 'A', ko: '와, 고마워요! 아침부터 아무것도 못 먹어서 배에서 꼬르륵 소리가 났어요.', en: 'Wow, thank you! I haven’t been able to eat anything since this morning, so my stomach was rumbling.' },
+      { who: 'B', ko: '하하, 그럼 빨리 드세요. 그리고 약 먹고 푹 쉬세요.', en: 'Ha ha, then eat up. And take your medicine and get plenty of rest.' },
+      { who: 'A', ko: '네, 오늘 밤에는 일찍 쿨쿨 잘게요!', en: 'I will. Tonight I’ll be fast asleep early!' },
+    ],
+    words: ['soundwords:knock', 'soundwords:coughcough', 'soundwords:rumble', 'soundwords:zzz'],
+    questions: [
+      {
+        q: { ko: '지호 씨는 언제부터 기침이 나요?', en: 'Since when has Jiho been coughing?' },
+        options: [
+          { ko: '어제부터', en: 'Since yesterday' },
+          { ko: '오늘 아침부터', en: 'Since this morning' },
+          { ko: '지난주부터', en: 'Since last week' },
+        ],
+        answer: 0,
+        line: 3,
+        why: 'Jiho says 어제부터 콜록콜록 기침이 나요: he’s been coughing since yesterday. 아침부터 is about food: he couldn’t eat anything from the morning on.',
+      },
+      {
+        q: { ko: '유나 씨는 뭘 사 왔어요?', en: 'What did Yuna bring?' },
+        options: [
+          { ko: '죽', en: 'Rice porridge' },
+          { ko: '약', en: 'Medicine' },
+          { ko: '과일', en: 'Fruit' },
+        ],
+        answer: 0,
+        line: 4,
+        why: 'Yuna says 제가 죽을 사 왔어요: she bought rice porridge (죽) and brought it over. She only tells Jiho to take his medicine: 약 먹고 푹 쉬세요.',
+      },
+      {
+        q: { ko: '지호 씨 배에서 왜 꼬르륵 소리가 났어요?', en: 'Why was Jiho’s stomach rumbling?' },
+        options: [
+          { ko: '아침부터 아무것도 못 먹어서', en: 'He hadn’t eaten anything since the morning' },
+          { ko: '기침을 많이 해서', en: 'He’d been coughing a lot' },
+          { ko: '죽을 많이 먹어서', en: 'He’d eaten a lot of porridge' },
+        ],
+        answer: 0,
+        line: 5,
+        why: 'Jiho says 아침부터 아무것도 못 먹어서 배에서 꼬르륵 소리가 났어요: he couldn’t eat anything from the morning on (-아서, “so”), and his stomach rumbled (꼬르륵). The porridge is what he’s about to eat.',
+      },
+    ],
+  },
 ]);

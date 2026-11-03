@@ -5,16 +5,17 @@ Meet 말랑이 (Mallang-i), a squishy rice-cake bunny with a sprout on its head:
 every Korean word you learn becomes a plant in your **word garden**, and short
 practice rounds keep it growing.
 
-- **20 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🌳 Word Families · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins · 👄 Sound Changes · 🔗 Grammar Cards · 🎧 Dialogues · 💬 Choose Your Reply · 🙏 What to Say When · 📖 Reading · 🙇 Speech Levels · 🦜 Shadowing · 👵 Honorifics · 📻 Stories · 🗓️ Weekly Review
-- **13 topics** with 727 words and 368 sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans · 🚄 travel & transport · 💊 at the doctor's · 💼 school & work
-- **29 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -는데, -(으)려고, -고 있어요, -(으)세요, -지 마세요, 예쁜 꽃 / 어제 본 영화, -네요 / -잖아요…) with 296 practice sentences, **29 listening dialogues** with two voices and a 🎭 role-play where you speak one part, **53 short texts to read** (a diary, a text message, a menu, a receipt, a group chat, a weather forecast, a chat between friends in 반말…), and **16 stories and podcasts** in a few parts for longer listening
+- **21 minigames:** 🎴 Word Cards · 🧩 Sentence Builder · ⚡️ Speed Match · 🌳 Word Families · 🎈 Balloon Pop · 🧪 Particle Lab · 🪄 Verb Magic · 🏪 Number Shop · 👂 Sound Twins · 👄 Sound Changes · 🔗 Grammar Cards · 🎧 Dialogues · 💬 Choose Your Reply · 🙏 What to Say When · 📖 Reading · 🪧 Reading Signs · 🙇 Speech Levels · 🦜 Shadowing · 👵 Honorifics · 📻 Stories · 🗓️ Weekly Review
+- **14 topics** with 758 words and 390 sentences, each with short lesson notes: ☕ at the café · 🌞 my day · 👨‍👩‍👧 family & people · 🔢 numbers & time · 🛍️ shopping · 💗 feelings · 🗺️ finding the way · 📔 the past tense · ☔ weather · 🎨 hobbies & plans · 🚄 travel & transport · 💊 at the doctor's · 💼 school & work · 💥 sound & feeling words (두근두근, 반짝반짝, 꼬르륵…)
+- **31 grammar patterns** (-고, -지만, -아서/어서, -(으)면, -는데, -(으)려고, -고 있어요, -(으)세요, -지 마세요, 예쁜 꽃 / 어제 본 영화, -네요 / -잖아요, 비가 올 것 같아요…) with 316 practice sentences, **30 listening dialogues** with two voices and a 🎭 role-play where you speak one part, **55 short texts to read** (a short story, a diary, a text message, a menu, a receipt, a group chat, a weather forecast, a chat between friends in 반말…), and **16 stories and podcasts** in a few parts for longer listening
 - **Speech levels and honorifics:** 60 sentences in 합니다체, 해요체 and 반말, with who each one is for, and 60 on showing respect for the person you talk about (가세요, 주무세요, 드세요, 연세, 드려요…)
-- **Conversations you take part in:** 22 in which you pick (or say) your reply and the other person reacts, and **how Korean really sounds**: 7 rules of sound change (먹어요 [머거요], 학년 [항년], 좋다 [조타]) with 63 words to hear and say
+- **Conversations you take part in:** 23 in which you pick (or say) your reply and the other person reacts, and **how Korean really sounds**: 7 rules of sound change (먹어요 [머거요], 학년 [항년], 좋다 [조타]) with 63 words to hear and say
 - **Word families:** 27 Sino-Korean syllables with a meaning of their own (학 = study: 학교, 학생, 방학), so you can guess new words from the ones you know
 - **Set phrases:** 41 things Koreans say at everyday moments (잘 먹겠습니다, 수고하셨습니다, 실례합니다…), and when to say them
+- **Signs:** 42 signs and labels you see in Korea (출구, 금연, 영업중, 1+1, 품절…), drawn the way they really look
 - **Built-in Korean keyboard**, so you never need a Korean input method
 - **Pronunciation audio** through your browser's own Korean voice (or, optionally, Azure's neural voices with your own key), **dictation** of whole sentences, and **🎤 speaking practice** and **shadowing** in Chrome and Edge
-- **An adjustable daily goal, a streak of the days you reach it, points, levels, 63 badges** and 14 outfits for the mascot, saved on your computer
+- **An adjustable daily goal, a streak of the days you reach it, points, levels, 64 badges** and 14 outfits for the mascot, saved on your computer
 - Korean interface with small English subtitles, which you can turn off once you're ready, and a **dark theme**
 - A **weekly review** of the words and sentences you missed most
 - **TOPIK I practice tests**: listening and reading in the style of the real test (113 questions), with your score and the level it stands for
@@ -72,12 +73,13 @@ The game follows a few well-established ideas about learning vocabulary:
 | **How Korean really sounds** | Korean isn't always said the way it's spelled. Sound Changes takes the rules one at a time, each with its card: linking (먹어요 [머거요]), the quiet ㅎ (좋아요 [조아요]), consonants that turn nasal (학년 [항년]), an ㅎ that makes its neighbour stronger (좋다 [조타]), tense sounds (학교 [학꾜]), 같이 [가치] and 신라 [실라]. You see a word and pick how it's said, then hear one and pick its spelling; the wrong options are what learners really say and write (reading it letter by letter, half the rule), each explained. |
 | **Practice counts everywhere** | The fast games (Speed Match, Balloon Pop, Particle Lab, Verb Magic, Number Shop) use the words and sentences you've learned: a slip marks that word or sentence as tricky, so Word Cards and the Sentence Builder bring it back soon. |
 | **A daily goal that means real practice** | Presets from 250 ⭐ (about 6 minutes) to 1200 ⭐ (about 30), or any amount on a slider in Settings. The 🔥 streak counts the days in a row you reach it. |
-| **Grammar in real sentences** | Grammar Cards teaches the endings that join ideas (-고, -지만, -아서/어서, -(으)면, -(으)니까, -(으)러, -(으)려고, -(으)면서, -(으)ㄹ 때, -기 전에, -(으)ㄴ 후에, -는데), the helpers for "can", "must" and "may", and everyday endings: -고 있어요 ("am …-ing"), -아/어 보다 ("try"), -(으)ㄹ게요 ("I'll…"), -(으)ㄴ 적이 있어요 ("have ever…"), the polite -(으)세요 / -(으)셨어요 and -지 마세요 ("please don't"), the forms that describe a noun (예쁜 꽃, 지금 보는 영화, 어제 본 영화, 내일 볼 영화), and the chatty endings that say how you mean a sentence: -네요 ("oh, …!"), -죠 ("…, right?"), -잖아요 ("…, you know") and -거든요 ("…, you see"). Each pattern starts with a card (meaning, how to make it with a table of forms, a note, examples), then you fill the blank in real sentences. The wrong options are the same word with another ending (a different meaning: `오면` "if it rains" vs `오니까` "because it's raining") and the slips learners really make (`먹아서`, `듣으면`, `가을 때`), each explained. Every pattern has its own review schedule. |
+| **Grammar in real sentences** | Grammar Cards teaches the endings that join ideas (-고, -지만, -아서/어서, -(으)면, -(으)니까, -(으)러, -(으)려고, -(으)면서, -(으)ㄹ 때, -기 전에, -(으)ㄴ 후에, -는데), the helpers for "can", "must" and "may", and everyday endings: -고 있어요 ("am …-ing"), -아/어 보다 ("try"), -(으)ㄹ게요 ("I'll…"), -(으)ㄴ 적이 있어요 ("have ever…"), the polite -(으)세요 / -(으)셨어요 and -지 마세요 ("please don't"), the forms that describe a noun (예쁜 꽃, 지금 보는 영화, 어제 본 영화, 내일 볼 영화), the chatty endings that say how you mean a sentence: -네요 ("oh, …!"), -죠 ("…, right?"), -잖아요 ("…, you know") and -거든요 ("…, you see"), and "it seems" (비가 오는 것 같아요, 비가 온 것 같아요, 비가 올 것 같아요). Each pattern starts with a card (meaning, how to make it with a table of forms, a note, examples), then you fill the blank in real sentences. The wrong options are the same word with another ending (a different meaning: `오면` "if it rains" vs `오니까` "because it's raining") and the slips learners really make (`먹아서`, `듣으면`, `가을 때`), each explained. Every pattern has its own review schedule. |
 | **Listening to real conversations** | Dialogues plays short two-person conversations (ordering, asking the way, making plans…) with two different voices and the script hidden, then asks about them. After each answer you see the line that holds it; at the end, the whole script with translations. Reading the script first is allowed, for fewer points. |
 | **Speaking in a conversation** | In the role-play, you take one part of a dialogue you've just heard and say its lines out loud: the other part answers you, and the game checks how close you were. Then you swap parts. |
 | **Taking part in a conversation** | In Choose Your Reply you're one of the speakers, and you want something (a hot latte to take away, an appointment for tomorrow…). They speak; you pick your reply from three, or say it with the 🎤. A wrong reply isn't just marked wrong: they react the way a real person would (`네? 제가요?`), you see why, and you try again. |
 | **What to say when** | Some moments have words of their own: 잘 먹겠습니다 before a meal, 수고하셨습니다 at the end of the working day, 안녕히 계세요 when you're the one leaving. What to Say When shows a moment and asks what you'd say, or plays a phrase and asks when you'd say it. The wrong answers are what a Korean wouldn't say there, and each one shows when it is said. |
-| **Reading real texts** | Reading gives you short texts of the kinds you'd really meet (a diary entry, a text message, a note, a menu, a notice, a receipt, a review) built from the words you know, with questions that need careful reading: the wrong options are usually in the text too (another price, another day). The text stays on screen, and after each answer the sentence that holds it lights up. |
+| **Reading real texts** | Reading gives you short texts of the kinds you'd really meet (a short story, a diary entry, a text message, a note, a menu, a notice, a receipt, a review) built from the words you know, with questions that need careful reading: the wrong options are usually in the text too (another price, another day). The text stays on screen, and after each answer the sentence that holds it lights up. |
+| **Reading the street** | Reading Signs shows the signs and labels you'd see in Korea, drawn the way they really look (a green 비상구, a red 금연, a yellow 주의, 영업중 hanging on a shop door, 1+1 on a price tag). Read one and pick what it says, or get a moment ("you want to get out of the station") and pick the sign. The pictogram comes only on the card: in the questions you read the Korean, and the wrong meanings come from signs of the same colour. |
 | **Polite, casual or formal?** | Speech Levels shows the same sentence in 합니다체 (formal), 해요체 (polite) and 반말 (casual), with who each one is for and what else changes (저 → 나, 네 → 응, 이에요 → 이야). Then: which level is this sentence, which one fits the person you're talking to, and say it in 반말 or 합니다체, next to the slips learners really make (`저는 학생이야`, `학생야`, `갑습니다`), each explained. |
 | **Shadowing** | Hear a sentence you know and say it straight back, three times, a little faster each time (🐢 0.75× → 🚶 0.9× → 🐇 1.05×). In Chrome and Edge the 🎤 listens as soon as the voice stops and tells you how close you were. |
 | **Showing respect** | Honorifics is the next step after the speech levels: they're about who you talk *to*, honorifics about who you talk *about*. Each sentence comes twice: about someone you respect (할머니께서 지금 **주무세요**) and about someone else (동생이 지금 **자요**). First: which plain word is this the respectful form of; then fill the blank in each, next to the slips learners really make (`자세요`, `있으세요` for being somewhere, `저는 가세요`), each explained. |
@@ -101,7 +103,8 @@ The game follows a few well-established ideas about learning vocabulary:
 - **🎧 대화 듣기 · Dialogues**: two conversations a round. ▶ plays the whole dialogue (🐢 slowly), `R` replays it, and every line in the script has its own 🔊. A dialogue opens once you know its key words, and the ones you found hard come back sooner. Without a Korean voice it becomes reading practice. In Chrome and Edge, **🎭 Role-play** on the script screen lets you take one speaker's part: the other part's lines are played for you, and you say yours out loud with 🎤 (`M` starts listening). Then swap parts.
 - **💬 대답 고르기 · Choose Your Reply**: two conversations a round, in which you play one part, with a goal that's shown at the start and with every choice. They speak (`R` replays); you pick your reply from three (`1`–`3`), or say it (🎤, `M`). After a wrong reply they react, you see why, and you try again; the right one is read aloud in a second voice and the conversation goes on. At the end, the whole conversation with translations and a 🎤 for each of your lines. A conversation opens once you know its key words, and the ones you slipped in come back sooner.
 - **🙏 상황 표현 · What to Say When**: the set phrases Koreans say at everyday moments. A new phrase starts with its card: how it sounds (🔊, and 🎤 to say it), what it means word for word, when and to whom you say it, and what you'll hear back. Then: a moment, and which phrase you'd say (`1`–`4`); or a phrase you hear (`R` replays), and when you'd say it (`1`–`3`). The wrong answers are phrases a Korean wouldn't say there, so every slip shows when that one is said. Each phrase has its own review schedule.
-- **📖 읽기 · Reading**: for when the dialogues feel easy. A short text from one of your topics (a diary entry, a text message, a note on the fridge, a menu, a notice…), then 2–3 questions while the text stays on screen. After each answer the sentence that holds it lights up, with its translation; at the end you get the whole text with translations and a 🔊 for every sentence. ▶ reads the text aloud (🐢 slowly). Showing the English first is allowed, for fewer points. A text opens once you know its key words.
+- **📖 읽기 · Reading**: for when the dialogues feel easy. A short text from one of your topics (a short story, a diary entry, a text message, a note on the fridge, a menu, a notice…), then 2–3 questions while the text stays on screen. After each answer the sentence that holds it lights up, with its translation; at the end you get the whole text with translations and a 🔊 for every sentence. ▶ reads the text aloud (🐢 slowly). Showing the English first is allowed, for fewer points. A text opens once you know its key words.
+- **🪧 표지판 읽기 · Reading Signs**: the signs and labels you see in Korea. A new sign starts with its card: the sign as it really looks (with its pictogram), what it means, where you see it and the parts of the word (출구: 출 “out” + 구 “opening”). Then: a sign, and what it says (`1`–`4`); or a moment, and which sign answers it. The wrong answers are signs that say something else, and the right one is read aloud. Each sign has its own review schedule.
 - **🙇 말투 · Speech Levels**: 합니다체, 해요체 or 반말? The very first round opens with the card: the three levels, who each one is for, their endings and a table of what else changes (📖 reopens it any time). Each sentence opens once you know its key words and has its own review schedule, and its questions get harder as it grows: which level is this sentence → who are you talking to (👫 a close friend, 🛍️ a shop assistant, 📺 the news…), pick the sentence that fits → say it in 반말 or in 합니다체. Every wrong option is explained, and the feedback shows the sentence in all three levels with a 🔊 for each.
 - **🦜 따라 말하기 · Shadowing**: five sentences you know a round (the ones you've built in the Sentence Builder and your focus topic's first). Each one is played three times, a little faster each time, and you say it straight back. In Chrome and Edge, with speaking practice on, the 🎤 opens as soon as the voice stops and checks you (`M` listens again, `R` replays); elsewhere, say it out loud and press 😊 *I said it*. It needs a Korean voice.
 - **👵 높임말 · Honorifics**: -(으)시- (가세요, 가셨어요), the verbs and nouns with a word of their own (주무세요, 드세요, 계세요, 연세, 성함), and the humble words for what you do for someone you respect (드려요, 여쭤봐요). The very first round opens with the card (📖 reopens it); each sentence has its own review schedule and opens once you know its key words. The feedback shows both sentences of a pair, with a 🔊 each.
@@ -301,8 +304,10 @@ The endings are `go` -고 · `jiman` -지만 · `aseo` -아서/어서 · `myeon`
 `neunde` -는데 / -(으)ㄴ데 · `seyo` -(으)세요 · `si` -(으)셨어요 · `jimaseyo` -지 마세요 · `ryeogo` -(으)려고 ·
 `myeonseo` -(으)면서 · `jeogi` / `jeogiNot` -(으)ㄴ 적이 있어요 / 없어요, and before a noun `adjN` (예쁜, adjectives) ·
 `nowN` (보는) · `pastN` (본) · `futN` (볼), whose answer is the whole word before the noun, and the chatty endings
-`neyo` -네요 · `jyo` -죠 · `janayo` -잖아요 · `geodeunyo` -거든요, whose answer ends its sentence. The tests check that
-every answer matches the engine and that every question has three explained wrong options.
+`neyo` -네요 · `jyo` -죠 · `janayo` -잖아요 · `geodeunyo` -거든요, whose answer ends its sentence, and "it seems":
+`seemNow` (오는 / 비싼 것 같아요) · `seemPast` (온 것 같아요) · `seemFut` (올 것 같아요), whose answer is the whole
+`… 것 같아요`. The tests check that every answer matches the engine and that every question has three explained wrong
+options.
 
 **Dialogues** live in `content/dialogues.js`: two speakers (one `voice: 'high'`, one `'low'`), a few lines,
 and questions whose options are `{ ko, en }` and whose `line` points at the line with the answer:
@@ -434,6 +439,18 @@ situation is also a wrong answer to "when do you say …?" for the phrases it li
                  wrong: ['after-eating', 'bye-you-go', …] }, …] },
 ```
 
+**Signs** live in `content/signs.js`: what the sign says, how it's read aloud when it has digits (`say`), its meaning,
+its `look` (`exit` green, `info` blue, `ban` a red "no", `warn` yellow, `shop` a door sign, `tag` a price tag), where
+you see it, a moment you'd look for it (`need`) and the signs that wouldn't answer that moment (`wrong`):
+
+```js
+{ id: 'exit', ko: '출구', en: 'Exit (the way out)', look: 'info', icon: '🚶', level: 1,
+  where: 'In subway stations and buildings: the way out. …', note: '**출** means “going out” …',
+  words: ['directions:exit'],   // the game word it is, practised when it comes up
+  need: 'You’ve got off the subway and want to get out of the station.',
+  wrong: ['entrance', 'transfer', …], avoid: ['emergency-exit'] },   // avoid: signs that mean nearly the same
+```
+
 **TOPIK I practice questions** live in `content/topik.js`, in two lists, `listening` and `reading`. Each entry has a
 `type` (the kind of question, in the real test's order: listening `reply`, `next`, `place`, `topic`, `match`, `idea`,
 `set`; reading `about`, `blank`, `notice`, `match`, `idea`, `order`, `set`), what to hear (`script`, with a man `'m'`
@@ -499,7 +516,8 @@ content/              one file per topic: words, sentences, lesson notes; sounds
                       speech-levels.js: speech levels; honorifics.js: honorifics; stories.js: stories;
                       topik.js: TOPIK I practice questions; replies.js: Choose Your Reply conversations;
                       sound-changes.js: Sound Changes rules and words; word-families.js: Word Families;
-                      phrases.js: What to Say When
+                      phrases.js: What to Say When; signs.js: Reading Signs; sound-words.js: the sound & feeling
+                      words topic
 js/core/              no UI: config, Hangul engine, numbers, verb conjugation, grammar endings, particles,
                       answer checking, storage, spaced repetition, progress & badges, distractor picking,
                       TOPIK I practice tests (building and scoring them), speech (and the optional Azure
@@ -508,7 +526,7 @@ js/ui/                components, mascot (and its outfits), Korean keyboard, fee
 js/exercises/         intro · choice · tiles · typing · sentence · dictation
 js/games/             word-cards · sentence-builder · speed-match · word-families · balloon-pop ·
                       particle-lab · verb-magic · number-shop · sound-twins · sound-changes · grammar-cards ·
-                      dialogues · replies · phrases · reading · speech-levels · shadowing · honorifics ·
+                      dialogues · replies · phrases · reading · signs · speech-levels · shadowing · honorifics ·
                       stories · weekly-review
 js/screens/           onboarding · home · garden · stats · settings · play · summary · topik (TOPIK I practice)
 js/pwa.js             install & offline support (only when opened from a web address)
@@ -536,7 +554,7 @@ them when an old save is upgraded), levels, badges, saving, loading and upgradin
 offline file list, and the optional Azure voices (against a simulated Azure: the key stays out of the progress and
 backups, one request per clip, the browser's voice when Azure refuses). They also check every topic, grammar
 pattern, dialogue, reading text, speech-level sentence, honorifics item, story, TOPIK question, conversation, sound
-change, word family and set phrase for authoring mistakes (including that every verb form and every grammar answer
+change, word family, set phrase and sign for authoring mistakes (including that every verb form and every grammar answer
 matches the engines).
 
 ## Why plain JavaScript?
@@ -551,6 +569,6 @@ which browsers only allow from a web address, so that part simply switches itsel
 
 ## Ideas for next steps
 
-- It seems: -(으)ㄹ 것 같아요, -는 것 같아요 and -(으)ㄴ 것 같아요 (비가 올 것 같아요, 맛있는 것 같아요), with Grammar Cards of their own
-- Signs in the street: 출구, 금연, 영업 중, 1+1, 품절: read the signs and labels you see in Korea
-- Sound and feeling words: 두근두근, 반짝반짝, 꼬르륵: the words Korean uses for sounds, movements and feelings
+- Must not and had better: -(으)면 안 돼요 and -는 게 좋겠어요 (여기서 사진을 찍으면 안 돼요), with Grammar Cards of their own
+- Chat talk: what Koreans type in messages (ㅋㅋ, ㅠㅠ, ㅇㅋ, 넹, ㄱㅅ), read in real-looking chats
+- Asking nicely: -아/어 주시겠어요?, -(으)ㄹ 수 있을까요? and 죄송한데요…, for asking staff and strangers for help

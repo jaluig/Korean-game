@@ -24,6 +24,7 @@
   const sounds = { rules: [], items: [] };
   const families = [];
   const phrases = [];
+  const signs = [];
   const problems = [];
 
   const qualify = (topicId, ref) => (ref.includes(':') ? ref : `${topicId}:${ref}`);
@@ -667,6 +668,72 @@
     }
   }
 
+  /**
+   * Signs and labels (content/signs.js), read in Reading Signs: what a sign says
+   * (출구, 금연, 영업중, 1+1), its look (the colours real signs have), where you see
+   * it, and a moment you'd look for it (`need`), with the signs you wouldn't follow
+   * then (`wrong`). `avoid` lists signs that mean nearly the same. Ids become 'sign:<id>'.
+   */
+  const SIGN_LOOKS = ['exit', 'info', 'ban', 'warn', 'shop', 'tag'];
+  function registerSigns(list) {
+    for (const x of list || []) {
+      const id = `sign:${x.id}`;
+      if (!x.id) problems.push('sign: needs an id');
+      else if (signs.some((y) => y.id === id)) problems.push(`${id}: duplicate sign`);
+      else {
+        const refs = (v) => (Array.isArray(v) ? v : []);
+        signs.push(Object.freeze({ ...x, id, localId: x.id, level: x.level || 1, type: 'sign', index: signs.length, needs: refs(x.words), wrong: refs(x.wrong), avoid: refs(x.avoid) }));
+      }
+    }
+  }
+
+  function checkSigns(found) {
+    const plain = (t) => String(t).replace(/[\s.,!?~]+/g, '');
+    const filled = (t) => typeof t === 'string' && !!t.trim();
+    const ids = new Set(signs.map((x) => x.localId));
+    const needs = new Map();
+    for (const x of signs) {
+      if (!filled(x.ko) || !filled(x.en) || !filled(x.where) || !filled(x.need)) found.push(`${x.id}: needs ko, en, where and need`);
+      else {
+        if (x.ko.length > 14) found.push(`${x.id}: a sign says little: 14 characters at most`);
+        if (x.en.length > 40) found.push(`${x.id}: "en" is 40 characters at most (it's an answer option)`);
+        if (x.need.length > 120) found.push(`${x.id}: "need" is 120 characters at most`);
+        // The 🔊 reads Hangul: a sign with digits or symbols (1+1, 50%) says how it's read, and only such a sign.
+        if (/[^가-힣\s]/.test(x.ko) && !(filled(x.say) && /^[가-힣\s]+$/.test(x.say))) found.push(`${x.id}: add "say", the sign as it's read aloud, in Hangul`);
+        if (/^[가-힣\s]+$/.test(x.ko) && x.say !== undefined) found.push(`${x.id}: "say" is only for a sign with digits or symbols (the 🔊 reads ${x.ko} as it is)`);
+        if (x.need.includes(x.ko)) found.push(`${x.id}: the need names the sign (${x.ko}): describe the moment instead`);
+        const key = x.need.toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim();
+        if (needs.has(key)) found.push(`${x.id}: the same "need" as ${needs.get(key)}`);
+        needs.set(key, x.id);
+      }
+      if (!SIGN_LOOKS.includes(x.look)) found.push(`${x.id}: look is one of ${SIGN_LOOKS.join(', ')}`);
+      if (![1, 2, 3].includes(x.level)) found.push(`${x.id}: level 1, 2 or 3`);
+      if (x.icon !== undefined && !/\p{Extended_Pictographic}/u.test(String(x.icon))) found.push(`${x.id}: "icon" is an emoji`);
+      for (const y of signs) {
+        if (y.index <= x.index) continue;
+        if (x.ko && y.ko && plain(x.ko) === plain(y.ko)) found.push(`${y.id}: the same sign as ${x.id}`);
+        const meaning = (t) => String(t).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+        if (x.en && y.en && meaning(x.en) === meaning(y.en)) found.push(`${y.id}: the same meaning as ${x.id} (“${x.en}”): say how they differ`);
+      }
+      for (const ref of x.needs) {
+        const w = words.get(ref);
+        if (!w) found.push(`${x.id}: unknown word "${ref}" (use topic:id)`);
+        else if (plain(w.ko) !== plain(x.ko)) found.push(`${x.id}: "words" is the game word the sign is, and ${ref} is ${w.ko}`);
+      }
+      if (x.wrong.length < 3 || new Set(x.wrong).size !== x.wrong.length) found.push(`${x.id}: needs 3+ different signs in "wrong" (ones you wouldn't follow for its need)`);
+      for (const [field, list] of [['wrong', x.wrong], ['avoid', x.avoid]]) {
+        for (const ref of list) {
+          if (ref === x.localId) found.push(`${x.id}: "${field}" lists the sign itself`);
+          else if (!ids.has(ref)) found.push(`${x.id}: "${field}" lists unknown sign "${ref}"`);
+        }
+      }
+      for (const ref of x.wrong) {
+        const y = signs.find((s) => s.localId === ref);
+        if (x.avoid.includes(ref) || (y && y.avoid.includes(x.localId))) found.push(`${x.id}: ${ref} is in "wrong", but they mean nearly the same ("avoid")`);
+      }
+    }
+  }
+
   function checkReadings(found) {
     for (const r of readings) {
       if (!topics.some((t) => t.id === r.topic)) found.push(`${r.id}: unknown topic "${r.topic}"`);
@@ -710,6 +777,11 @@
         const e = M.grammar && M.grammar.ENDINGS[q.form];
         if (at >= 0 && e && M.grammar.BEFORE_NOUN.has(e.base) && !((at === 0 || q.ko[at - 1] === ' ') && q.ko[at + q.answer.length] === ' ')) {
           found.push(`${q.id}: "${q.answer}" goes before a noun: it must be a word of its own, followed by a space`);
+        }
+        // "It seems" (올 것 같아요) is words of its own, written with 것: the other options end in 것 too.
+        if (at >= 0 && e && M.grammar.SEEM[e.base]) {
+          if (!((at === 0 || q.ko[at - 1] === ' ') && /^([\s.!?…]|$)/.test(q.ko.slice(at + q.answer.length)))) found.push(`${q.id}: "${q.answer}" is words of its own: a space before it, and a space or . ! ? after`);
+          if (/거 같아요$/.test(q.answer)) found.push(`${q.id}: write 것 같아요 (거 is accepted, but the other options end in 것)`);
         }
         // A chatty ending (맛있네요, 갔잖아요) ends its sentence.
         if (at >= 0 && M.grammar && M.grammar.CHATTY.has(q.form) && !/^([.!?…]|$)/.test(q.ko.slice(at + q.answer.length))) {
@@ -793,6 +865,7 @@
     checkSoundChanges(found);
     checkWordFamilies(found);
     checkPhrases(found);
+    checkSigns(found);
     return found;
   }
 
@@ -812,6 +885,7 @@
     registerSoundChanges,
     registerWordFamilies,
     registerPhrases,
+    registerSigns,
     check,
     grammar: () => grammar.slice(),
     grammarPattern: (id) => grammar.find((g) => g.id === id) || null,
@@ -846,6 +920,9 @@
     wordFamily: (id) => families.find((f) => f.id === id) || null,
     phrases: () => phrases.slice(),
     phrase: (id) => phrases.find((p) => p.id === id) || null,
+    signs: () => signs.slice(),
+    sign: (id) => signs.find((x) => x.id === id) || null,
+    SIGN_LOOKS,
     LEVELS,
     soundSets: () => soundSets.slice(),
     soundSet: (id) => soundSets.find((s) => s.id === id) || null,

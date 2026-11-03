@@ -47,13 +47,15 @@
   // Verbs with their own opposite instead of 안 + verb.
   const OWN_NEGATIVE = { 있다: '없다', 맛있다: '맛없다', 재미있다: '재미없다' };
   // Negatives that are fine but not the only natural choice (배 안 고파요 / 안 배고파요): not drilled.
-  const NO_NEGATIVE = new Set(['알다', '배고프다', '배부르다', '목마르다', '화나다', '사랑하다', '모르다', '없다', '맛없다', '재미없다']);
+  const NO_NEGATIVE = new Set(['알다', '배고프다', '배부르다', '목마르다', '화나다', '사랑하다', '모르다', '없다', '맛없다', '재미없다',
+    // (안 두근두근해요, 안 바삭바삭해요 are clunky: natives say 안 떨려요, 안 바삭해요 or -지 않아요.)
+    '두근두근하다', '말랑말랑하다', '바삭바삭하다', '쫄깃쫄깃하다', '보들보들하다']);
   // 러-irregular verbs (이르러요, 푸르러요) are rare and not handled.
   const UNSUPPORTED = new Set(['이르다', '푸르다']);
   // Things that happen to you rather than things you do: no "want to", "shall we?" or "please".
   const NOT_VOLITIONAL = new Set([
     '모르다', '알다', '화나다', '좋아하다', '싫어하다', '있다', '없다', '걸리다', '나다', '사랑하다', '되다', '낫다',
-    '걱정되다', '떨리다', '신나다', '놀라다', '어울리다',
+    '걱정되다', '떨리다', '신나다', '놀라다', '어울리다', '두근두근하다',
   ]);
   // "Shall we…?" sounds odd with these (✗ 울까요?), though "want to" is fine (울고 싶어요).
   const NO_SUGGEST = new Set(['웃다', '울다', '씻다', '싸우다', '웃기다']);

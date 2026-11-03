@@ -142,6 +142,26 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.12.0',
+      body: () => {
+        const topic = M.content.topic('soundwords');
+        const stories = M.content.readings().filter((r) => r.kind.en === 'A short story').length;
+        const seems = M.content.grammar().some((g) => g.form === 'seemNow');
+        return [
+          h('h3', ui.bi('새 게임', 'A new game')),
+          featureList([
+            ['🪧', `표지판 읽기 · Reading Signs: ${M.content.signs().length} signs and labels you see in Korea (출구, 금연, 영업중, 1+1, 품절…), drawn the way they really look. Read a sign and pick what it says, or pick the sign you need.`],
+          ]),
+          topic || seems || stories ? h('h3', topic ? ui.bi('새 주제와 문법', 'A new topic, more grammar') : ui.bi('더 많은 연습', 'More to practise')) : null,
+          featureList([
+            topic ? ['💥', `소리와 느낌 · Sound & feeling words: ${M.content.words('soundwords').length} words for sounds, movements and feelings (두근두근, 반짝반짝, 꼬르륵…), in every word game, with a story, a dialogue and a conversation of their own.`] : null,
+            seems ? ['🔗', '“It seems”: -는 / -(으)ㄴ / -(으)ㄹ 것 같아요 in Grammar Cards (비가 오는 것 같아요, 비가 올 것 같아요).'] : null,
+            stories ? ['📖', `${stories === 1 ? 'A short story' : `${stories} short stories`} in Reading.`] : null,
+          ]),
+        ].filter(Boolean);
+      },
+    },
+    {
       version: '0.11.0',
       body: () => [
         h('h3', ui.bi('새 게임', 'A new game')),

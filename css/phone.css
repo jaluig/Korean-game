@@ -39,6 +39,8 @@ h3,
 .phrase-when,
 .phrase-reply,
 .ex-phrase .option-ko .option-text,
+.ex-sign .option-ko .option-text,
+.sign-card-note,
 .dlg-line-ko,
 .dlg-line-en {
   word-break: keep-all;

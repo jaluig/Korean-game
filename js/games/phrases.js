@@ -63,8 +63,8 @@
     return Math.max(0, cfg().newPerDay - fresh);
   }
 
-  /** Two phrases taught as a pair: each is a wrong answer in the other's situations (잘 먹겠습니다 / 잘 먹었습니다). */
-  const partners = (a, b) => a.situations.some((s) => s.wrong.includes(b.localId)) && b.situations.some((s) => s.wrong.includes(a.localId));
+  /** Two phrases taught as a pair: neighbours in the list, each a wrong answer in the other's situations (잘 먹겠습니다 / 잘 먹었습니다). */
+  const partners = (a, b) => Math.abs(a.index - b.index) === 1 && a.situations.some((s) => s.wrong.includes(b.localId)) && b.situations.some((s) => s.wrong.includes(a.localId));
 
   /** Spread the questions so the same phrase never comes twice in a row when it can be helped (the one with most left first). */
   function spread(list) {

@@ -453,3 +453,59 @@ test('chatty endings: -네요, -죠, -잖아요, -거든요 on the stem (ㄹ dro
     assert.ok(G.table(id).length >= 4, id);
   }
 });
+
+test('it seems: -는 / -(으)ㄴ / -(으)ㄹ 것 같아요 (것 is a noun, so the form before a noun comes first)', () => {
+  // Checked by hand: [dict, pos, now, done (verbs), to come].
+  const rows = [
+    ['가다', V, '가는 것 같아요', '간 것 같아요', '갈 것 같아요'],
+    ['먹다', V, '먹는 것 같아요', '먹은 것 같아요', '먹을 것 같아요'],
+    ['살다', V, '사는 것 같아요', '산 것 같아요', '살 것 같아요'],
+    ['만들다', V, '만드는 것 같아요', '만든 것 같아요', '만들 것 같아요'],
+    ['듣다', V, '듣는 것 같아요', '들은 것 같아요', '들을 것 같아요'],
+    ['돕다', V, '돕는 것 같아요', '도운 것 같아요', '도울 것 같아요'],
+    ['모르다', V, '모르는 것 같아요', null, '모를 것 같아요'],
+    ['비싸다', A, '비싼 것 같아요', null, '비쌀 것 같아요'],
+    ['춥다', A, '추운 것 같아요', null, '추울 것 같아요'],
+    ['길다', A, '긴 것 같아요', null, '길 것 같아요'],
+    ['하얗다', A, '하얀 것 같아요', null, '하얄 것 같아요'],
+    ['맛있다', A, '맛있는 것 같아요', null, '맛있을 것 같아요'],
+  ];
+  for (const [dict, pos, now, done, later] of rows) {
+    assert.equal(G.form(dict, 'seemNow', { pos }).text, now, `${dict} seemNow`);
+    assert.equal(done ? G.form(dict, 'seemPast', { pos }).text : G.form(dict, 'seemPast', { pos }), done, `${dict} seemPast`);
+    assert.equal(G.form(dict, 'seemFut', { pos }).text, later, `${dict} seemFut`);
+  }
+  assert.equal(G.form('있다', 'seemPast'), null, '있다: 있었던 것 같아요, not 있은');
+  assert.equal(G.form('알다', 'seemPast'), null, '알다: 안 것 같아요 isn’t said');
+  assert.equal(G.form('비싸다', 'seemFut', { pos: A }).rule, 'after a vowel');
+  assert.equal(G.form('가다', 'seemNow').rule, 'verb', 'the -는 table says which rows are verbs');
+  assert.equal(G.form('춥다', 'seemNow', { pos: A }).rule, 'adjective, ㅂ → 우');
+  assert.match(G.form('춥다', 'seemFut', { pos: A }).steps[0], /an adjective takes/);
+  assert.ok(G.form('오다', 'seemFut').variants.includes('올 거 같아요'), 'people say 거 for 것');
+  const has = (dict, id, text, pos = V) => assert.ok(G.slips(dict, id, { pos }).some((s) => s.text === text), `${dict} ${id}: ${text}`);
+  has('비싸다', 'seemNow', '비싸는 것 같아요', A);
+  has('춥다', 'seemNow', '춥은 것 같아요', A);
+  has('맛있다', 'seemNow', '맛있은 것 같아요', A);
+  has('살다', 'seemNow', '살는 것 같아요');
+  has('먹다', 'seemPast', '먹었는 것 같아요');
+  has('가다', 'seemPast', '가은 것 같아요');
+  has('춥다', 'seemFut', '춥을 것 같아요', A);
+  has('오다', 'seemNow', '오다 것 같아요');
+  has('비싸다', 'seemFut', '비싸는 것 같아요', A);
+  for (const id of ['seemNow', 'seemPast', 'seemFut']) {
+    for (const [dict, pos] of [['살다', V], ['듣다', V], ['오다', V], ['춥다', A], ['하얗다', A]]) {
+      const right = G.form(dict, id, { pos });
+      if (!right) continue;
+      const ok = new Set([right.text, ...right.variants]);
+      for (const s of G.slips(dict, id, { pos })) assert.ok(!ok.has(s.text) && s.why, `${dict} ${id}: ${s.text}`);
+    }
+    assert.ok(G.table(id).length >= 4, id);
+  }
+});
+
+test('it seems: no slip is a right form (낫는 is the verb 낫다), and the polite form before 것 is one', () => {
+  assert.ok(!G.slips('낫다', 'seemNow', { pos: A }).some((s) => s.text === '낫는 것 같아요'), '낫는 것 같아요: “seems to be healing”');
+  assert.ok(!G.slips('낫다', 'adjN', { pos: A }).some((s) => s.text === '낫는'));
+  assert.ok(G.slips('오다', 'seemNow').some((s) => s.text === '와요 것 같아요'));
+  assert.ok(G.slips('먹다', 'seemFut').length >= 2, 'a plain verb gets two slips');
+});

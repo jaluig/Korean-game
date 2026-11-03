@@ -72,6 +72,8 @@
       // Eight questions a round: three new phrases (their cards first; four on the very first round, two
       // questions each; a pair is never split), at most eight a day, none while five or more are due.
       phrases: { size: 8, newPerRound: 3, firstRound: 4, newPerDay: 8, maxDueForNew: 5 },
+      // Reading Signs: the same shape of round as What to Say When.
+      signs: { size: 8, newPerRound: 3, firstRound: 4, newPerDay: 8, maxDueForNew: 5 },
       // TOPIK I practice: a short mock test, 10 questions a section, with the kinds of questions in the real test's
       // order (a list of types: one of them). Each listening item can be heard twice, as on the real test.
       topik: {
@@ -112,6 +114,7 @@
       phone: 15, // a Number Shop phone order (heard, then written down)
       family: 10, // a Word Families question
       phrase: 10, // a What to Say When question
+      sign: 10, // a Reading Signs question
       sound: 8,
       grammar: 12,
       dialogue: 12,

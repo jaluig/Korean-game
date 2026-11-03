@@ -1644,4 +1644,93 @@ Mallang.content.registerReplies([
       { them: { ko: '아이고, 고생했다! 다음엔 나랑 같이 가자.', en: 'You poor thing! Next time, come with me.' } },
     ],
   },
+  {
+    id: 'soundwords-bakery',
+    topic: 'soundwords',
+    level: 2,
+    scene: '🥐',
+    title: { ko: '바삭바삭한 빵 주세요', en: 'Something crispy, please' },
+    role: { ko: '손님', en: 'Customer' },
+    goal: {
+      ko: '저는 바삭바삭한 빵을 좋아해요. 할머니는 말랑말랑한 빵을 좋아하세요. 하나씩 사요.',
+      en: 'You love crispy bread, and your grandma loves soft, squishy bread. Buy one of each.',
+    },
+    them: { name: '직원', en: 'Baker', emoji: '👩‍🍳', voice: 'high' },
+    words: ['soundwords:crispy', 'soundwords:squishy', 'cafe:bread', 'cafe:please'],
+    steps: [
+      { them: { ko: '어서 오세요! 뭐 찾으세요?', en: 'Welcome! What are you looking for?' } },
+      {
+        you: [
+          { ko: '바삭바삭한 빵 있어요?', en: 'Do you have any crispy bread?', right: true, note: 'Before a noun, 바삭바삭하다 becomes 바삭바삭한: 바삭바삭한 빵 (crispy bread).' },
+          {
+            ko: '바삭바삭해요 빵 있어요?',
+            en: 'Do you have… it’s crispy… bread? (mixed up)',
+            react: { ko: '네? 아, 바삭바삭한 빵이요?', en: 'Sorry? Oh, you mean crispy bread?' },
+            why: '바삭바삭해요 ends a sentence, so it can’t go before a noun. Before 빵, use 바삭바삭한: 바삭바삭한 빵 있어요?',
+          },
+          {
+            ko: '쫄깃쫄깃한 빵 있어요?',
+            en: 'Do you have any chewy bread?',
+            react: { ko: '네, 이 베이글이 정말 쫄깃쫄깃해요!', en: 'Yes, this bagel is really chewy!' },
+            why: '쫄깃쫄깃 is chewy, like a bagel. You want bread that crunches: 바삭바삭한 빵.',
+          },
+        ],
+      },
+      { them: { ko: '이 크루아상 어떠세요? 정말 바삭바삭해요.', en: 'How about this croissant? It’s really crispy.' } },
+      {
+        you: [
+          { ko: '좋아요. 그거 하나 주세요.', en: 'Great. One of those, please.', right: true },
+          {
+            ko: '좋아요. 그거 하나 드세요.',
+            en: 'Great. Have one of those.',
+            react: { ko: '하하, 제가요? 손님 거예요!', en: 'Ha ha, me? It’s for you!' },
+            why: '드세요 invites *her* to eat it. To ask for something, use 주세요: 그거 하나 주세요.',
+          },
+          {
+            ko: '음… 바삭바삭한 빵은 싫어요.',
+            en: 'Hmm… I don’t like crispy bread.',
+            react: { ko: '네? 바삭바삭한 빵 찾으셨잖아요!', en: 'Sorry? But you asked for crispy bread!' },
+            why: 'You love crispy bread! Take the croissant: 좋아요. 그거 하나 주세요.',
+          },
+        ],
+      },
+      { them: { ko: '네. 또 필요한 거 있으세요?', en: 'Sure. Anything else?' } },
+      {
+        you: [
+          { ko: '말랑말랑한 빵도 있어요? 할머니 드릴 거예요.', en: 'Do you have soft, squishy bread too? It’s for my grandma.', right: true },
+          {
+            ko: '바삭바삭한 빵도 있어요? 할머니 드릴 거예요.',
+            en: 'Do you have crispy bread too? It’s for my grandma.',
+            react: { ko: '할머니도 바삭바삭한 빵을 좋아하세요? 그럼 이 바게트 어떠세요?', en: 'Your grandma likes crispy bread too? Then how about this baguette?' },
+            why: 'Your grandma loves soft bread that gives when you press it: 말랑말랑한 빵도 있어요?',
+          },
+          {
+            ko: '말랑말랑하는 빵도 있어요? 할머니 드릴 거예요.',
+            en: 'Do you have bread that “softs” too? It’s for my grandma. (mixed up)',
+            react: { ko: '아, 말랑말랑한 빵이요? 네, 있어요.', en: 'Oh, soft bread? Yes, we do.' },
+            why: '말랑말랑하다 describes something (it’s an adjective), so before a noun it takes -ㄴ, not -는: 말랑말랑한 빵.',
+          },
+        ],
+      },
+      { them: { ko: '그럼 이 우유 식빵 어떠세요? 정말 말랑말랑해요.', en: 'Then how about this milk bread? It’s really soft.' } },
+      {
+        you: [
+          { ko: '좋아요. 그것도 주세요.', en: 'Great. I’ll take that too, please.', right: true, note: '도 means “too”: the croissant and the milk bread.' },
+          {
+            ko: '좋아요. 그것도 줄게요.',
+            en: 'Great. I’ll give you that too.',
+            react: { ko: '하하, 제가 드려야죠!', en: 'Ha ha, I’m the one who gives it to you!' },
+            why: '줄게요 means “I’ll give it (to you)”. To ask for it, use 주세요: 그것도 주세요.',
+          },
+          {
+            ko: '좋아요. 그것도 사 주세요.',
+            en: 'Great. Buy me that too, please.',
+            react: { ko: '네? 제가 사 드려요? 하하.', en: 'Sorry? I buy it for you? Ha ha.' },
+            why: '사 주세요 asks someone to buy it for you, like a child asking a parent. In a shop, just say 주세요: 그것도 주세요.',
+          },
+        ],
+      },
+      { them: { ko: '네, 모두 칠천 원입니다. 할머니께서 좋아하실 거예요!', en: 'OK, that’s 7,000 won altogether. Your grandma will love it!' } },
+    ],
+  },
 ]);

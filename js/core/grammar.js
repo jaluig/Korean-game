@@ -10,8 +10,9 @@
  * -고 있어요, -아/어 보세요, -아/어 봤어요, -(으)ㄹ게요, -는데/-(으)ㄴ데,
  * the polite -(으)세요 and -(으)셨어요, -지 마세요, -(으)려고, -(으)면서 and
  * -(으)ㄴ 적이 있어요/없어요; the forms that describe a noun: 예쁜 꽃,
- * 지금 보는 영화, 어제 본 영화, 내일 볼 영화; and the chatty endings that
- * say how you mean a sentence: -네요, -죠, -잖아요, -거든요.
+ * 지금 보는 영화, 어제 본 영화, 내일 볼 영화; the chatty endings that
+ * say how you mean a sentence: -네요, -죠, -잖아요, -거든요; and "it seems":
+ * -는 / -(으)ㄴ / -(으)ㄹ 것 같아요.
  * The patterns themselves (explanations, example and question sentences)
  * live in content/grammar.js and are practised in Grammar Cards.
  */
@@ -46,6 +47,10 @@
    *         'nowMod'   verbs, now or usually: -는 (보는, 먹는, 사는)
    *         'pastMod'  verbs, already done: -(으)ㄴ (본, 먹은, 산, 들은)
    *         'futMod'   verbs, still to come: -(으)ㄹ (볼, 먹을, 살, 들을)
+   * and "it seems", the form before a noun + 것 같아요 (것, “thing”, is a noun):
+   *         'seemNow'  verbs -는, adjectives -(으)ㄴ (오는 / 비싼 것 같아요)
+   *         'seemPast' verbs -(으)ㄴ (온 것 같아요)
+   *         'seemFut'  verbs and adjectives -(으)ㄹ (올 / 추울 것 같아요)
    */
   const ENDINGS = {
     go: { name: '-고', meaning: '“and” (also “and then”)', base: 'stem', tail: '고', past: true },
@@ -82,6 +87,10 @@
     jyo: { name: '-죠 (-지요)', meaning: '“…, right?” or “of course …”: something you both know, or expect them to agree with', base: 'stem', tail: '죠', past: true },
     janayo: { name: '-잖아요', meaning: '“…, you know”, “remember?”: reminding them of something they already know', base: 'stem', tail: '잖아요', past: true },
     geodeunyo: { name: '-거든요', meaning: '“(it’s because) …, you see”: a reason or background they don’t know yet', base: 'stem', tail: '거든요', past: true },
+    // It seems: a guess, from what you see or hear, and the soft way to say what you think.
+    seemNow: { name: '-는 / -(으)ㄴ 것 같아요', meaning: '“it seems …”, “I think …”: a guess about now, from what you see or hear (비가 오는 것 같아요)', base: 'seemNow', tail: ' 것 같아요' },
+    seemPast: { name: '-(으)ㄴ 것 같아요 (done)', meaning: '“it seems … (has) …”: a guess about something that already happened (비가 온 것 같아요)', base: 'seemPast', tail: ' 것 같아요', verbOnly: true },
+    seemFut: { name: '-(으)ㄹ 것 같아요', meaning: '“it looks like … will …”, “I think … will …”: a guess about what’s coming (비가 올 것 같아요)', base: 'seemFut', tail: ' 것 같아요' },
   };
   const CHATTY = new Set(['neyo', 'jyo', 'janayo', 'geodeunyo']);
   /** Other correct spellings: 죠 is short for 지요 (먹지요); after ㅎ-irregular adjectives, -네요 may drop the ㅎ (그러네요). */
@@ -92,9 +101,13 @@
   }
   // The endings whose form goes before a noun (the answer is the whole word: 예쁜, 보는).
   const BEFORE_NOUN = new Set(['adjMod', 'nowMod', 'pastMod', 'futMod']);
+  // "It seems": which form before a noun comes before 것 같아요 (verbs and adjectives differ only for now).
+  const SEEM = { seemNow: (pos) => (pos === 'verb' ? 'nowMod' : 'adjMod'), seemPast: () => 'pastMod', seemFut: () => 'futMod' };
 
   // 있다/없다 and the words built on them take 는, not (으)ㄴ, as modifiers (있는), so no 후에 form here.
   const IT_EOP = /(있|없)다$/;
+  // Adjectives that are verbs too, so their -는 form is right as a verb (크는 아이, a growing child; 낫는, healing).
+  const ALSO_VERB = /^(크다|늦다|밝다|낫다)$/;
   // These have their own polite words (드세요, 주무세요, 계세요) or are polite already: no -(으)세요 / -(으)셨어요.
   const OWN_POLITE = /^(먹다|자다|있다|드시다|계시다|주무시다)$/;
 
@@ -107,7 +120,8 @@
     if (e.verbOnly && pos !== 'verb') return false;
     if (e.adjOnly && pos !== 'adjective') return false;
     if (tense === 'past' && !e.past) return false;
-    if ((id === 'hue' || id === 'jeogi' || id === 'jeogiNot' || id === 'pastN') && IT_EOP.test(dict)) return false;
+    if ((id === 'hue' || id === 'jeogi' || id === 'jeogiNot' || id === 'pastN' || id === 'seemPast') && IT_EOP.test(dict)) return false;
+    if (id === 'seemPast' && /^(알다|모르다)$/.test(dict)) return false; // (안 / 모른 것 같아요 isn't said: 몰랐던 것 같아요)
     if (id === 'goIt' && IT_EOP.test(dict)) return false; // 있고 있어요 isn't said
     if ((id === 'boseyo' || id === 'bwasseoyo') && dict === '보다') return false; // 봐 보세요 is awkward
     if ((id === 'seyo' || id === 'si') && OWN_POLITE.test(dict)) return false;
@@ -251,6 +265,17 @@
     }
     if (e.base === 'neunde') return neundeForm(dict, stem, pos, e);
     if (BEFORE_NOUN.has(e.base)) return nounForm(dict, stem, e.base);
+    if (SEEM[e.base]) {
+      const kind = SEEM[e.base](pos);
+      const m = nounForm(dict, stem, kind, pos);
+      const text = `${m.text}${e.tail}`;
+      // Verbs and adjectives share the -는 / -(으)ㄴ table: say which is which (as for -는데).
+      let rule = m.rule;
+      if (kind === 'nowMod') rule = m.rule === 'stem + 는' ? 'verb' : `verb, ${m.rule}`;
+      else if (kind === 'adjMod' && !IT_EOP.test(dict)) rule = m.rule.startsWith('after') ? 'adjective' : `adjective, ${m.rule}`;
+      // (People say 거 for 것: 올 거 같아요.)
+      return { text, steps: [...m.steps, `것 (“thing”) is a noun, so that form goes before it: ${text}.`], variants: [`${m.text} 거 같아요`], rule };
+    }
     if (e.base === 'future') {
       const f = C.futureStem(stem);
       const text = `${f.text}${e.tail}`;
@@ -277,7 +302,7 @@
   }
 
   /** The forms before a noun: 예쁜, 맛있는 (adjectives); 보는, 본, 볼 (verbs). */
-  function nounForm(dict, stem, base) {
+  function nounForm(dict, stem, base, pos = 'verb') {
     const ㄹ = C.irregularType(stem) === 'ㄹ';
     if (base === 'nowMod' || (base === 'adjMod' && IT_EOP.test(dict))) {
       const text = presentModifier(stem);
@@ -287,7 +312,7 @@
     }
     if (base === 'futMod') {
       const f = C.futureStem(stem);
-      return { text: f.text, steps: [`For what’s still to come, a verb takes (으)ㄹ. ${f.why}`], variants: [], rule: futureRule(stem) };
+      return { text: f.text, steps: [`For what’s still to come, ${pos === 'verb' ? 'a verb' : 'an adjective'} takes (으)ㄹ. ${f.why}`], variants: [], rule: futureRule(stem) };
     }
     const m = modifierStem(stem);
     const lead = base === 'adjMod' ? `${dict} is an adjective, so before a noun it takes (으)ㄴ.` : 'For what already happened, a verb takes (으)ㄴ.';
@@ -431,8 +456,7 @@
       if (e.base === 'adjMod') {
         if (IT_EOP.test(dict)) add(`${stem}은`, `Words ending in 있다/없다 take 는 before a noun, like verbs: ${right.text}.`); // 맛있은
         else {
-          // (Not for words that are verbs too: 크는 아이, a growing child; 늦는 사람; 날이 밝는.)
-          if (!/^(크다|늦다|밝다)$/.test(dict)) add(`${stem}는`, `는 is for verbs (and words ending in 있다/없다). ${dict} is an adjective, so it takes (으)ㄴ: ${right.text}.`); // 예쁘는
+          if (!ALSO_VERB.test(dict)) add(`${stem}는`, `는 is for verbs (and words ending in 있다/없다). ${dict} is an adjective, so it takes (으)ㄴ: ${right.text}.`); // 예쁘는
           add(`${stem}은`, `${modifierStem(stem).why}`); // 예쁘은, 춥은, 길은
         }
         if (present) add(present.text, sentenceEnd(present.text)); // 예뻐요 꽃
@@ -453,6 +477,39 @@
         add(`${stem}을`, C.futureStem(stem).why); // 가을, 살을, 듣을
         const future = C.conjugate(dict, 'future', { pos });
         if (future) add(future.text, sentenceEnd(future.text)); // 볼 거예요 영화
+      }
+      return out;
+    }
+
+    if (SEEM[e.base]) {
+      const kind = SEEM[e.base](pos);
+      const t = (x) => `${x}${e.tail}`;
+      add(t(dict), `The dictionary form (${dict}) never goes before a noun, and 것 is a noun: ${right.text}.`); // 오다 것 같아요
+      const polite = C.conjugate(dict, 'present', { pos });
+      if (polite) add(t(polite.text), `${polite.text} ends a sentence. Before 것 (a noun), ${dict} takes the form before a noun: ${right.text}.`); // 와요 것 같아요
+      if (kind === 'adjMod') {
+        if (IT_EOP.test(dict)) add(t(`${stem}은`), `Words ending in 있다/없다 take 는, like verbs: ${right.text}.`); // 맛있은 것 같아요
+        else {
+          if (!ALSO_VERB.test(dict)) add(t(`${stem}는`), `는 is for verbs (and words ending in 있다/없다). ${dict} is an adjective, so it takes (으)ㄴ: ${right.text}.`); // 비싸는 것 같아요
+          add(t(`${stem}은`), `${modifierStem(stem).why} So: ${right.text}.`); // 비싸은, 춥은, 길은 것 같아요
+        }
+      }
+      if (kind === 'nowMod') {
+        if (type === 'ㄹ') add(t(`${stem}는`), `ㄹ drops before ㄴ: ${right.text}.`); // 살는 것 같아요
+        if (type === 'ㄷ') add(t(`${head}${withFinal(last, 'ㄹ')}는`), `${dict}’s ㄷ only turns into ㄹ before a vowel. Before 는, it stays: ${right.text}.`); // 들는 것 같아요
+      }
+      if (kind === 'pastMod') {
+        add(t(`${stem}은`), `${modifierStem(stem).why} So: ${right.text}.`); // 가은, 살은, 듣은 것 같아요
+        const ps = pastStem(dict, pos);
+        if (ps) {
+          add(t(`${ps}은`), `The (으)ㄴ form already says it happened, so it never takes 었/았: ${right.text}.`); // 먹었은 것 같아요
+          add(t(`${ps}는`), `For something that already happened, it’s the (으)ㄴ form, not 었 + 는: ${right.text}.`); // 먹었는 것 같아요
+        }
+      }
+      if (kind === 'futMod') {
+        add(t(`${stem}을`), `${C.futureStem(stem).why} So: ${right.text}.`); // 가을, 살을, 춥을 것 같아요
+        // 는 on an adjective is wrong for what's coming too (not for 크다/늦다/밝다, verbs as well).
+        if (!verb && !IT_EOP.test(dict) && !ALSO_VERB.test(dict)) add(t(`${stem}는`), `는 is for verbs (and words ending in 있다/없다). ${dict} is an adjective, and for what’s still to come it takes (으)ㄹ: ${right.text}.`); // 비싸는, 춥는 것 같아요
       }
       return out;
     }
@@ -528,6 +585,9 @@
     jyo: [['가다'], ['먹다'], ['살다'], ['춥다', 'adjective']],
     janayo: [['가다'], ['먹다'], ['알다'], ['바쁘다', 'adjective']],
     geodeunyo: [['가다'], ['먹다'], ['살다'], ['아프다', 'adjective']],
+    seemNow: [['가다'], ['먹다'], ['살다'], ['비싸다', 'adjective'], ['춥다', 'adjective'], ['맛있다', 'adjective']],
+    seemPast: [['가다'], ['먹다'], ['살다'], ['듣다']],
+    seemFut: [['가다'], ['먹다'], ['살다'], ['춥다', 'adjective'], ['비싸다', 'adjective']],
   };
 
   /** Rows for an intro card: [{ dict, text, rule }]. */
@@ -596,5 +656,5 @@
     };
   }
 
-  M.grammar = { ENDINGS, BEFORE_NOUN, CHATTY, applies, form, slips, contrast, table, question, euStem, modifierStem };
+  M.grammar = { ENDINGS, BEFORE_NOUN, CHATTY, SEEM, applies, form, slips, contrast, table, question, euStem, modifierStem };
 })(window.Mallang);
