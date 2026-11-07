@@ -142,6 +142,44 @@
   /** What each version added, newest first. */
   const NOTES = [
     {
+      version: '0.13.0',
+      body: () => {
+        const has = (form) => M.content.grammar().some((g) => g.form === form);
+        const rules = has('mustNot') && has('hadBetter');
+        const asking = has('couldYou') && has('possible');
+        const game = (id, en, text) => {
+          const g = M.games.get(id);
+          return g ? [g.emoji, `${g.title.ko} · ${en}: ${text}`] : null;
+        };
+        // Each claim only when what it names is there.
+        const story = (id) => M.content.story(`story:${id}`);
+        const dialogue = (id) => M.content.dialogue(`dialogue:${id}`);
+        const reply = (id) => M.content.reply(`reply:${id}`);
+        const and = (parts) => (parts.length < 3 ? parts.join(' and ') : `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]}`);
+        const storyNews = [
+          story('weather-grandma-knows') || story('people-twins') ? 'more for beginners' : null,
+          story('soundwords-midnight-thud') ? 'one full of sound words (쿵, 살금살금, 후루룩…)' : null,
+          story('travel-red-cap') ? 'a trip where you ask strangers for help' : null,
+        ].filter(Boolean);
+        const more = [
+          storyNews.length ? game('stories', 'Stories', `${M.content.stories().length} stories to listen to: ${and(storyNews)}.`) : null,
+          ['feelings-movie-tears', 'hobbies-photo-drawing', 'work-exam-pencil'].some((id) => dialogue(id)) ? game('dialogues', 'Dialogues', `${M.content.dialogues().length} dialogues, with more for beginners.`) : null,
+          reply('day-neighbour-music') && reply('weather-rain-florist') ? game('replies', 'Choose Your Reply', `${M.content.replies().length} conversations, among them two where you ask nicely: a neighbour about their music at midnight, and a florist for somewhere to wait out the rain.`) : null,
+        ].filter(Boolean);
+        return [
+          rules || asking ? h('h3', ui.bi('문법 카드에', 'In Grammar Cards')) : null,
+          rules || asking
+            ? featureList([
+              rules ? ['🔗', 'Rules and advice: -(으)면 안 돼요 (여기서 사진을 찍으면 안 돼요, “you mustn’t take photos here”) and -는 게 좋겠어요 (우산을 가져가는 게 좋겠어요, “you’d better take an umbrella”).'] : null,
+              asking ? ['🔗', 'Asking staff and strangers nicely: -아/어 주시겠어요? (사진 좀 찍어 주시겠어요?) and -(으)ㄹ 수 있을까요? (카드로 계산할 수 있을까요?), with 저기요 and 죄송한데요… to start.'] : null,
+            ])
+            : null,
+          more.length ? h('h3', ui.bi('더 많은 이야기와 대화', 'More stories and conversations')) : null,
+          more.length ? featureList(more) : null,
+        ].filter(Boolean);
+      },
+    },
+    {
       version: '0.12.0',
       body: () => {
         const topic = M.content.topic('soundwords');

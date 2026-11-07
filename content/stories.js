@@ -1029,4 +1029,275 @@ Mallang.content.registerStories([
       },
     ],
   },
+  // ---------- weather · level 1 · a story ----------
+  {
+    id: 'weather-grandma-knows',
+    topic: 'weather',
+    level: 1,
+    emoji: '☔',
+    kind: { ko: '이야기', en: 'A story' },
+    title: { ko: '할머니는 알아요', en: 'Grandma knows' },
+    voice: 'low',
+    words: ['weather:weather', 'weather:rain', 'health:leg'],
+    parts: [
+      {
+        lines: [
+          { ko: '지난주 월요일 아침에는 날씨가 정말 좋았어요.', en: 'Last Monday morning, the weather was really nice.' },
+          { ko: '텔레비전에서도 “오늘은 비가 안 와요”라고 했어요.', en: 'The TV said so too: “No rain today.”' },
+          { ko: '그런데 할머니가 “오늘 비 와. 우산 가져가!”라고 하셨어요.', en: 'But Grandma said, “It’s going to rain today. Take an umbrella!”' },
+          { ko: '저는 “에이, 비 안 와요!”라고 했어요.', en: 'I said, “Oh, come on, it’s not going to rain!”' },
+          { ko: '그리고 여덟 시에 우산 없이 학교에 갔어요.', en: 'And at eight, I set off for school without an umbrella.' },
+        ],
+        questions: [
+          { q: { ko: '할머니는 뭐라고 하셨어요?', en: 'What did Grandma say?' },
+            options: [{ ko: '비가 와요', en: 'It’s going to rain' }, { ko: '비가 안 와요', en: 'It won’t rain' }, { ko: '눈이 와요', en: 'It’s going to snow' }],
+            answer: 0, line: 2,
+            why: 'Grandma says 오늘 비 와 (the casual way to say 비가 와요): “it’s going to rain today”, so take an umbrella (우산 가져가!). 비가 안 와요 (it won’t rain) is what the TV said.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '세 시에 수업이 끝났어요.', en: 'Classes finished at three.' },
+          { ko: '그런데 밖에 비가 정말 많이 왔어요!', en: 'But it was pouring outside!' },
+          { ko: '친구들은 모두 우산이 있었어요.', en: 'My friends all had umbrellas.' },
+          { ko: '저만 우산이 없었어요.', en: 'I was the only one without one.' },
+          { ko: '그래서 비를 맞으면서 집까지 뛰어왔어요.', en: 'So I ran all the way home in the rain.' },
+        ],
+        questions: [
+          { q: { ko: '수업은 몇 시에 끝났어요?', en: 'What time did classes finish?' },
+            options: [{ ko: '3시', en: '3:00' }, { ko: '8시', en: '8:00' }, { ko: '4시', en: '4:00' }],
+            answer: 0, line: 0,
+            why: '세 시에 수업이 끝났어요: classes finished at three (세 시: 셋 becomes 세 before 시). 여덟 시 (8:00) is when he left for school.' },
+          { q: { ko: '친구들은 우산이 있었어요?', en: 'Did his friends have umbrellas?' },
+            options: [{ ko: '네, 모두 있었어요', en: 'Yes, they all did' }, { ko: '아니요, 모두 없었어요', en: 'No, none of them did' }, { ko: '한 명만 있었어요', en: 'Only one of them did' }],
+            answer: 0, line: [2, 3],
+            why: '친구들은 모두 우산이 있었어요: all (모두) his friends had umbrellas. 저만 우산이 없었어요: he was the only one (저만, “only me”) without one.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '할머니가 웃으면서 “거 봐, 할머니 말이 맞지?”라고 하셨어요.', en: 'Grandma laughed and said, “See? Grandma was right, wasn’t she?”' },
+          { ko: '저는 “할머니, 어떻게 아셨어요?”라고 물어봤어요.', en: 'I asked, “Grandma, how did you know?”' },
+          { ko: '할머니는 “할머니 다리가 아프면 비가 와”라고 하셨어요.', en: 'Grandma said, “When Grandma’s legs ache, it rains.”' },
+          { ko: '할머니 다리는 텔레비전보다 똑똑해요!', en: 'Grandma’s legs are smarter than the TV!' },
+          { ko: '이제 저는 아침마다 “할머니, 오늘 다리 아프세요?”라고 물어봐요.', en: 'Now every morning I ask, “Grandma, do your legs hurt today?”' },
+        ],
+        questions: [
+          { q: { ko: '할머니 다리가 아프면 어떻게 돼요?', en: 'What happens when Grandma’s legs ache?' },
+            options: [{ ko: '비가 와요', en: 'It rains' }, { ko: '눈이 와요', en: 'It snows' }, { ko: '날씨가 좋아요', en: 'The weather’s nice' }],
+            answer: 0, line: 2,
+            why: '할머니 다리가 아프면 비가 와: when (-(으)면) Grandma’s legs ache, it rains. That’s how she knew, and why her legs are “smarter than the TV”.' },
+          { q: { ko: '이 사람은 이제 아침마다 할머니한테 뭘 물어봐요?', en: 'What does he ask Grandma every morning now?' },
+            options: [{ ko: '오늘 다리 아프세요?', en: '“Do your legs hurt today?”' }, { ko: '오늘 비 와요?', en: '“Is it going to rain today?”' }, { ko: '우산 어디 있어요?', en: '“Where’s the umbrella?”' }],
+            answer: 0, line: 4,
+            why: 'He asks 할머니, 오늘 다리 아프세요? (아프세요 is the polite way to ask Grandma). If her legs hurt, it’s going to rain!' },
+        ],
+      },
+    ],
+  },
+
+  // ---------- people · level 1 · a story ----------
+  {
+    id: 'people-twins',
+    topic: 'people',
+    level: 1,
+    emoji: '☕',
+    kind: { ko: '이야기', en: 'A story' },
+    title: { ko: '누구세요?', en: '“Who are you?”' },
+    voice: 'high',
+    words: ['people:name', 'people:who', 'day:friend'],
+    parts: [
+      {
+        lines: [
+          { ko: '제 친구 이름은 지민이에요.', en: 'My friend’s name is Jimin.' },
+          { ko: '우리는 매일 학교에서 만나요.', en: 'We see each other at school every day.' },
+          { ko: '어제 저는 카페에서 지민이를 봤어요.', en: 'Yesterday I saw Jimin at a café.' },
+          { ko: '그래서 “지민아, 안녕!”이라고 했어요.', en: 'So I said, “Hi, Jimin!”' },
+          { ko: '그런데 지민이가 저를 보고 “누구세요?”라고 했어요!', en: 'But Jimin looked at me and said, “Who are you?”' },
+        ],
+        questions: [
+          { q: { ko: '이 사람은 어제 어디에서 지민이를 봤어요?', en: 'Where did she see Jimin yesterday?' },
+            options: [{ ko: '카페', en: 'at a café' }, { ko: '학교', en: 'at school' }, { ko: '지민이 집', en: 'at Jimin’s house' }],
+            answer: 0, line: 2,
+            why: '어제 저는 카페에서 지민이를 봤어요: yesterday she saw Jimin at a café (카페에서). School (학교) is where they see each other every day.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '저는 정말 슬펐어요.', en: 'I was really sad.' },
+          { ko: '오늘 학교에서 지민이를 또 만났어요.', en: 'Today I saw Jimin at school again.' },
+          { ko: '지민이는 저를 보고 “안녕!” 하고 웃었어요.', en: 'Jimin saw me, said “Hi!” and smiled.' },
+          { ko: '저는 “어제 카페에서 왜 그랬어?”라고 물어봤어요.', en: 'I asked, “Why were you like that at the café yesterday?”' },
+          { ko: '지민이는 “카페? 나 어제 하루 종일 집에 있었어!”라고 했어요.', en: 'Jimin said, “The café? I was at home all day yesterday!”' },
+        ],
+        questions: [
+          { q: { ko: '지민이는 어제 어디에 있었어요?', en: 'Where was Jimin yesterday?' },
+            options: [{ ko: '집', en: 'at home' }, { ko: '카페', en: 'at a café' }, { ko: '학교', en: 'at school' }],
+            answer: 0, line: 4,
+            why: 'Jimin says 나 어제 하루 종일 집에 있었어: she was at home (집에) all day (하루 종일) yesterday. So who was at the café?' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '그때 지민이가 핸드폰 사진을 보여 줬어요.', en: 'Then Jimin showed me a photo on her phone.' },
+          { ko: '사진에는 지민이가 두 명 있었어요!', en: 'There were two Jimins in the photo!' },
+          { ko: '지민이는 “우리 언니 지은이야. 우리는 쌍둥이야!”라고 했어요.', en: 'Jimin said, “That’s my older sister, Jieun. We’re twins!”' },
+          { ko: '지은이는 지민이보다 오 분 먼저 태어났어요. 그래서 언니예요!', en: 'Jieun was born five minutes before Jimin, so she’s the older sister!' },
+          { ko: '이번 주말에는 우리 셋이 같이 카페에 가요!', en: 'This weekend, the three of us are going to the café together!' },
+        ],
+        questions: [
+          { q: { ko: '어제 카페에 누가 있었어요?', en: 'Who was at the café yesterday?' },
+            options: [{ ko: '지민이 언니', en: 'Jimin’s older sister' }, { ko: '지민이', en: 'Jimin' }, { ko: '지민이 엄마', en: 'Jimin’s mom' }],
+            answer: 0, line: [1, 2],
+            why: 'Jimin was at home all day, but the photo shows two Jimins: 우리 언니 지은이야. 우리는 쌍둥이야! The girl at the café was her twin (쌍둥이) sister, Jieun. She didn’t know the speaker, so she politely asked 누구세요?' },
+          { q: { ko: '이번 주말에 누가 카페에 가요?', en: 'Who is going to the café this weekend?' },
+            options: [{ ko: '세 사람 모두', en: 'all three of them' }, { ko: '지민이하고 지은이', en: 'Jimin and Jieun' }, { ko: '이 사람하고 지민이', en: 'the speaker and Jimin' }],
+            answer: 0, line: 4,
+            why: '이번 주말에는 우리 셋이 같이 카페에 가요!: all three of them (우리 셋: the speaker, Jimin and Jieun) are going to the café together.' },
+        ],
+      },
+    ],
+  },
+
+  // ---------- soundwords · level 2 · a story ----------
+  {
+    id: 'soundwords-midnight-thud',
+    topic: 'soundwords',
+    level: 2,
+    emoji: '🌙',
+    kind: { ko: '이야기', en: 'A story' },
+    title: { ko: '한밤중에 쿵!', en: 'Thud! In the middle of the night' },
+    voice: 'low',
+    words: ['soundwords:zzz', 'soundwords:startled', 'soundwords:pounding', 'soundwords:gulp'],
+    parts: [
+      {
+        lines: [
+          { ko: '어젯밤에 저는 침대에서 쿨쿨 자고 있었어요.', en: 'Last night I was fast asleep in bed.' },
+          { ko: '그런데 갑자기 부엌에서 “쿵!” 소리가 났어요.', en: 'Suddenly there was a thud from the kitchen.' },
+          { ko: '저는 깜짝 놀라서 잠이 깼어요. 밤 열두 시였어요.', en: 'I woke up with a start. It was midnight.' },
+          { ko: '엄마하고 아빠는 열 시에 주무셨어요.', en: 'Mom and Dad had gone to bed at ten.' },
+          { ko: '우리 고양이 나비도 제 옆에서 쿨쿨 자고 있었어요.', en: 'And our cat, Nabi, was fast asleep next to me.' },
+        ],
+        questions: [
+          { q: { ko: '“쿵!” 소리는 몇 시에 났어요?', en: 'What time was the thud?' },
+            options: [{ ko: '밤 12시', en: 'midnight' }, { ko: '밤 10시', en: '10 p.m.' }, { ko: '새벽 2시', en: '2 a.m.' }],
+            answer: 0, line: 2,
+            why: '깜짝 놀라서 잠이 깼어요. 밤 열두 시였어요: the thud woke him with a start (깜짝) at midnight (열두 시). 열 시 (10:00) is when his mom and dad went to bed.' },
+          { q: { ko: '그때 나비는 뭐 하고 있었어요?', en: 'What was Nabi doing at the time?' },
+            options: [{ ko: '자고 있었어요', en: 'It was asleep' }, { ko: '부엌에 있었어요', en: 'It was in the kitchen' }, { ko: '밥을 먹고 있었어요', en: 'It was eating' }],
+            answer: 0, line: 4,
+            why: '나비도 제 옆에서 쿨쿨 자고 있었어요: Nabi the cat was fast asleep (쿨쿨 자다) next to him, so the noise in the kitchen wasn’t the cat.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '가슴이 두근두근했어요.', en: 'My heart was pounding.' },
+          { ko: '저는 불도 안 켜고 살금살금 부엌으로 갔어요.', en: 'Without even turning on the light, I crept into the kitchen on tiptoe.' },
+          { ko: '깜깜한 부엌에서 누가 식탁에 앉아 있었어요!', en: 'In the dark kitchen, someone was sitting at the table!' },
+          { ko: '그 사람은 뭔가를 후루룩 먹고 있었어요.', en: 'They were slurping something up.' },
+          { ko: '그때 제 발에 뭐가 걸렸어요. 콜라 캔이 데굴데굴 굴러갔어요!', en: 'Just then my foot hit something, and a can of cola went rolling across the floor!' },
+        ],
+        questions: [
+          { q: { ko: '이 사람은 부엌에 어떻게 갔어요?', en: 'How did he go into the kitchen?' },
+            options: [
+              { ko: '불을 안 켜고 살금살금 갔어요', en: 'On tiptoe, in the dark' },
+              { ko: '불을 켜고 살금살금 갔어요', en: 'On tiptoe, with the light on' },
+              { ko: '나비하고 같이 뛰어갔어요', en: 'He ran in with Nabi' },
+            ],
+            answer: 0, line: 1,
+            why: '저는 불도 안 켜고 살금살금 부엌으로 갔어요: he didn’t even switch on the light (불도 안 켜고), and crept in on tiptoe (살금살금). Nabi was still asleep.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '그 사람도 깜짝 놀라서 뒤를 돌아봤어요.', en: 'The person jumped too, and turned around.' },
+          { ko: '아빠였어요! 아빠는 라면을 드시고 계셨어요.', en: 'It was Dad! He was eating ramen.' },
+          { ko: '아빠는 요즘 다이어트 중이세요.', en: 'Dad’s on a diet at the moment.' },
+          { ko: '아빠가 작은 목소리로 “쉿! 엄마한테는 비밀이야!”라고 하셨어요.', en: 'In a whisper, Dad said, “Shh! It’s a secret from Mom!”' },
+          { ko: '라면 냄새에 저도 침을 꿀꺽 삼켰어요. 그래서 우리는 같이 후루룩 먹었어요!', en: 'The smell of the ramen made me gulp, too. So we slurped it up together!' },
+        ],
+        questions: [
+          { q: { ko: '부엌에 누가 있었어요?', en: 'Who was in the kitchen?' },
+            options: [{ ko: '아빠', en: 'his dad' }, { ko: '엄마', en: 'his mom' }, { ko: '고양이 나비', en: 'Nabi the cat' }],
+            answer: 0, line: 1,
+            why: '아빠였어요!: it was his dad, eating ramen (라면을 드시고 계셨어요) in the dark, though he’d gone to bed at ten. Nabi was asleep next to the speaker.' },
+          { q: { ko: '이 사람은 마지막에 뭐 했어요?', en: 'What did he do in the end?' },
+            options: [{ ko: '아빠하고 라면을 먹었어요', en: 'He ate ramen with his dad' }, { ko: '엄마한테 말했어요', en: 'He told his mom' }, { ko: '다시 잤어요', en: 'He went back to sleep' }],
+            answer: 0, line: 4,
+            why: 'The smell made him gulp (침을 꿀꺽 삼켰어요), so 우리는 같이 후루룩 먹었어요: he and his dad slurped (후루룩) the ramen together. Telling Mom is the one thing they won’t do: 엄마한테는 비밀이야!' },
+        ],
+      },
+    ],
+  },
+
+  // ---------- travel · level 3 · a story (asking nicely) ----------
+  {
+    id: 'travel-red-cap',
+    topic: 'travel',
+    level: 3,
+    emoji: '🧢',
+    kind: { ko: '이야기', en: 'A story' },
+    title: { ko: '빨간 모자 아저씨', en: 'The man in the red cap' },
+    voice: 'high',
+    words: ['travel:plane', 'cafe:seat', 'hobbies:take', 'directions:excuseme'],
+    parts: [
+      {
+        lines: [
+          { ko: '지난주에 엄마하고 같이 비행기를 타고 제주도에 갔어요.', en: 'Last week, Mom and I flew to Jeju Island.' },
+          { ko: '그런데 비행기에서 엄마 자리는 앞쪽이고, 제 자리는 뒤쪽이었어요.', en: 'But on the plane, Mom’s seat was near the front, and mine was at the back.' },
+          { ko: '엄마 옆자리에는 빨간 모자를 쓴 아저씨가 앉아 계셨어요.', en: 'In the seat next to Mom sat a man in a red cap.' },
+          { ko: '저는 아저씨한테 “죄송한데요, 저하고 자리 좀 바꿀 수 있을까요?”라고 물어봤어요.', en: 'I asked him, “I’m sorry to bother you, but could we swap seats?”' },
+          { ko: '아저씨는 “그럼요!” 하고 웃으면서 제 자리로 가 주셨어요.', en: 'He said, “Of course!” and kindly moved to my seat with a smile.' },
+        ],
+        questions: [
+          { q: { ko: '엄마 자리는 어디였어요?', en: 'Where was Mom’s seat?' },
+            options: [{ ko: '앞쪽', en: 'near the front' }, { ko: '뒤쪽', en: 'at the back' }, { ko: '창가', en: 'by the window' }],
+            answer: 0, line: 1,
+            why: '엄마 자리는 앞쪽이고, 제 자리는 뒤쪽이었어요: Mom’s seat was near the front (앞쪽). The back (뒤쪽) was the speaker’s.' },
+          { q: { ko: '이 사람은 왜 아저씨하고 자리를 바꾸고 싶었어요?', en: 'Why did she want to swap seats with the man?' },
+            options: [
+              { ko: '엄마 옆에 앉고 싶어서', en: 'She wanted to sit next to her mom' },
+              { ko: '창가에 앉고 싶어서', en: 'She wanted a window seat' },
+              { ko: '뒤쪽에 앉고 싶어서', en: 'She wanted to sit at the back' },
+            ],
+            answer: 0, line: [1, 2],
+            why: 'Her seat was at the back, and 엄마 옆자리에는 빨간 모자를 쓴 아저씨가 앉아 계셨어요: the man was in the seat next to her mom. Swapping put her next to Mom, and him at the back.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '제주도 바다는 정말 파랗고 예뻤어요.', en: 'The sea on Jeju was so blue and beautiful.' },
+          { ko: '그래서 엄마하고 같이 사진을 찍고 싶었어요.', en: 'So I wanted a photo of Mom and me together.' },
+          { ko: '저는 옆에 있는 분한테 “저기요, 사진 좀 찍어 주시겠어요?”라고 부탁했어요.', en: 'I asked the person next to us, “Excuse me, would you mind taking our picture?”' },
+          { ko: '그분이 뒤를 돌아보셨어요. 빨간 모자 아저씨였어요!', en: 'He turned around. It was the man in the red cap!' },
+          { ko: '아저씨는 “또 만났네요!” 하고 사진을 열 장이나 찍어 주셨어요.', en: 'He said, “We meet again!” and took a whole ten photos of us.' },
+        ],
+        questions: [
+          { q: { ko: '바다에서 누가 사진을 찍어 주셨어요?', en: 'Who took their photo by the sea?' },
+            options: [{ ko: '빨간 모자 아저씨', en: 'the man in the red cap' }, { ko: '엄마', en: 'her mom' }, { ko: '호텔 직원', en: 'someone from the hotel' }],
+            answer: 0, line: [2, 3],
+            why: 'She asked the person next to them, 저기요, 사진 좀 찍어 주시겠어요?, and 빨간 모자 아저씨였어요!: it was the man in the red cap from the plane.' },
+        ],
+      },
+      {
+        lines: [
+          { ko: '다음 날, 서울로 돌아가는 비행기에서도 엄마 자리하고 제 자리가 떨어져 있었어요.', en: 'The next day, on the plane back to Seoul, Mom’s seat and mine were apart again.' },
+          { ko: '저는 승무원한테 “죄송한데요, 엄마 옆에 앉을 수 있을까요?”라고 물어봤어요.', en: 'I asked a flight attendant, “Excuse me, could I possibly sit next to my mom?”' },
+          { ko: '승무원은 “잠깐만요. 옆자리 손님께 여쭤볼게요”라고 했어요.', en: 'She said, “Just a moment. I’ll ask the passenger next to her.”' },
+          { ko: '그런데 엄마 옆자리에서 누가 손을 흔들었어요. 빨간 모자 아저씨였어요!', en: 'Then someone in the seat next to Mom waved. It was the man in the red cap!' },
+          { ko: '아저씨는 웃으면서 “벌써 세 번째네요! 자리 바꿔 드릴게요”라고 하셨어요.', en: 'He laughed and said, “That’s the third time already! I’ll swap with you.”' },
+        ],
+        questions: [
+          { q: { ko: '서울로 가는 비행기에서 이 사람은 누구한테 부탁했어요?', en: 'On the plane to Seoul, who did she ask for help?' },
+            options: [{ ko: '승무원', en: 'a flight attendant' }, { ko: '빨간 모자 아저씨', en: 'the man in the red cap' }, { ko: '엄마', en: 'her mom' }],
+            answer: 0, line: 1,
+            why: 'This time she asked a flight attendant (승무원한테): 죄송한데요, 엄마 옆에 앉을 수 있을까요? (could I sit next to my mom?). On the way there, she had asked the man himself.' },
+          { q: { ko: '이 사람은 빨간 모자 아저씨를 모두 몇 번 만났어요?', en: 'How many times did she run into the man in the red cap?' },
+            options: [{ ko: '3번', en: 'three times' }, { ko: '2번', en: 'twice' }, { ko: '10번', en: 'ten times' }],
+            answer: 0, line: 4,
+            why: 'He says 벌써 세 번째네요!: “that’s the third time already!”: on the plane to Jeju, by the sea, and on the plane home. 열 (10) was the number of photos he took.' },
+        ],
+      },
+    ],
+  },
 ]);

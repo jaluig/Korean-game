@@ -787,6 +787,18 @@
         if (at >= 0 && M.grammar && M.grammar.CHATTY.has(q.form) && !/^([.!?…]|$)/.test(q.ko.slice(at + q.answer.length))) {
           found.push(`${q.id}: "${q.answer}" ends a sentence: put . ! or ? right after it`);
         }
+        // Rules, advice and asking nicely (찍으면 안 돼요, 가는 게 좋겠어요, 찍어 주시겠어요?) start with a word of their own,
+        // spelled the way the engine spells them, like the wrong options (not 도와 주시겠어요 or 가는 것이 좋겠어요)…
+        const whole = M.grammar && (M.grammar.RULES.has(q.form) || M.grammar.ASKING.has(q.form));
+        if (at > 0 && whole && q.ko[at - 1] !== ' ') found.push(`${q.id}: "${q.answer}" starts a word of its own: put a space before it`);
+        if (at >= 0 && whole) {
+          const right = M.grammar.form(q.dict, q.form, { pos: q.pos, tense: q.tense });
+          if (right && q.answer !== right.text) found.push(`${q.id}: write "${right.text}" (the wrong options are spelled like it)`);
+        }
+        // …and asking nicely ends in a question mark.
+        if (at >= 0 && M.grammar && M.grammar.ASKING.has(q.form) && q.ko[at + q.answer.length] !== '?') {
+          found.push(`${q.id}: "${q.answer}" asks a question: put ? right after it`);
+        }
         for (const ref of q.needs) if (!words.has(ref)) found.push(`${q.id}: unknown word "${ref}" (use topic:id)`);
         for (const t of q.traps) if (!t.text || !t.why) found.push(`${q.id}: each trap needs "text" and "why"`);
         if (q.context !== undefined && !(q.context && typeof q.context.en === 'string' && q.context.en.trim() && (q.context.ko === undefined || /[가-힣]/.test(q.context.ko)))) {

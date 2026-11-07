@@ -509,3 +509,126 @@ test('it seems: no slip is a right form (낫는 is the verb 낫다), and the pol
   assert.ok(G.slips('오다', 'seemNow').some((s) => s.text === '와요 것 같아요'));
   assert.ok(G.slips('먹다', 'seemFut').length >= 2, 'a plain verb gets two slips');
 });
+
+test('rules and advice: -(으)면 안 돼요 (must not) and -는 게 좋겠어요 (had better)', () => {
+  // Checked by hand: [dict, pos, must not, had better (verbs only)].
+  const rows = [
+    ['가다', V, '가면 안 돼요', '가는 게 좋겠어요'],
+    ['먹다', V, '먹으면 안 돼요', '먹는 게 좋겠어요'],
+    ['찍다', V, '찍으면 안 돼요', '찍는 게 좋겠어요'],
+    ['만들다', V, '만들면 안 돼요', '만드는 게 좋겠어요'],
+    ['듣다', V, '들으면 안 돼요', '듣는 게 좋겠어요'],
+    ['눕다', V, '누우면 안 돼요', '눕는 게 좋겠어요'],
+    ['피우다', V, '피우면 안 돼요', '피우는 게 좋겠어요'],
+    ['공부하다', V, '공부하면 안 돼요', '공부하는 게 좋겠어요'],
+    ['있다', V, '있으면 안 돼요', '있는 게 좋겠어요'],
+    ['비싸다', A, '비싸면 안 돼요', null],
+  ];
+  for (const [dict, pos, mustNot, better] of rows) {
+    assert.equal(G.form(dict, 'mustNot', { pos }).text, mustNot, `${dict} mustNot`);
+    assert.equal(better ? G.form(dict, 'hadBetter', { pos }).text : G.form(dict, 'hadBetter', { pos }), better, `${dict} hadBetter`);
+  }
+  assert.equal(G.form('만들다', 'hadBetter').rule, 'ㄹ drops');
+  assert.equal(G.form('듣다', 'hadBetter').rule, 'stem + 는', '듣다 keeps its ㄷ before 는');
+  assert.ok(G.form('가다', 'hadBetter').variants.includes('가는 것이 좋겠어요'), '게 is short for 것이');
+  const has = (dict, id, text, pos = V) => assert.ok(G.slips(dict, id, { pos }).some((s) => s.text === text), `${dict} ${id}: ${text}`);
+  has('먹다', 'mustNot', '먹면 안 돼요');
+  has('먹다', 'mustNot', '먹어면 안 돼요');
+  has('먹다', 'mustNot', '안 먹으면 돼요');
+  has('먹다', 'mustNot', '먹으면 안 되요');
+  has('듣다', 'mustNot', '듣으면 안 돼요');
+  has('만들다', 'mustNot', '만들으면 안 돼요');
+  assert.ok(!G.slips('공부하다', 'mustNot').some((s) => s.text.startsWith('안 ')), 'it would be 공부 안 하면 돼요');
+  assert.ok(!G.slips('있다', 'mustNot').some((s) => s.text.startsWith('안 ')), '있다’s opposite is 없다');
+  assert.ok(!G.slips('알다', 'mustNot').some((s) => s.text.startsWith('안 ')), '알다’s opposite is 모르다');
+  has('만들다', 'hadBetter', '만들는 게 좋겠어요');
+  has('듣다', 'hadBetter', '들는 게 좋겠어요');
+  has('돕다', 'hadBetter', '도우는 게 좋겠어요');
+  has('가다', 'hadBetter', '간 게 좋겠어요');
+  has('가다', 'hadBetter', '갈 게 좋겠어요');
+  has('가다', 'hadBetter', '가는 좋겠어요');
+  has('가다', 'hadBetter', '가다 게 좋겠어요');
+  for (const id of ['mustNot', 'hadBetter']) {
+    for (const [dict, pos] of [['가다', V], ['먹다', V], ['만들다', V], ['듣다', V], ['돕다', V], ['있다', V], ['춥다', A]]) {
+      const right = G.form(dict, id, { pos });
+      if (!right) continue;
+      const ok = new Set([right.text, ...right.variants].map((t) => t.replace(/\s+/g, '')));
+      for (const s of G.slips(dict, id, { pos })) assert.ok(!ok.has(s.text.replace(/\s+/g, '')) && s.why, `${dict} ${id}: ${s.text}`);
+    }
+    assert.ok(G.table(id).length >= 4, id);
+  }
+});
+
+test('asking nicely: -아/어 주시겠어요? and -(으)ㄹ 수 있을까요? (도와주시겠어요 is one word)', () => {
+  // Checked by hand: [dict, could you…?, could I…?].
+  const rows = [
+    ['찍다', '찍어 주시겠어요', '찍을 수 있을까요'],
+    ['닫다', '닫아 주시겠어요', '닫을 수 있을까요'],
+    ['기다리다', '기다려 주시겠어요', '기다릴 수 있을까요'],
+    ['말하다', '말해 주시겠어요', '말할 수 있을까요'],
+    ['쓰다', '써 주시겠어요', '쓸 수 있을까요'],
+    ['부르다', '불러 주시겠어요', '부를 수 있을까요'],
+    ['듣다', '들어 주시겠어요', '들을 수 있을까요'],
+    ['돕다', '도와주시겠어요', '도울 수 있을까요'],
+    ['바꾸다', '바꿔 주시겠어요', '바꿀 수 있을까요'],
+    ['앉다', '앉아 주시겠어요', '앉을 수 있을까요'],
+    ['만들다', '만들어 주시겠어요', '만들 수 있을까요'],
+  ];
+  for (const [dict, could, may] of rows) {
+    assert.equal(G.form(dict, 'couldYou').text, could, `${dict} couldYou`);
+    assert.equal(G.form(dict, 'possible').text, may, `${dict} possible`);
+  }
+  assert.equal(G.form('빌려주다', 'couldYou'), null, '빌려주시겠어요: the verb has its 주다 already');
+  assert.equal(G.form('주다', 'couldYou'), null);
+  assert.equal(G.form('예쁘다', 'possible', { pos: A }), null, 'verbs only');
+  assert.deepEqual([...G.ASKING].sort(), ['couldYou', 'possible']);
+  const has = (dict, id, text) => assert.ok(G.slips(dict, id).some((s) => s.text === text), `${dict} ${id}: ${text}`);
+  has('찍다', 'couldYou', '찍어 주겠어요');
+  has('찍다', 'couldYou', '찍어 드리겠어요');
+  has('찍다', 'couldYou', '찍 주시겠어요');
+  has('듣다', 'couldYou', '듣어 주시겠어요');
+  has('돕다', 'couldYou', '도와주겠어요');
+  assert.ok(G.slips('돕다', 'couldYou').every((s) => !/\s/.test(s.text)), 'written like the answer, so the spacing gives nothing away');
+  has('가다', 'possible', '가 수 있을까요');
+  has('가다', 'possible', '가을 수 있을까요');
+  has('가다', 'possible', '가는 수 있을까요');
+  for (const id of ['couldYou', 'possible']) {
+    for (const dict of ['찍다', '기다리다', '듣다', '돕다', '만들다', '있다']) {
+      const right = G.form(dict, id);
+      if (!right) continue;
+      const ok = new Set([right.text, ...right.variants].map((t) => t.replace(/\s+/g, '')));
+      for (const s of G.slips(dict, id)) {
+        assert.ok(!ok.has(s.text.replace(/\s+/g, '')) && s.why, `${dict} ${id}: ${s.text}`);
+        assert.ok(!/주세요$/.test(s.text), `${dict} ${id}: …아/어 주세요 is a polite request too, never a wrong answer`);
+      }
+    }
+    assert.ok(G.table(id).length >= 5, id);
+  }
+});
+
+test('the grammar checker: asking nicely ends in “?”, and the new answers start a word of their own', () => {
+  const q = (id, ko) => ({ id, ko, en: 'Could you take a photo of us?', answer: '찍어 주시겠어요', dict: '찍다' });
+  M.content.registerGrammar([
+    {
+      id: 'check-asking',
+      form: 'couldYou',
+      title: { ko: '부탁', en: 'Asking' },
+      meaning: 'x',
+      how: 'x',
+      examples: [{ ko: '사진 좀 찍어 주시겠어요?', en: 'Could you take a photo?' }, { ko: '문 좀 닫아 주시겠어요?', en: 'Could you close the door?' }],
+      questions: [
+        q('no-mark', '사진 좀 찍어 주시겠어요.'),
+        q('glued', '사진좀찍어 주시겠어요?'),
+        { ...q('spaced', '좀 도와 주시겠어요?'), answer: '도와 주시겠어요', dict: '돕다' },
+        q('fine', '사진 좀 찍어 주시겠어요?'),
+        q('fine2', '저기요, 사진 좀 찍어 주시겠어요?'),
+        q('fine3', '찍어 주시겠어요?'),
+      ],
+    },
+  ]);
+  const found = M.content.check().filter((p) => p.includes('check-asking'));
+  assert.ok(found.some((p) => /#no-mark: .* asks a question: put \?/.test(p)), found.join('\n'));
+  assert.ok(found.some((p) => /#glued: .* starts a word of its own/.test(p)), found.join('\n'));
+  assert.ok(found.some((p) => /#spaced: write "도와주시겠어요"/.test(p)), 'spelled like the engine (and the wrong options)');
+  assert.deepEqual(found.filter((p) => /#fine/.test(p)), []);
+});

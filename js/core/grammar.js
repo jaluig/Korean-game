@@ -11,8 +11,9 @@
  * the polite -(으)세요 and -(으)셨어요, -지 마세요, -(으)려고, -(으)면서 and
  * -(으)ㄴ 적이 있어요/없어요; the forms that describe a noun: 예쁜 꽃,
  * 지금 보는 영화, 어제 본 영화, 내일 볼 영화; the chatty endings that
- * say how you mean a sentence: -네요, -죠, -잖아요, -거든요; and "it seems":
- * -는 / -(으)ㄴ / -(으)ㄹ 것 같아요.
+ * say how you mean a sentence: -네요, -죠, -잖아요, -거든요; "it seems":
+ * -는 / -(으)ㄴ / -(으)ㄹ 것 같아요; rules and advice: -(으)면 안 돼요 and
+ * -는 게 좋겠어요; and asking nicely: -아/어 주시겠어요? and -(으)ㄹ 수 있을까요?
  * The patterns themselves (explanations, example and question sentences)
  * live in content/grammar.js and are practised in Grammar Cards.
  */
@@ -51,6 +52,8 @@
    *         'seemNow'  verbs -는, adjectives -(으)ㄴ (오는 / 비싼 것 같아요)
    *         'seemPast' verbs -(으)ㄴ (온 것 같아요)
    *         'seemFut'  verbs and adjectives -(으)ㄹ (올 / 추울 것 같아요)
+   * and advice, the -는 form + 게 좋겠어요 (게 is short for 것이, “the thing”):
+   *         'better'   verbs -는 (가는 / 만드는 게 좋겠어요)
    */
   const ENDINGS = {
     go: { name: '-고', meaning: '“and” (also “and then”)', base: 'stem', tail: '고', past: true },
@@ -91,6 +94,12 @@
     seemNow: { name: '-는 / -(으)ㄴ 것 같아요', meaning: '“it seems …”, “I think …”: a guess about now, from what you see or hear (비가 오는 것 같아요)', base: 'seemNow', tail: ' 것 같아요' },
     seemPast: { name: '-(으)ㄴ 것 같아요 (done)', meaning: '“it seems … (has) …”: a guess about something that already happened (비가 온 것 같아요)', base: 'seemPast', tail: ' 것 같아요', verbOnly: true },
     seemFut: { name: '-(으)ㄹ 것 같아요', meaning: '“it looks like … will …”, “I think … will …”: a guess about what’s coming (비가 올 것 같아요)', base: 'seemFut', tail: ' 것 같아요' },
+    // Rules and advice: what you mustn't do, and what you'd better do.
+    mustNot: { name: '-(으)면 안 돼요', meaning: '“must not”, “you’re not allowed to …”: a rule (여기서 사진을 찍으면 안 돼요)', base: 'eu', tail: '면 안 돼요' },
+    hadBetter: { name: '-는 게 좋겠어요', meaning: '“had better …”, “it’d be best to …”: advice (우산을 가져가는 게 좋겠어요)', base: 'better', tail: ' 게 좋겠어요', verbOnly: true },
+    // Asking nicely, to staff or a stranger: a favour, or whether something is possible (they end in a question mark).
+    couldYou: { name: '-아/어 주시겠어요?', meaning: '“could you … (for me), please?”: asking someone to do something for you (사진 좀 찍어 주시겠어요?)', base: 'inf', tail: ' 주시겠어요', verbOnly: true },
+    possible: { name: '-(으)ㄹ 수 있을까요?', meaning: '“could I …?”, “would it be possible to …?”: asking whether you can (자리를 바꿀 수 있을까요?)', base: 'future', tail: ' 수 있을까요', verbOnly: true },
   };
   const CHATTY = new Set(['neyo', 'jyo', 'janayo', 'geodeunyo']);
   /** Other correct spellings: 죠 is short for 지요 (먹지요); after ㅎ-irregular adjectives, -네요 may drop the ㅎ (그러네요). */
@@ -103,6 +112,10 @@
   const BEFORE_NOUN = new Set(['adjMod', 'nowMod', 'pastMod', 'futMod']);
   // "It seems": which form before a noun comes before 것 같아요 (verbs and adjectives differ only for now).
   const SEEM = { seemNow: (pos) => (pos === 'verb' ? 'nowMod' : 'adjMod'), seemPast: () => 'pastMod', seemFut: () => 'futMod' };
+  // Rules and advice (찍으면 안 돼요, 가는 게 좋겠어요) and asking nicely, whose answer ends a question
+  // (사진 좀 찍어 주시겠어요?): the answer is the whole ending, a word of its own.
+  const RULES = new Set(['mustNot', 'hadBetter']);
+  const ASKING = new Set(['couldYou', 'possible']);
 
   // 있다/없다 and the words built on them take 는, not (으)ㄴ, as modifiers (있는), so no 후에 form here.
   const IT_EOP = /(있|없)다$/;
@@ -110,6 +123,8 @@
   const ALSO_VERB = /^(크다|늦다|밝다|낫다)$/;
   // These have their own polite words (드세요, 주무세요, 계세요) or are polite already: no -(으)세요 / -(으)셨어요.
   const OWN_POLITE = /^(먹다|자다|있다|드시다|계시다|주무시다)$/;
+  // 도와주다 and 도와드리다 are words of their own in the dictionary, so they're written as one: 도와주시겠어요.
+  const tailOf = (dict, id) => (id === 'couldYou' && dict === '돕다' ? ENDINGS[id].tail.trim() : ENDINGS[id].tail);
 
   /** Can this ending be used on this word (and in this tense)? */
   function applies(dict, id, { pos = 'verb', tense = 'present' } = {}) {
@@ -125,6 +140,7 @@
     if (id === 'goIt' && IT_EOP.test(dict)) return false; // 있고 있어요 isn't said
     if ((id === 'boseyo' || id === 'bwasseoyo') && dict === '보다') return false; // 봐 보세요 is awkward
     if ((id === 'seyo' || id === 'si') && OWN_POLITE.test(dict)) return false;
+    if (id === 'couldYou' && /(주다|드리다)$/.test(dict)) return false; // 빌려주시겠어요, not 빌려줘 주시겠어요: use the verb without 주다
     return !!C.conjugate(dict, 'present', { pos }); // e.g. rare 러-irregular verbs aren't supported
   }
 
@@ -195,6 +211,7 @@
   function infRule(stem, inf) {
     const type = C.irregularType(stem);
     const labels = { 하: '하다 → 해', ㅂ: 'ㅂ → 우', ㄷ: 'ㄷ → ㄹ', ㅅ: 'ㅅ drops', ㅎ: 'ㅎ drops', 르: '르 → ㄹㄹ', ㅡ: 'ㅡ drops' };
+    if (type === 'ㅂ' && inf.text.endsWith('와')) return 'ㅂ → 오'; // 돕다 → 도와, 곱다 → 고와
     if (labels[type]) return labels[type];
     const p = parts(lastChar(stem));
     if (p.final) return inf.text.endsWith('아') ? '+ 아 (ㅏ/ㅗ)' : '+ 어';
@@ -250,11 +267,11 @@
     }
     if (e.base === 'inf') {
       const inf = C.infinitive(stem);
-      const text = `${inf.text}${e.tail}`;
+      const text = `${inf.text}${tailOf(dict, id)}`;
       return {
         text,
         steps: [inf.why, `For ${e.name}, take ${inf.text}요, drop the 요 and add ${e.tail.trim()} → ${text}.`],
-        variants: [...inf.variants.flatMap((v) => [`${v}${e.tail}`, ...(e.alsoOk || []).map((alt) => `${v}${alt}`)]), ...also(text)],
+        variants: [...inf.variants.flatMap((v) => [`${v}${tailOf(dict, id)}`, ...(e.alsoOk || []).map((alt) => `${v}${alt}`)]), ...also(text)],
         rule: infRule(stem, inf),
       };
     }
@@ -275,6 +292,18 @@
       else if (kind === 'adjMod' && !IT_EOP.test(dict)) rule = m.rule.startsWith('after') ? 'adjective' : `adjective, ${m.rule}`;
       // (People say 거 for 것: 올 거 같아요.)
       return { text, steps: [...m.steps, `것 (“thing”) is a noun, so that form goes before it: ${text}.`], variants: [`${m.text} 거 같아요`], rule };
+    }
+    if (e.base === 'better') {
+      const m = presentModifier(stem);
+      const text = `${m}${e.tail}`;
+      const dropped = C.irregularType(stem) === 'ㄹ';
+      const how = dropped ? `${dict} ends in ㄹ, which drops before ㄴ: ${allButLast(stem)}${withFinal(lastChar(stem), '')} + 는 → ${m}.` : `A verb takes 는 on the stem: ${stem} + 는 → ${m}.`;
+      return {
+        text,
+        steps: [how, `Then add 게 좋겠어요 (게 is short for 것이, “the thing”: “doing it would be best”) → ${text}.`],
+        variants: [`${m} 것이 좋겠어요`],
+        rule: dropped ? 'ㄹ drops' : 'stem + 는',
+      };
     }
     if (e.base === 'future') {
       const f = C.futureStem(stem);
@@ -398,7 +427,7 @@
     }
 
     if (e.base === 'inf') {
-      const shape = (x) => `${x}${e.tail}`;
+      const shape = (x) => `${x}${tailOf(dict, id)}`;
       const rightWhy = `${inf.why} So: ${right.text}.`;
       if (['ㅂ', 'ㄷ', 'ㅅ', 'ㅎ'].includes(type)) add(shape(`${stem}${harmony(last)}`), rightWhy); // 듣어서, 춥어서, 짓어서
       if (type === 'ㅅ') {
@@ -419,6 +448,11 @@
       if (!type && !final && ['ㅏ', 'ㅓ', 'ㅕ'].includes(parts(last).vowel)) add(shape(`${stem}${harmony(last)}`), `${stem} + ${harmony(last)} always merge: ${right.text}.`); // 가아서
       if (last === '오' && !final) add(shape(`${stem}아`), `오 + 아 always merge into 와: ${right.text}.`); // 오아서
       if (id === 'aseo') add(`${pastStem(dict, pos)}어서`, `-아서/어서 never takes the past tense. Even for the past, say ${right.text}: the verb at the end shows the tense.`); // 먹었어서
+      if (id === 'couldYou') {
+        const gap = tailOf(dict, id) === e.tail ? ' ' : '';
+        add(`${inf.text}${gap}주겠어요`, `주겠어요 has no 시, so it doesn’t honour the person you’re asking: it’s how a boss might ask a junior. To staff or a stranger, ask with 주시겠어요: ${right.text}.`); // 찍어 주겠어요
+        add(`${inf.text}${gap}드리겠어요`, `드리다 (the polite 주다) is for doing something for someone else: ${inf.text}${gap}드릴게요 means “I’ll do it for you”. To ask them to do it for you, it’s 주시겠어요: ${right.text}.`); // 찍어 드리겠어요
+      }
     }
 
     if (e.base === 'eu') {
@@ -429,6 +463,14 @@
       if (id === 'ryeogo') add(`${C.futureStem(stem).text}려고`, `People often say [${C.futureStem(stem).text}려고], but it’s written ${right.text}: no extra ㄹ.`); // 먹을려고
       if ((id === 'seyo' || id === 'si') && inf.text !== stem) add(`${inf.text}${e.tail}`, `${e.name} goes on the stem, not the 아/어 form. ${right.steps[0]}`); // 앉아세요, 해세요
       if (id === 'si') add(`${pastStem(dict, pos)}으${e.tail}`, `In the polite past, 시 comes first and the past after it (시 + 었 → 셨): ${right.text}.`); // 갔으셨어요
+      if (id === 'mustNot') {
+        if (inf.text !== stem) add(`${inf.text}${e.tail}`, `-(으)면 goes on the stem, not the 아/어 form (that’s for -아/어도 돼요, “may”). ${right.steps[0]}`); // 먹어면 안 돼요
+        // 안 before the verb changes the meaning: -(으)면 돼요 is “it’s enough if …”. (Only for action verbs:
+        // noun + 하다 verbs put 안 before 하다, 공부 안 하면 돼요; 있다's opposite is 없다, and 알다's is 모르다.)
+        const enough = right.text.replace(/ 안 돼요$/, ' 돼요');
+        if (verb && !IT_EOP.test(dict) && dict !== '알다' && !(head && last === '하')) add(`안 ${enough}`, `안 ${enough} means “you just have to not …” (-(으)면 돼요 is “it’s enough if …”). For “must not”, 안 goes before 돼요: ${right.text}.`); // 안 먹으면 돼요
+        add(right.text.replace(/돼요$/, '되요'), `돼요 is short for 되어요; it’s never spelled 되요: ${right.text}.`); // 먹으면 안 되요
+      }
     }
 
     if (e.base === 'future') {
@@ -436,6 +478,7 @@
       const noun = e.tail.trim().split(' ')[0];
       if (verb && !IT_EOP.test(dict) && id !== 'lgeyo') add(`${presentModifier(stem)}${e.tail}`, `${noun} takes the (으)ㄹ form: ${right.text}.`); // 먹는 때, 먹는 수 있어요
       if (id === 'lgeyo') add(right.text.replace(/게요$/, '께요'), `It sounds like [께요], but it’s spelled 게요: ${right.text}.`); // 먹을께요
+      if (id === 'possible') add(`${stem}${e.tail}`, `수 needs the (으)ㄹ form before it. ${C.futureStem(stem).why} So: ${right.text}.`); // 가 수 있을까요, 먹 수 있을까요
     }
 
     if (e.base === 'neunde') {
@@ -514,6 +557,20 @@
       return out;
     }
 
+    if (e.base === 'better') {
+      const t = (x) => `${x}${e.tail}`;
+      const m = presentModifier(stem);
+      const done = modifierStem(stem).text;
+      add(t(dict), `The dictionary form (${dict}) never goes before a noun, and 게 is short for 것이 (“the thing”): ${right.text}.`); // 가다 게 좋겠어요
+      add(`${m} 좋겠어요`, `${m} is the form before a noun, so a noun has to follow: 게 (short for 것이, “the thing”): ${right.text}.`); // 가는 좋겠어요
+      add(t(done), IT_EOP.test(dict) ? `${dict} takes 는, like other verbs: ${right.text}.` : `${done} is the (으)ㄴ form, for what already happened. Advice about what to do takes 는: ${right.text}.`); // 간 게 좋겠어요
+      add(t(C.futureStem(stem).text), `게 좋겠어요 takes the 는 form, even for what you’d better do later: ${right.text}.`); // 갈 게 좋겠어요
+      if (type === 'ㄹ') add(t(`${stem}는`), `ㄹ drops before ㄴ: ${right.text}.`); // 만들는 게 좋겠어요
+      if (type === 'ㄷ') add(t(`${head}${withFinal(last, 'ㄹ')}는`), `${dict}’s ㄷ only turns into ㄹ before a vowel. Before 는, it stays: ${right.text}.`); // 들는 게 좋겠어요
+      if (type === 'ㅂ') add(t(`${head}${withFinal(last, '')}우는`), `${dict}’s ㅂ only turns into 우 before a vowel. Before 는, it stays: ${right.text}.`); // 도우는 게 좋겠어요
+      return out;
+    }
+
     if (e.base === 'modifier') {
       const noun = id === 'hue' ? '후에' : '적';
       add(`${stem}은${e.tail}`, modifierStem(stem).why); // 가은 후에, 살은 후에, 듣은 후에, 가은 적이 있어요
@@ -588,6 +645,10 @@
     seemNow: [['가다'], ['먹다'], ['살다'], ['비싸다', 'adjective'], ['춥다', 'adjective'], ['맛있다', 'adjective']],
     seemPast: [['가다'], ['먹다'], ['살다'], ['듣다']],
     seemFut: [['가다'], ['먹다'], ['살다'], ['춥다', 'adjective'], ['비싸다', 'adjective']],
+    mustNot: [['가다'], ['찍다'], ['만들다'], ['듣다'], ['눕다']],
+    hadBetter: [['가다'], ['먹다'], ['만들다'], ['듣다'], ['쉬다']],
+    couldYou: [['찍다'], ['닫다'], ['기다리다'], ['말하다'], ['쓰다'], ['부르다']],
+    possible: [['가다'], ['앉다'], ['만들다'], ['듣다'], ['돕다']],
   };
 
   /** Rows for an intro card: [{ dict, text, rule }]. */
@@ -656,5 +717,5 @@
     };
   }
 
-  M.grammar = { ENDINGS, BEFORE_NOUN, CHATTY, SEEM, applies, form, slips, contrast, table, question, euStem, modifierStem };
+  M.grammar = { ENDINGS, BEFORE_NOUN, CHATTY, SEEM, RULES, ASKING, applies, form, slips, contrast, table, question, euStem, modifierStem };
 })(window.Mallang);

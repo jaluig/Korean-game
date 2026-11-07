@@ -11,6 +11,8 @@ const OVERLAP = [
   ['myeon', 'ttae'], ['aseo', 'nikka'], ['aseo', 'go'], ['hue', 'go'], ['su', 'ado'], ['hue', 'aseo'],
   ['neunde', 'jiman'], ['neunde', 'nikka'], ['neunde', 'go'], ['seyo', 'boseyo'],
   ['reo', 'ryeogo'], ['bwasseoyo', 'jeogi'], ['bwasseoyo', 'jeogiNot'], ['jyo', 'janayo'],
+  ['mustNot', 'jimaseyo'], ['mustNot', 'suNot'], ['hadBetter', 'aya'], ['hadBetter', 'seyo'], ['hadBetter', 'boseyo'],
+  ['couldYou', 'seyo'], ['couldYou', 'possible'], ['possible', 'su'], ['possible', 'ado'], ['mustNot', 'possible'],
 ];
 
 function learnWords(now = NOON) {
@@ -40,11 +42,18 @@ test('every answer is the form the engine makes, and every question has four fai
     for (const q of g.questions) {
       const right = G.form(q.dict, q.form, { pos: q.pos, tense: q.tense });
       assert.ok(right, `${q.id}: the engine can't make ${q.dict} + ${q.form}`);
+      assert.ok(!(q.form === 'mustNot' && q.ko.slice(0, q.ko.indexOf(q.answer)).endsWith('안 ')), `${q.id}: 안 … -(으)면 안 돼요 is a double negative (“must”)`);
       assert.ok([right.text, ...right.variants].map(squash).includes(squash(q.answer)), `${q.id}: "${q.answer}" but the engine makes "${right.text}"`);
       for (const c of q.contrast) {
         assert.ok(G.ENDINGS[c] && c !== q.form, `${q.id}: contrast ${c}`);
         assert.ok(!OVERLAP.some(([a, b]) => (a === c && b === q.form) || (b === c && a === q.form)), `${q.id}: ${c} overlaps with ${q.form}`);
         assert.ok(!(c === 'nowN' && q.form === 'futN'), `${q.id}: -는 can be a scheduled future (내일 가는 곳): never a wrong answer for -(으)ㄹ`);
+        const at = q.ko.indexOf(q.answer);
+        assert.ok(!(c === 'lgeyo' && q.ko.slice(at + q.answer.length).startsWith('?')), `${q.id}: -(으)ㄹ게요 can’t ask a question (the asking form is -(으)ㄹ까요?)`);
+        assert.ok(!(c === 'mustNot' && q.ko.slice(0, at).endsWith('안 ')), `${q.id}: 안 + -(으)면 안 돼요 is a double negative (“must”)`);
+        const asks = q.ko.slice(at + q.answer.length).startsWith('?');
+        assert.ok(!(G.ASKING.has(c) && !asks), `${q.id}: ${c} asks a question: only a contrast before “?”`);
+        assert.ok(!(q.form === 'mustNot' && asks && ['ado', 'su'].includes(c)), `${q.id}: -(으)면 안 돼요? asks for permission too, like ${c}`);
       }
       for (let i = 0; i < 5; i++) {
         const built = G.question(q);

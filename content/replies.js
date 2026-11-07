@@ -1733,4 +1733,321 @@ Mallang.content.registerReplies([
       { them: { ko: '네, 모두 칠천 원입니다. 할머니께서 좋아하실 거예요!', en: 'OK, that’s 7,000 won altogether. Your grandma will love it!' } },
     ],
   },
+  // ---------- Asking a stranger nicely: level 2 ----------
+  {
+    id: 'day-neighbour-music',
+    topic: 'day',
+    level: 2,
+    scene: '🎵',
+    title: { ko: '옆집 음악 소리', en: 'The music next door' },
+    role: { ko: '이웃', en: 'Neighbour' },
+    goal: {
+      ko: '밤 열두 시예요. 옆집 음악 소리가 너무 커서 잘 수 없어요. 옆집 사람은 처음 보는 사람이에요. 정중하게 부탁해요.',
+      en: 'It’s midnight, and the music next door is so loud you can’t sleep. You’ve never met your neighbour: knock, and ask him nicely to turn it down.',
+    },
+    them: { name: '옆집 사람', en: 'Your neighbour', emoji: '🧑‍🎤', voice: 'low' },
+    words: ['day:night', 'day:sleep', 'hobbies:music', 'soundwords:sound'],
+    steps: [
+      { them: { ko: '네? 누구세요?', en: 'Yes? Who is it?' } },
+      {
+        you: [
+          {
+            ko: '안녕하세요. 옆집에 사는 사람인데요.',
+            en: 'Hello. I live next door.',
+            right: true,
+            note: '-는데요 (인데요 after a noun) leaves the sentence open, as if to say “…and there’s something I’d like to ask”: softer than a flat 옆집 사람이에요.',
+          },
+          {
+            ko: '안녕. 나 옆집 사람이야.',
+            en: 'Hi. I’m from next door. (반말)',
+            react: { ko: '네? 저 아세요? 왜 반말하세요?', en: 'Sorry? Do I know you? Why the 반말?' },
+            why: '안녕 and 나 … 이야 are 반말, for close friends and family. To a neighbour you’ve never met, use polite 해요체: 안녕하세요. 옆집에 사는 사람인데요.',
+          },
+          {
+            ko: '안녕하세요. 옆집에 사시는 분인데요.',
+            en: 'Hello. I’m the honourable person from next door.',
+            react: { ko: '하하… 네. 옆집 분이세요?', en: 'Ha ha… OK. So you’re from next door?' },
+            why: '사시는 (with -(으)시-) and 분 show respect, so they’re for other people, never for yourself. About yourself: 옆집에 사는 사람인데요.',
+          },
+        ],
+      },
+      { them: { ko: '아, 안녕하세요. 무슨 일이세요?', en: 'Oh, hello. What can I do for you?' } },
+      {
+        you: [
+          {
+            ko: '죄송한데요, 음악 소리 좀 줄여 주시겠어요?',
+            en: 'Sorry to bother you, but would you mind turning the music down a bit?',
+            right: true,
+            note: '죄송한데요 (“I’m sorry, but…”) softens a request to a stranger, and -아/어 주시겠어요? (“would you…?”) asks a favour very politely. 좀 makes it gentler still.',
+          },
+          {
+            ko: '음악 소리 좀 줄이세요.',
+            en: 'Turn your music down.',
+            react: { ko: '…네, 줄이면 되잖아요.', en: '…Fine. I’ll turn it down, OK?' },
+            why: '줄이세요 is polite in form, but it tells him what to do, so it sounds like a complaint, and he’s put out. To ask a stranger a favour, ask: 음악 소리 좀 줄여 주시겠어요?',
+          },
+          {
+            ko: '음악 소리 좀 줄여도 돼요?',
+            en: 'May I turn your music down?',
+            react: { ko: '네? 제 음악을 직접 줄이시게요? 하하.', en: 'Sorry? You want to turn my music down yourself? Ha ha.' },
+            why: '-아/어도 돼요? asks permission for *you* to do something: “may I turn it down?” You want *him* to do it: 음악 소리 좀 줄여 주시겠어요?',
+          },
+        ],
+      },
+      { them: { ko: '아이고, 죄송해요! 바로 줄일게요.', en: 'Oh dear, I’m so sorry! I’ll turn it down right away.' } },
+      {
+        you: [
+          { ko: '감사합니다. 안녕히 주무세요!', en: 'Thank you. Good night!', right: true, note: '안녕히 주무세요 (“sleep well”) is the polite way to say good night.' },
+          {
+            ko: '천만에요. 안녕히 주무세요!',
+            en: 'You’re welcome. Good night!',
+            react: { ko: '네? 아… 네, 안녕히 주무세요.', en: 'Huh? Oh… OK, good night.' },
+            why: '천만에요 (“you’re welcome”) answers a thank-you, but he said sorry and that he’d turn it down. Thank him: 감사합니다. 안녕히 주무세요!',
+          },
+          {
+            ko: '감사합니다. 안녕히 주무셨어요?',
+            en: 'Thank you. Did you sleep well?',
+            react: { ko: '네? 아직 안 잤는데요? 하하.', en: 'Sorry? I haven’t been to bed yet! Ha ha.' },
+            why: '안녕히 주무셨어요? is a morning greeting: “did you sleep well?” At night, say 안녕히 주무세요 (good night).',
+          },
+        ],
+      },
+      { them: { ko: '네, 안녕히 주무세요. 시끄럽게 해서 정말 죄송했어요!', en: 'Good night. I’m really sorry about the noise!' } },
+    ],
+  },
+  {
+    id: 'weather-rain-florist',
+    topic: 'weather',
+    level: 2,
+    scene: '💐',
+    title: { ko: '비가 그칠 때까지', en: 'Until the rain stops' },
+    role: { ko: '우산이 없는 사람', en: 'Caught without an umbrella' },
+    goal: {
+      ko: '갑자기 비가 많이 와요. 우산이 없어서 꽃집에 들어왔어요. 비가 그칠 때까지 여기 있고 싶어요. 비가 안 그치면 우산을 빌리고, 내일 돌려줄 거예요. 꽃집 사장님은 처음 보는 분이에요.',
+      en: 'It’s suddenly pouring and you have no umbrella, so you’ve ducked into a florist’s. You’ve never met the owner: ask, nicely, if you can stay until the rain stops. If it won’t stop, borrow an umbrella: you’ll bring it back tomorrow.',
+    },
+    them: { name: '꽃집 사장님', en: 'Florist', emoji: '👩‍🦳', voice: 'high' },
+    words: ['weather:rain', 'weather:umbrella', 'weather:flower'],
+    steps: [
+      { them: { ko: '어서 오세요! 꽃 사러 오셨어요?', en: 'Hello, come in! Are you here for some flowers?' } },
+      {
+        you: [
+          {
+            ko: '아니요, 죄송한데요… 비가 그칠 때까지 여기 좀 있을 수 있을까요?',
+            en: 'No, I’m sorry… Could I stay in here until the rain stops?',
+            right: true,
+            note: '-(으)ㄹ 수 있을까요? (“could I…?”, literally “would it be possible…?”) asks very gently. -(으)ㄹ 때까지 means “until”: 비가 그칠 때까지, until the rain stops.',
+          },
+          {
+            ko: '아니, 비가 그칠 때까지 여기 좀 있을게.',
+            en: 'Nope, I’ll stay in here till the rain stops. (반말)',
+            react: { ko: '어머, 반말이네요? 네… 그러세요.', en: 'Oh my, 반말? Well… go ahead.' },
+            why: '아니 and 있을게 are 반말, for close friends, and 있을게 just announces what you’ll do. To someone you’ve never met, ask in 해요체: 여기 좀 있을 수 있을까요?',
+          },
+          {
+            ko: '아니요, 비가 그칠 때까지 여기 좀 계세요.',
+            en: 'No, please stay in here until the rain stops.',
+            react: { ko: '네? 여기 제 가게예요. 저는 원래 여기 있어요! 하하.', en: 'Sorry? This is my shop: I’m always here! Ha ha.' },
+            why: '계세요 (from 계시다, the honorific word for 있다, “be, stay”) asks *her* to stay. To ask whether *you* can stay: 여기 좀 있을 수 있을까요?',
+          },
+        ],
+      },
+      { them: { ko: '그럼요! 그런데 이 비는 금방 안 그칠 거예요.', en: 'Of course! But this rain won’t stop any time soon.' } },
+      {
+        you: [
+          {
+            ko: '아이고… 그럼 혹시 우산 좀 빌릴 수 있을까요?',
+            en: 'Oh dear… Then could I possibly borrow an umbrella?',
+            right: true,
+            note: '빌리다 means “borrow”. 혹시 (“by any chance”) makes a request gentler still.',
+          },
+          {
+            ko: '아이고… 그럼 혹시 우산 좀 빌려 드릴까요?',
+            en: 'Oh dear… Then shall I lend you an umbrella?',
+            react: { ko: '하하, 우산이 없는 사람은 손님이잖아요!', en: 'Ha ha, you’re the one with no umbrella!' },
+            why: '빌려 드릴까요? offers to lend *her* one (드리다: to give, to someone you respect). You want to borrow one: 우산 좀 빌릴 수 있을까요?',
+          },
+          {
+            ko: '아이고… 그럼 혹시 우산 좀 살 수 있을까요?',
+            en: 'Oh dear… Then could I possibly buy an umbrella?',
+            react: { ko: '어머, 여기는 꽃집이라서 우산은 안 팔아요.', en: 'Oh, this is a florist’s: we don’t sell umbrellas.' },
+            why: '사다 means “buy”, and a florist’s doesn’t sell umbrellas. You want to borrow one and bring it back tomorrow: 우산 좀 빌릴 수 있을까요? (빌리다 = borrow).',
+          },
+        ],
+      },
+      { them: { ko: '그럼요. 이거 가져가세요. 어떤 손님이 두고 간 우산이에요.', en: 'Of course. Take this one: a customer left it here.' } },
+      {
+        you: [
+          {
+            ko: '정말 감사합니다! 내일 꼭 돌려드릴게요.',
+            en: 'Thank you so much! I’ll bring it back tomorrow, I promise.',
+            right: true,
+            note: '돌려드리다 is the polite way to say 돌려주다 (give back), for someone you respect, and -(으)ㄹ게요 promises what *you’ll* do.',
+          },
+          {
+            ko: '정말 감사합니다! 내일 꼭 돌려주세요.',
+            en: 'Thank you so much! Please give it back tomorrow.',
+            react: { ko: '네? 하하, 돌려주는 건 손님이죠!', en: 'Sorry? Ha ha, *you’re* the one giving it back!' },
+            why: '돌려주세요 asks *her* to give it back. To promise that you will: 내일 꼭 돌려드릴게요.',
+          },
+          {
+            ko: '정말 감사합니다! 내일 꼭 가져갈게요.',
+            en: 'Thank you so much! I’ll come and take it tomorrow, I promise.',
+            react: { ko: '네? 지금 가져가세요. 비가 이렇게 오는데요!', en: 'Sorry? Take it now: look how hard it’s raining!' },
+            why: '가져갈게요 means “I’ll take it (away)”, so she thinks you’ll leave it here and pick it up tomorrow. To promise to bring it back: 내일 꼭 돌려드릴게요.',
+          },
+        ],
+      },
+      { them: { ko: '네, 조심히 가세요!', en: 'Sure. Get home safely!' } },
+    ],
+  },
+
+  // ---------- Level 1 ----------
+  {
+    id: 'numbers-lift-neighbour',
+    topic: 'numbers',
+    level: 1,
+    scene: '🏢',
+    title: { ko: '몇 층 가세요?', en: 'Which floor?' },
+    role: { ko: '새 이웃', en: 'New neighbour' },
+    goal: {
+      ko: '어제 엄마, 아빠하고 이 아파트 오 층으로 이사 왔어요. 저는 열아홉 살이에요.',
+      en: 'Yesterday you moved into a flat on the fifth floor of this building, with your mom and dad. You’re nineteen. In the lift, an elderly neighbour starts chatting.',
+    },
+    them: { name: '할머니', en: 'Elderly neighbour', emoji: '👵', voice: 'high' },
+    words: ['numbers:howmany', 'numbers:o', 'numbers:three', 'numbers:nine'],
+    steps: [
+      { them: { ko: '몇 층 가세요?', en: 'Which floor are you going to?' } },
+      {
+        you: [
+          { ko: '오 층이요. 감사합니다.', en: 'The fifth, please. Thank you.', right: true, note: 'Which floor: Sino-Korean numbers + 층 (일 층, 이 층… 오 층).' },
+          {
+            ko: '다섯 층이요. 감사합니다.',
+            en: '“Five floors”, please. Thank you.',
+            react: { ko: '다섯 층? 아, 오 층이요?', en: 'Five floors? Oh, the fifth floor?' },
+            why: 'Floors are numbered with Sino-Korean numbers: 오 층 (the fifth floor). 다섯 층 would mean “five floors”.',
+          },
+          {
+            ko: '오 층 가세요. 감사합니다.',
+            en: 'Go to the fifth floor. Thank you.',
+            react: { ko: '네? 할머니는 삼 층 가요. 학생은 몇 층 가요?', en: 'Sorry? I’m going to the third. Which floor are you going to?' },
+            why: '가세요 is for what *she* does, so it sounds as if you’re sending her to the fifth floor. Just name your floor: 오 층이요.',
+          },
+        ],
+      },
+      { them: { ko: '오 층이요? 새로 이사 왔어요? 가족이 몇 명이에요?', en: 'The fifth? Have you just moved in? How many of you are there?' } },
+      {
+        you: [
+          { ko: '네, 세 명이에요. 엄마, 아빠하고 저요.', en: 'Yes, there are three of us: Mom, Dad and me.', right: true, note: 'People are counted with native numbers, and 셋 becomes 세 before a counter: 세 명.' },
+          {
+            ko: '네, 삼 명이에요. 엄마, 아빠하고 저요.',
+            en: 'Yes, there are “sam” of us: Mom, Dad and me.',
+            react: { ko: '삼 명? 아, 세 명이요?', en: '“Sam”? Oh, you mean three?' },
+            why: 'People are counted with native numbers: 세 명, not 삼 명. Sino-Korean 삼 is for floors (삼 층), minutes and money.',
+          },
+          {
+            ko: '네, 두 명이에요. 엄마, 아빠하고 저요.',
+            en: 'Yes, there are two of us: Mom, Dad and me.',
+            react: { ko: '엄마, 아빠, 그리고 학생… 세 명이네요! 하하.', en: 'Mom, Dad and you… that makes three! Ha ha.' },
+            why: 'Don’t forget to count yourself! Mom, Dad and you make 세 명 (three).',
+          },
+        ],
+      },
+      { them: { ko: '아이고, 좋네요. 학생은 몇 살이에요?', en: 'Oh, how lovely. And how old are you?' } },
+      {
+        you: [
+          { ko: '열아홉 살이에요.', en: 'I’m nineteen.', right: true, note: 'With 살, age takes native numbers: 열아홉 = 열 (10) + 아홉 (9).' },
+          {
+            ko: '십구 살이에요.',
+            en: 'I’m “sip-gu” years old.',
+            react: { ko: '십구 살? 하하, 열아홉 살이요?', en: '“Sip-gu”? Ha ha, you mean nineteen?' },
+            why: 'With 살, age takes native numbers: 열아홉 살. (Sino-Korean numbers go with 세, a formal word for “years old” you’ll see on forms: 십구 세.)',
+          },
+          {
+            ko: '열아홉 명이에요.',
+            en: 'There are nineteen people.',
+            react: { ko: '열아홉 명? 하하, 열아홉 살이요?', en: 'Nineteen people? Ha ha, you mean you’re nineteen?' },
+            why: '명 counts people. For how old you are, the counter is 살: 열아홉 살이에요.',
+          },
+        ],
+      },
+      { them: { ko: '좋을 때네요! 할머니는 삼 층이에요. 먼저 내릴게요. 또 봐요!', en: 'What a lovely age! I’m on the third floor, so I’ll get off first. See you!' } },
+    ],
+  },
+  {
+    id: 'feelings-birthday-thanks',
+    topic: 'feelings',
+    level: 1,
+    scene: '🎂',
+    title: { ko: '생일 선물', en: 'A birthday present' },
+    role: { ko: '오늘 생일인 학생', en: 'Student with a birthday today' },
+    goal: {
+      ko: '오늘은 제 생일이에요. 한국어 반 친구 하은 씨가 선물을 줘요. 저는 정말 행복해요.',
+      en: 'It’s your birthday, and Haeun, a classmate from your Korean class, has a present for you. You’re so happy.',
+    },
+    them: { name: '하은', en: 'Haeun (classmate)', emoji: '👧', voice: 'high' },
+    words: ['feelings:congrats', 'feelings:thankful', 'feelings:happy'],
+    steps: [
+      { them: { ko: '생일 축하해요! 이거 선물이에요.', en: 'Happy birthday! This is for you.' } },
+      {
+        you: [
+          { ko: '와, 고마워요!', en: 'Wow, thank you!', right: true },
+          {
+            ko: '와, 축하해요!',
+            en: 'Wow, congratulations!',
+            react: { ko: '하하, 축하는 제가 해요! 오늘 생일이잖아요.', en: 'Ha ha, I’m the one congratulating you! It’s your birthday!' },
+            why: '축하해요 congratulates someone else. When someone wishes you a happy birthday, thank them: 고마워요!',
+          },
+          {
+            ko: '와, 잘 먹겠습니다!',
+            en: 'Wow, thank you for the food!',
+            react: { ko: '하하, 먹는 거 아니에요. 열어 보세요!', en: 'Ha ha, it’s not something to eat. Open it!' },
+            why: '잘 먹겠습니다 is what you say just before eating food someone has made or bought for you. For a present, say 고마워요!',
+          },
+        ],
+      },
+      { them: { ko: '케이크도 있어요! 오늘 기분 어때요?', en: 'There’s cake too! How are you feeling today?' } },
+      {
+        you: [
+          { ko: '정말 행복해요!', en: 'I’m so happy!', right: true },
+          {
+            ko: '정말 슬퍼요!',
+            en: 'I’m so sad!',
+            react: { ko: '네? 왜요? 생일이잖아요!', en: 'What? Why? It’s your birthday!' },
+            why: '슬퍼요 means “I’m sad”. You’re over the moon: 정말 행복해요!',
+          },
+          {
+            ko: '정말 피곤해요!',
+            en: 'I’m so tired!',
+            react: { ko: '아이고, 생일인데 피곤해요? 그럼 오늘은 푹 쉬어요!', en: 'Oh no, tired on your birthday? Then get some rest today!' },
+            why: '피곤해요 means “I’m tired”. To say you’re happy: 정말 행복해요!',
+          },
+        ],
+      },
+      { them: { ko: '저는 다음 주가 생일이에요!', en: 'My birthday’s next week!' } },
+      {
+        you: [
+          {
+            ko: '정말요? 그럼 미리 축하해요!',
+            en: 'Really? Then happy birthday in advance!',
+            right: true,
+            note: '미리 means “in advance”: 미리 축하해요 congratulates someone before the day. This time 축하해요 is right: it’s *her* birthday.',
+          },
+          {
+            ko: '정말요? 그럼 미리 고마워요!',
+            en: 'Really? Then thank you in advance!',
+            react: { ko: '하하, 뭐가 고마워요? 축하해 줘요!', en: 'Ha ha, thanks for what? Congratulate me!' },
+            why: '고마워요 thanks someone, but it’s *her* birthday that’s coming: congratulate her, 미리 축하해요!',
+          },
+          {
+            ko: '정말요? 생일 축하했어요!',
+            en: 'Really? I congratulated you!',
+            react: { ko: '하하, 아직이에요. 다음 주예요!', en: 'Ha ha, not yet. It’s next week!' },
+            why: '축하했어요 is past: “I congratulated you”. Her birthday hasn’t come yet: 미리 축하해요 (happy birthday in advance)!',
+          },
+        ],
+      },
+      { them: { ko: '고마워요! 그럼 다음 주에도 같이 케이크 먹어요!', en: 'Thanks! Then let’s have cake together next week too!' } },
+    ],
+  },
 ]);
